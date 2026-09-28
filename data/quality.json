@@ -1,0 +1,18 @@
+{
+  "source_seasons": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "raw_rows": 62020,
+  "retained_rows": 58771,
+  "dropped_rows": 3249,
+  "d1_teams_in_crosswalk": 362,
+  "unique_d1_teams_in_output": 362,
+  "unique_games_in_output": 30946,
+  "source": "ESPN Men's College Basketball Team Box Scores via SportsDataverse",
+  "crosswalk": "ESPN 2026 team crosswalk via SportsDataverse",
+  "generated_utc": "2026-09-28T21:42:34.243486+00:00"
+}
