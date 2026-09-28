@@ -465,6 +465,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const { rows, quality } = await loadDataset();
     if (document.body.dataset.page === "report") renderReport(rows, quality);
     if (document.body.dataset.page === "dashboard") initializeDashboard(rows);
+    document.querySelectorAll(".loading").forEach((element) => element.classList.remove("loading"));
   } catch (error) {
     showError(error);
   }
