@@ -1,0 +1,4 @@
+Your Name: [replace with your name]
+Student ID: [replace with your student ID]
+Repository URL: [paste the public GitHub repository URL]
+Live Site URL: [paste the GitHub Pages URL]

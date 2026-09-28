@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A data report on recent NCAA Division I men's basketball team performance.">
+    <title>D-I Hoops Lab | Report</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body data-page="report">
+    <header class="site-nav">
+      <a class="brand" href="index.html"><span class="brand-mark">D1</span> Hoops Lab</a>
+      <nav aria-label="Primary navigation">
+        <a class="active" href="index.html">Report</a>
+        <a href="dashboard.html">Dashboard</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero report-hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Financial Data Analytics · NCAA Division I</p>
+          <h1>Five seasons of<br><span>college hoops.</span></h1>
+          <p id="hero-summary" class="hero-summary loading">Loading the recent team-game file…</p>
+          <a class="button button-light" href="dashboard.html">Explore the dashboard <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="hero-note">
+          <p>2022–2026</p>
+          <span>Season keys are the year each season ended.</span>
+        </div>
+      </section>
+
+      <section class="headline-grid" aria-label="Headline numbers">
+        <article class="headline-card"><span class="card-label">Seasons</span><strong id="headline-seasons" class="loading">—</strong><span>2021–22 through 2025–26</span></article>
+        <article class="headline-card accent-card"><span class="card-label">D-I team-game rows</span><strong id="headline-teamgames" class="loading">—</strong><span>one team in one game</span></article>
+        <article class="headline-card"><span class="card-label">Teams</span><strong id="headline-teams" class="loading">—</strong><span>unique D-I programs</span></article>
+        <article class="headline-card"><span class="card-label">Average points</span><strong id="headline-points" class="loading">—</strong><span>per team-game row</span></article>
+      </section>
+
+      <section class="intro-section">
+        <p class="eyebrow">The report</p>
+        <h2>A recent look at the teams, tendencies, and tradeoffs behind Division I basketball.</h2>
+        <p>This report treats a team’s box score in a particular game as the observation. That makes it possible to compare teams across seasons while preserving the detail of individual games. The findings are generated from the same CSV loaded by the dashboard.</p>
+      </section>
+
+      <div id="report-sections" class="report-sections">
+        <div class="loading-panel loading">Building the report findings and charts…</div>
+      </div>
+
+      <section class="methodology-section">
+        <div>
+          <p class="eyebrow">Data notes</p>
+          <h2>What the rows mean</h2>
+        </div>
+        <p id="methodology-copy">Loading the data definition…</p>
+      </section>
+
+      <section class="next-step">
+        <div>
+          <p class="eyebrow">Keep exploring</p>
+          <h2>Change the question without changing the data.</h2>
+          <p>Filter by season, team, conference, venue, or result. Then switch the measure and breakdown to see the current view recalculate in the browser.</p>
+        </div>
+        <a class="button button-dark" href="dashboard.html">Open dashboard <span aria-hidden="true">→</span></a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>D1 Hoops Lab · built for Financial Data Analytics</span>
+      <span><a href="README.md">Methods</a> · <a href="data/README.md">Data source</a></span>
+    </footer>
+
+    <noscript><div class="noscript">This site needs JavaScript to load the data and render the interactive charts.</div></noscript>
+    <script src="app.js"></script>
+  </body>
+</html>

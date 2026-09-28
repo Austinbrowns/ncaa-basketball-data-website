@@ -1,0 +1,471 @@
+const DATA_URL = "data/team_box_2022_2026.csv";
+const QUALITY_URL = "data/quality.json";
+
+const number = (value) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+};
+
+const mean = (rows, key) => {
+  const values = rows.map((row) => number(row[key])).filter((value) => value !== null);
+  return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
+};
+
+const sum = (rows, key) => rows.reduce((total, row) => total + (number(row[key]) || 0), 0);
+
+const unique = (rows, key) => new Set(rows.map((row) => row[key])).size;
+
+const formatNumber = (value, digits = 1) => {
+  if (!Number.isFinite(value)) return "—";
+  return new Intl.NumberFormat("en-US", { maximumFractionDigits: digits }).format(value);
+};
+
+const formatPercent = (value, digits = 1) => `${formatNumber(value, digits)}%`;
+
+const escapeHtml = (value) => String(value ?? "")
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;")
+  .replaceAll("'", "&#039;");
+
+function parseCSV(text) {
+  const source = text.replace(/^\uFEFF/, "");
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let quoted = false;
+
+  for (let index = 0; index < source.length; index += 1) {
+    const character = source[index];
+    const next = source[index + 1];
+
+    if (character === '"' && quoted && next === '"') {
+      cell += '"';
+      index += 1;
+    } else if (character === '"') {
+      quoted = !quoted;
+    } else if (character === "," && !quoted) {
+      row.push(cell);
+      cell = "";
+    } else if ((character === "\n" || character === "\r") && !quoted) {
+      if (character === "\r" && next === "\n") index += 1;
+      row.push(cell);
+      if (row.some((value) => value !== "")) rows.push(row);
+      row = [];
+      cell = "";
+    } else {
+      cell += character;
+    }
+  }
+
+  if (cell.length || row.length) {
+    row.push(cell);
+    rows.push(row);
+  }
+
+  const headers = rows.shift().map((header) => header.trim());
+  return rows.map((values) => Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ""])));
+}
+
+function normalizeRow(row) {
+  const season = number(row.season);
+  return {
+    gameId: row.game_id,
+    season,
+    seasonLabel: row.season_label,
+    seasonPhase: row.season_phase,
+    date: row.game_date,
+    teamId: row.team_id,
+    team: row.team_name,
+    teamLocation: row.team_location,
+    abbreviation: row.team_abbreviation,
+    conference: row.conference,
+    venue: row.team_home_away === "home" ? "Home" : "Away",
+    result: row.result,
+    win: row.result === "Win" ? 1 : 0,
+    points: number(row.team_score),
+    opponent: row.opponent_team_name,
+    opponentPoints: number(row.opponent_score),
+    margin: number(row.margin),
+    assists: number(row.assists),
+    blocks: number(row.blocks),
+    defensiveRebounds: number(row.defensive_rebounds),
+    offensiveRebounds: number(row.offensive_rebounds),
+    rebounds: number(row.total_rebounds),
+    steals: number(row.steals),
+    turnovers: number(row.turnovers),
+    fouls: number(row.fouls),
+    fgm: number(row.field_goals_made),
+    fga: number(row.field_goals_attempted),
+    fgPct: number(row.field_goal_pct),
+    threePM: number(row.three_point_field_goals_made),
+    threePA: number(row.three_point_field_goals_attempted),
+    threePct: number(row.three_point_field_goal_pct),
+    threeRate: number(row.three_point_rate_pct),
+    efg: number(row.effective_fg_pct),
+    ftm: number(row.free_throws_made),
+    fta: number(row.free_throws_attempted),
+    ftPct: number(row.free_throw_pct),
+    teamTurnovers: number(row.team_turnovers),
+  };
+}
+
+async function loadDataset() {
+  const [dataResponse, qualityResponse] = await Promise.all([
+    fetch(DATA_URL),
+    fetch(QUALITY_URL),
+  ]);
+  if (!dataResponse.ok) throw new Error(`Could not load ${DATA_URL}`);
+  const dataText = await dataResponse.text();
+  const rows = parseCSV(dataText).map(normalizeRow).filter((row) => row.teamId && row.team);
+  const quality = qualityResponse.ok ? await qualityResponse.json() : {};
+  return { rows, quality };
+}
+
+function groupRows(rows, keyFunction, measureFunction) {
+  const groups = new Map();
+  rows.forEach((row) => {
+    const key = keyFunction(row);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(row);
+  });
+
+  return [...groups.entries()].map(([label, group]) => {
+    const values = group.map(measureFunction).filter((value) => Number.isFinite(value));
+    return {
+      label,
+      rows: group.length,
+      games: unique(group, "gameId"),
+      wins: sum(group, "win"),
+      average: values.length ? values.reduce((total, value) => total + value, 0) / values.length : 0,
+      averagePoints: mean(group, "points"),
+      averageMargin: mean(group, "margin"),
+      winRate: 100 * mean(group, "win"),
+    };
+  });
+}
+
+function shortLabel(label, length = 18) {
+  const value = String(label);
+  return value.length > length ? `${value.slice(0, length - 1)}…` : value;
+}
+
+function svgText(x, y, value, attributes = "") {
+  return `<text x="${x}" y="${y}" ${attributes}>${escapeHtml(value)}</text>`;
+}
+
+function emptyChart(container, message = "No rows match these filters.") {
+  container.innerHTML = `<div class="empty-chart">${escapeHtml(message)}</div>`;
+}
+
+function chartFrame(width, height, content, label) {
+  return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(label)}" preserveAspectRatio="none">${content}</svg>`;
+}
+
+function renderBars(container, items, options = {}) {
+  if (!items.length) return emptyChart(container);
+  const width = 760;
+  const height = options.height || 310;
+  const margin = { top: 22, right: 18, bottom: 76, left: 52 };
+  const plotWidth = width - margin.left - margin.right;
+  const plotHeight = height - margin.top - margin.bottom;
+  const maxValue = Math.max(...items.map((item) => item.value), 1);
+  const barSpace = plotWidth / items.length;
+  const barWidth = Math.max(8, barSpace * 0.68);
+  let content = "";
+
+  [0, 0.5, 1].forEach((tick) => {
+    const y = margin.top + plotHeight - plotHeight * tick;
+    content += `<line x1="${margin.left}" y1="${y}" x2="${width - margin.right}" y2="${y}" class="chart-grid"/>`;
+    content += svgText(margin.left - 8, y + 4, formatNumber(maxValue * tick, options.digits ?? 1), 'class="chart-axis" text-anchor="end"');
+  });
+
+  items.forEach((item, index) => {
+    const x = margin.left + barSpace * index + (barSpace - barWidth) / 2;
+    const barHeight = (Math.max(0, item.value) / maxValue) * plotHeight;
+    const y = margin.top + plotHeight - barHeight;
+    content += `<rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="5" class="chart-bar"/>`;
+    content += svgText(x + barWidth / 2, y - 8, options.valueFormat ? options.valueFormat(item.value) : formatNumber(item.value), 'class="chart-value" text-anchor="middle"');
+    content += `<text x="${x + barWidth / 2}" y="${height - margin.bottom + 22}" class="chart-label" text-anchor="end" transform="rotate(-35 ${x + barWidth / 2} ${height - margin.bottom + 22})">${escapeHtml(shortLabel(item.label, 22))}</text>`;
+  });
+
+  container.innerHTML = chartFrame(width, height, content, options.label || "Bar chart");
+}
+
+function renderLine(container, items, options = {}) {
+  if (!items.length) return emptyChart(container);
+  const width = 760;
+  const height = options.height || 310;
+  const margin = { top: 24, right: 22, bottom: 54, left: 52 };
+  const plotWidth = width - margin.left - margin.right;
+  const plotHeight = height - margin.top - margin.bottom;
+  const maxValue = Math.max(...items.map((item) => item.value), 1);
+  const step = items.length === 1 ? plotWidth : plotWidth / (items.length - 1);
+  const points = items.map((item, index) => {
+    const x = margin.left + index * step;
+    const y = margin.top + plotHeight - (Math.max(0, item.value) / maxValue) * plotHeight;
+    return { ...item, x, y };
+  });
+  let content = "";
+
+  [0, 0.5, 1].forEach((tick) => {
+    const y = margin.top + plotHeight - plotHeight * tick;
+    content += `<line x1="${margin.left}" y1="${y}" x2="${width - margin.right}" y2="${y}" class="chart-grid"/>`;
+    content += svgText(margin.left - 8, y + 4, formatNumber(maxValue * tick, options.digits ?? 1), 'class="chart-axis" text-anchor="end"');
+  });
+
+  content += `<polyline points="${points.map((point) => `${point.x},${point.y}`).join(" ")}" class="chart-line"/>`;
+  points.forEach((point) => {
+    content += `<circle cx="${point.x}" cy="${point.y}" r="5" class="chart-dot"/>`;
+    content += svgText(point.x, height - 18, shortLabel(point.label, 15), 'class="chart-label" text-anchor="middle"');
+    content += svgText(point.x, point.y - 12, options.valueFormat ? options.valueFormat(point.value) : formatNumber(point.value), 'class="chart-value" text-anchor="middle"');
+  });
+
+  container.innerHTML = chartFrame(width, height, content, options.label || "Line chart");
+}
+
+function renderHorizontal(container, items, options = {}) {
+  if (!items.length) return emptyChart(container);
+  const width = 760;
+  const rowHeight = 30;
+  const height = Math.max(220, options.top * rowHeight + 74);
+  const margin = { top: 22, right: 70, bottom: 24, left: 170 };
+  const visible = items.slice(0, options.top || 8);
+  const maxValue = Math.max(...visible.map((item) => item.value), 1);
+  const plotWidth = width - margin.left - margin.right;
+  let content = "";
+
+  visible.forEach((item, index) => {
+    const y = margin.top + index * rowHeight;
+    const barWidth = Math.max(2, (Math.max(0, item.value) / maxValue) * plotWidth);
+    content += svgText(margin.left - 10, y + 17, shortLabel(item.label, 23), 'class="chart-label" text-anchor="end"');
+    content += `<rect x="${margin.left}" y="${y + 4}" width="${barWidth}" height="20" rx="4" class="chart-bar chart-bar-alt"/>`;
+    content += svgText(margin.left + barWidth + 8, y + 19, options.valueFormat ? options.valueFormat(item.value) : formatNumber(item.value), 'class="chart-value"');
+  });
+
+  container.innerHTML = chartFrame(width, height, content, options.label || "Horizontal bar chart");
+}
+
+function renderDots(container, items, options = {}) {
+  if (!items.length) return emptyChart(container);
+  const width = 760;
+  const height = options.height || 310;
+  const margin = { top: 24, right: 30, bottom: 54, left: 54 };
+  const plotWidth = width - margin.left - margin.right;
+  const plotHeight = height - margin.top - margin.bottom;
+  const maxX = Math.max(...items.map((item) => item.rows), 1);
+  const maxY = Math.max(...items.map((item) => item.value), 1);
+  let content = "";
+
+  [0, 0.5, 1].forEach((tick) => {
+    const y = margin.top + plotHeight - plotHeight * tick;
+    content += `<line x1="${margin.left}" y1="${y}" x2="${width - margin.right}" y2="${y}" class="chart-grid"/>`;
+    content += svgText(margin.left - 8, y + 4, formatNumber(maxY * tick, options.digits ?? 1), 'class="chart-axis" text-anchor="end"');
+  });
+
+  items.slice(0, 60).forEach((item) => {
+    const x = margin.left + (item.rows / maxX) * plotWidth;
+    const y = margin.top + plotHeight - (item.value / maxY) * plotHeight;
+    content += `<circle cx="${x}" cy="${y}" r="5" class="chart-dot chart-dot-soft"><title>${escapeHtml(item.label)}: ${formatNumber(item.value)}</title></circle>`;
+  });
+  content += svgText(width / 2, height - 15, "Rows in group", 'class="chart-axis" text-anchor="middle"');
+  content += `<text x="16" y="${height / 2}" class="chart-axis" text-anchor="middle" transform="rotate(-90 16 ${height / 2})">${escapeHtml(options.yLabel || "Value")}</text>`;
+  container.innerHTML = chartFrame(width, height, content, options.label || "Dot chart");
+}
+
+function reportSection(id, heading, copy, chartTitle) {
+  return `<section class="report-section">
+    <div class="section-copy"><p class="eyebrow">Finding ${id}</p><h2>${escapeHtml(heading)}</h2><p>${copy}</p></div>
+    <div class="chart-wrap"><div class="chart-title">${escapeHtml(chartTitle)}</div><div id="report-chart-${id}" class="chart"></div></div>
+  </section>`;
+}
+
+function getSeasonGroups(rows, measureKey) {
+  return groupRows(rows, (row) => row.seasonLabel, (row) => row[measureKey])
+    .sort((a, b) => a.label.localeCompare(b.label));
+}
+
+function renderReport(rows, quality) {
+  const averagePoints = mean(rows, "points");
+  const seasons = [...new Set(rows.map((row) => row.seasonLabel))].sort();
+  const firstSeason = seasons[0];
+  const lastSeason = seasons[seasons.length - 1];
+  const seasonPoints = getSeasonGroups(rows, "points");
+  const seasonThreeRate = getSeasonGroups(rows, "threeRate");
+  const homeAway = groupRows(rows, (row) => row.venue, (row) => row.win).sort((a, b) => a.label.localeCompare(b.label));
+  const turnoverByResult = groupRows(rows, (row) => row.result, (row) => row.turnovers).sort((a, b) => a.label.localeCompare(b.label));
+  const efgByResult = groupRows(rows, (row) => row.result, (row) => row.efg).sort((a, b) => a.label.localeCompare(b.label));
+  const teamGroups = groupRows(rows, (row) => row.team, (row) => row.points).filter((item) => item.rows >= 100);
+  const topScoring = [...teamGroups].sort((a, b) => b.average - a.average).slice(0, 8);
+  const topWinning = [...teamGroups].sort((a, b) => b.winRate - a.winRate).slice(0, 8);
+  topWinning.forEach((item) => { item.value = item.winRate; });
+  const conferenceGroups = groupRows(rows, (row) => row.conference, (row) => row.points).filter((item) => item.rows >= 100);
+  const conferencePoints = [...conferenceGroups].sort((a, b) => b.average - a.average).slice(0, 10);
+
+  document.getElementById("headline-seasons").textContent = seasons.length;
+  document.getElementById("headline-teamgames").textContent = formatNumber(rows.length, 0);
+  document.getElementById("headline-teams").textContent = formatNumber(unique(rows, "teamId"), 0);
+  document.getElementById("headline-points").textContent = formatNumber(averagePoints, 1);
+  document.getElementById("hero-summary").textContent = `This report uses ${formatNumber(rows.length, 0)} Division I team-game observations from ${firstSeason} through ${lastSeason}. It follows scoring, shot selection, home-court advantage, team leaders, conference differences, turnovers, and shooting efficiency.`;
+
+  const firstPoints = seasonPoints[0]?.average || 0;
+  const lastPoints = seasonPoints.at(-1)?.average || 0;
+  const firstThree = seasonThreeRate[0]?.average || 0;
+  const lastThree = seasonThreeRate.at(-1)?.average || 0;
+  const homeRate = homeAway.find((item) => item.label === "Home")?.winRate || 0;
+  const awayRate = homeAway.find((item) => item.label === "Away")?.winRate || 0;
+  const winTurnovers = turnoverByResult.find((item) => item.label === "Win")?.average || 0;
+  const lossTurnovers = turnoverByResult.find((item) => item.label === "Loss")?.average || 0;
+  const winEfg = efgByResult.find((item) => item.label === "Win")?.average || 0;
+  const lossEfg = efgByResult.find((item) => item.label === "Loss")?.average || 0;
+
+  document.getElementById("report-sections").innerHTML = [
+    reportSection("01", `The sample contains ${formatNumber(rows.length, 0)} D-I team-game rows`, `The five-season file covers ${formatNumber(unique(rows, "teamId"), 0)} Division I teams and ${formatNumber(unique(rows, "gameId"), 0)} games. Each row represents one team’s box score in one game, which makes team and season comparisons direct.`, "Team-game rows by season"),
+    reportSection("02", `Average scoring changed from ${formatNumber(firstPoints)} to ${formatNumber(lastPoints)} points`, `Across all team-game rows, the average score was ${formatNumber(averagePoints)} points. The season trend shows whether the scoring environment moved upward or downward over the selected period.`, "Average team points"),
+    reportSection("03", `Three-point attempts made up ${formatPercent(firstThree)} to ${formatPercent(lastThree)} of field-goal attempts`, `Three-point rate is calculated as three-point attempts divided by all field-goal attempts. It measures shot selection rather than simply made threes, so it remains comparable when shooting accuracy changes.`, "Three-point attempt rate"),
+    reportSection("04", `Home teams won ${formatPercent(homeRate)} of their team-game rows`, `Home teams won ${formatPercent(homeRate)} of rows compared with ${formatPercent(awayRate)} for away teams, a difference of ${formatPercent(homeRate - awayRate)} percentage points. The comparison includes the same five seasons and uses the row-level winner indicator.`, "Win rate by venue"),
+    reportSection("05", `${escapeHtml(topScoring[0]?.label || "The leading teams")} led the scoring table`, `To keep the comparison from favoring teams with only a handful of observations, this ranking requires at least 100 team-game rows per team. The leading team averaged ${formatNumber(topScoring[0]?.average || 0)} points per team-game.`, "Top teams by average points"),
+    reportSection("06", `${escapeHtml(topWinning[0]?.label || "The leading teams")} had the highest win rate among durable samples`, `This ranking uses the same 100-row minimum and calculates wins divided by team-game rows. The leading team won ${formatPercent(topWinning[0]?.winRate || 0)} of its observed games.`, "Top teams by win rate"),
+    reportSection("07", `Winning teams averaged ${formatNumber(winTurnovers)} turnovers versus ${formatNumber(lossTurnovers)} for losing teams`, `Turnovers are averaged per team-game row. The difference is ${formatNumber(lossTurnovers - winTurnovers)} turnovers, which shows the relationship between ball security and the result without claiming that turnovers alone caused the result.`, "Average turnovers by result"),
+    reportSection("08", `Winning teams posted ${formatPercent(winEfg)} effective field-goal shooting`, `Effective field-goal percentage is calculated as (field goals made + 0.5 × three-pointers made) divided by field-goal attempts. Winning rows averaged ${formatPercent(winEfg)} compared with ${formatPercent(lossEfg)} for losing rows.`, "Effective field-goal percentage by result"),
+    reportSection("09", `${escapeHtml(conferencePoints[0]?.label || "The leading conference")} led conference scoring`, `Conference averages are based on team-game rows and are limited to conferences with at least 100 observations. The top conference averaged ${formatNumber(conferencePoints[0]?.average || 0)} points per team-game.`, "Top conferences by average points"),
+  ].join("");
+
+  renderBars(document.getElementById("report-chart-01"), seasonPoints.map((item) => ({ label: item.label, value: item.rows })), { digits: 0, label: "Team-game rows by season" });
+  renderLine(document.getElementById("report-chart-02"), seasonPoints.map((item) => ({ label: item.label, value: item.average })), { label: "Average team points by season" });
+  renderLine(document.getElementById("report-chart-03"), seasonThreeRate.map((item) => ({ label: item.label, value: item.average })), { label: "Three-point attempt rate by season", valueFormat: (value) => formatPercent(value) });
+  renderBars(document.getElementById("report-chart-04"), homeAway.map((item) => ({ label: item.label, value: item.winRate })), { label: "Win rate by venue", valueFormat: (value) => formatPercent(value) });
+  renderHorizontal(document.getElementById("report-chart-05"), topScoring.map((item) => ({ label: item.label, value: item.average })), { top: 8, label: "Top teams by average points" });
+  renderHorizontal(document.getElementById("report-chart-06"), topWinning.map((item) => ({ label: item.label, value: item.winRate })), { top: 8, label: "Top teams by win rate", valueFormat: (value) => formatPercent(value) });
+  renderBars(document.getElementById("report-chart-07"), turnoverByResult.map((item) => ({ label: item.label, value: item.average })), { label: "Average turnovers by result" });
+  renderBars(document.getElementById("report-chart-08"), efgByResult.map((item) => ({ label: item.label, value: item.average })), { label: "Effective field-goal percentage by result", valueFormat: (value) => formatPercent(value) });
+  renderHorizontal(document.getElementById("report-chart-09"), conferencePoints.map((item) => ({ label: item.label, value: item.average })), { top: 10, label: "Top conferences by average points" });
+
+  const dropped = quality.dropped_rows ?? 0;
+  document.getElementById("methodology-copy").innerHTML = `The raw ESPN/SportsDataverse files contain one row per team per game. I combined seasons 2022–2026, kept rows whose team ID appears in the public 2026 Division I crosswalk, and dropped ${formatNumber(dropped, 0)} rows belonging to non-D-I teams or rows missing a required score/team identifier. The final file contains ${formatNumber(rows.length, 0)} rows and ${formatNumber(unique(rows, "teamId"), 0)} teams. A team-game row is the unit of analysis; the opponent is retained as a descriptive field. Points, rebounds, assists, turnovers, and shooting percentages are taken from the source box score. Three-point rate equals 3PA/FGA × 100. Effective field-goal percentage equals (FGM + 0.5 × 3PM)/FGA × 100. Win rate equals winning team-game rows divided by all team-game rows.`;
+}
+
+const measureDefinitions = {
+  points: { label: "Average points", key: "points", format: (value) => formatNumber(value) },
+  winRate: { label: "Win rate", key: "win", format: (value) => formatPercent(value) },
+  threePA: { label: "Average 3PA", key: "threePA", format: (value) => formatNumber(value) },
+  threeRate: { label: "Three-point attempt rate", key: "threeRate", format: (value) => formatPercent(value) },
+  efg: { label: "Effective FG%", key: "efg", format: (value) => formatPercent(value) },
+  rebounds: { label: "Average rebounds", key: "rebounds", format: (value) => formatNumber(value) },
+  turnovers: { label: "Average turnovers", key: "turnovers", format: (value) => formatNumber(value) },
+};
+
+const breakdownDefinitions = {
+  season: { label: "Season", key: (row) => row.seasonLabel },
+  conference: { label: "Conference", key: (row) => row.conference },
+  venue: { label: "Venue", key: (row) => row.venue },
+  team: { label: "Team", key: (row) => row.team },
+};
+
+function measureValue(row, measureKey) {
+  return number(row[measureDefinitions[measureKey].key]);
+}
+
+function selectedRows(rows) {
+  const season = document.getElementById("filter-season").value;
+  const team = document.getElementById("filter-team").value;
+  const conference = document.getElementById("filter-conference").value;
+  const venue = document.getElementById("filter-venue").value;
+  const result = document.getElementById("filter-result").value;
+  return rows.filter((row) =>
+    (season === "all" || row.seasonLabel === season) &&
+    (team === "all" || row.team === team) &&
+    (conference === "all" || row.conference === conference) &&
+    (venue === "all" || row.venue === venue) &&
+    (result === "all" || row.result === result)
+  );
+}
+
+function aggregateForDashboard(rows, measureKey, breakdownKey) {
+  const definition = breakdownDefinitions[breakdownKey];
+  const measure = (row) => measureValue(row, measureKey);
+  return groupRows(rows, definition.key, measure)
+    .map((item) => ({ ...item, value: item.average }))
+    .filter((item) => item.rows > 0)
+    .sort((a, b) => b.value - a.value);
+}
+
+function optionValues(rows, key) {
+  return [...new Set(rows.map((row) => row[key]).filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b), undefined, { numeric: true }));
+}
+
+function fillSelect(selectId, values, allLabel) {
+  const select = document.getElementById(selectId);
+  select.innerHTML = `<option value="all">${escapeHtml(allLabel)}</option>${values.map((value) => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join("")}`;
+}
+
+function updateDashboard(rows) {
+  const filtered = selectedRows(rows);
+  const measureKey = document.getElementById("measure-select").value;
+  const breakdownKey = document.getElementById("breakdown-select").value;
+  const measure = measureDefinitions[measureKey];
+  const groups = aggregateForDashboard(filtered, measureKey, breakdownKey);
+  const seasonal = aggregateForDashboard(filtered, measureKey, "season").sort((a, b) => a.label.localeCompare(b.label));
+  const byTeam = aggregateForDashboard(filtered, measureKey, "team");
+
+  document.getElementById("summary-teamgames").textContent = formatNumber(filtered.length, 0);
+  document.getElementById("summary-games").textContent = formatNumber(unique(filtered, "gameId"), 0);
+  document.getElementById("summary-teams").textContent = formatNumber(unique(filtered, "teamId"), 0);
+  document.getElementById("summary-average").textContent = formatNumber(mean(filtered, "points"));
+  document.getElementById("summary-average-label").textContent = "Average points per team-game";
+  document.getElementById("dashboard-status").textContent = `${formatNumber(filtered.length, 0)} team-game rows match the current filters. Charts use ${measure.label.toLowerCase()} and update in the browser.`;
+
+  const comparison = groups.slice(0, 14).reverse();
+  renderBars(document.getElementById("dashboard-chart-bars"), comparison.map((item) => ({ label: item.label, value: item.value })), { label: `${measure.label} by ${breakdownDefinitions[breakdownKey].label}`, valueFormat: measure.format, height: 340 });
+  renderLine(document.getElementById("dashboard-chart-line"), seasonal.map((item) => ({ label: item.label, value: item.value })), { label: `${measure.label} by season`, valueFormat: measure.format, height: 340 });
+  renderHorizontal(document.getElementById("dashboard-chart-top"), byTeam.map((item) => ({ label: item.label, value: item.value })), { top: 10, label: `Top teams by ${measure.label.toLowerCase()}`, valueFormat: measure.format });
+  renderDots(document.getElementById("dashboard-chart-dots"), groups, { label: `${measure.label} and group size`, yLabel: measure.label, height: 340 });
+
+  const table = document.getElementById("dashboard-table-body");
+  table.innerHTML = groups.slice(0, 30).map((item) => `<tr>
+    <td>${escapeHtml(item.label)}</td>
+    <td>${formatNumber(item.rows, 0)}</td>
+    <td>${formatNumber(item.games, 0)}</td>
+    <td>${measure.format(item.value)}</td>
+    <td>${formatPercent(item.winRate)}</td>
+    <td>${formatNumber(item.averagePoints)}</td>
+  </tr>`).join("") || `<tr><td colspan="6" class="empty-cell">No rows match the current filters.</td></tr>`;
+}
+
+function initializeDashboard(rows) {
+  fillSelect("filter-season", optionValues(rows, "seasonLabel"), "All seasons");
+  fillSelect("filter-team", optionValues(rows, "team"), "All teams");
+  fillSelect("filter-conference", optionValues(rows, "conference"), "All conferences");
+  fillSelect("filter-venue", optionValues(rows, "venue"), "All venues");
+  fillSelect("filter-result", optionValues(rows, "result"), "All results");
+
+  ["filter-season", "filter-team", "filter-conference", "filter-venue", "filter-result", "measure-select", "breakdown-select"].forEach((id) => {
+    document.getElementById(id).addEventListener("change", () => updateDashboard(rows));
+  });
+
+  document.getElementById("reset-filters").addEventListener("click", () => {
+    ["filter-season", "filter-team", "filter-conference", "filter-venue", "filter-result"].forEach((id) => { document.getElementById(id).value = "all"; });
+    document.getElementById("measure-select").value = "points";
+    document.getElementById("breakdown-select").value = "season";
+    updateDashboard(rows);
+  });
+  updateDashboard(rows);
+}
+
+function showError(error) {
+  document.querySelectorAll(".loading").forEach((element) => {
+    element.classList.remove("loading");
+    element.innerHTML = `<strong>Data could not be loaded.</strong><br>${escapeHtml(error.message)}<br><small>Use a local web server when testing this project; GitHub Pages serves the files correctly.</small>`;
+  });
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const { rows, quality } = await loadDataset();
+    if (document.body.dataset.page === "report") renderReport(rows, quality);
+    if (document.body.dataset.page === "dashboard") initializeDashboard(rows);
+  } catch (error) {
+    showError(error);
+  }
+});
