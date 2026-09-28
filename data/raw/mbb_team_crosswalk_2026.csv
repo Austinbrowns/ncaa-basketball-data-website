@@ -1,0 +1,363 @@
+season,espn_team_id,espn_abbreviation,espn_display_name,espn_short_name,espn_location,espn_mascot,espn_conference,fox_team_id,fox_team_name,fox_section,bart_team,bart_conf,kp_team,kp_conf,yahoo_team_id,yahoo_team_name,fox_match_confidence,bart_match_confidence,kp_match_confidence,match_method
+2026,2000,ACU,Abilene Christian Wildcats,Abilene Chrstn,Abilene Christian,Wildcats,Western Athletic Conference,320,Abilene Christian Wildcats,Western Athletic,Abilene Christian,WAC,Abilene Christian,WAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2005,AF,Air Force Falcons,Air Force,Air Force,Falcons,Mountain West Conference,191,Air Force Falcons,Mountain West,Air Force,MWC,Air Force,MWC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2006,AKR,Akron Zips,Akron,Akron,Zips,Mid-American Conference,157,Akron Zips,Mid-American,Akron,MAC,Akron,MAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2010,AAMU,Alabama A&M Bulldogs,Alabama A&M,Alabama A&M,Bulldogs,Southwestern Athletic Conference,272,Alabama A&M Bulldogs,Southwestern Athletic,Alabama A&M,SWAC,Alabama A&M,SWAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,333,ALA,Alabama Crimson Tide,Alabama,Alabama,Crimson Tide,Southeastern Conference,243,Alabama Crimson Tide,SEC,Alabama,SEC,Alabama,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2011,ALST,Alabama State Hornets,Alabama St,Alabama State,Hornets,Southwestern Athletic Conference,323,Alabama State Hornets,Southwestern Athletic,Alabama St.,SWAC,Alabama St.,SWAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2016,ALCN,Alcorn State Braves,Alcorn St,Alcorn State,Braves,Southwestern Athletic Conference,274,Alcorn State Braves,Southwestern Athletic,Alcorn St.,SWAC,Alcorn St.,SWAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,44,AMER,American University Eagles,American,American University,Eagles,Patriot League,104,American Eagles,Patriot League,American,Pat,American,PL,,,1.0,1.0,1.0,fox+bart+kp
+2026,2026,APP,App State Mountaineers,App State,App State,Mountaineers,Sun Belt Conference,255,Appalachian State Mountaineers,Sun Belt,Appalachian St.,SB,Appalachian St.,SB,,,1.0,1.0,1.0,fox+bart+kp
+2026,9,ASU,Arizona State Sun Devils,Arizona St,Arizona State,Sun Devils,Big 12 Conference,221,Arizona State Sun Devils,Big 12,Arizona St.,B12,Arizona St.,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,12,ARIZ,Arizona Wildcats,Arizona,Arizona,Wildcats,Big 12 Conference,220,Arizona Wildcats,Big 12,Arizona,B12,Arizona,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,8,ARK,Arkansas Razorbacks,Arkansas,Arkansas,Razorbacks,Southeastern Conference,244,Arkansas Razorbacks,SEC,Arkansas,SEC,Arkansas,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2032,ARST,Arkansas State Red Wolves,Arkansas St,Arkansas State,Red Wolves,Sun Belt Conference,291,Arkansas State Red Wolves,Sun Belt,Arkansas St.,SB,Arkansas St.,SB,,,1.0,1.0,1.0,fox+bart+kp
+2026,2029,UAPB,Arkansas-Pine Bluff Golden Lions,AR-Pine Bluff,Arkansas-Pine Bluff,Golden Lions,Southwestern Athletic Conference,275,Arkansas-Pine Bluff Golden Lions,Southwestern Athletic,Arkansas Pine Bluff,SWAC,Arkansas Pine Bluff,SWAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,349,ARMY,Army Black Knights,Army,Army,Black Knights,Patriot League,230,Army Black Knights,Patriot League,Army,Pat,Army,PL,,,1.0,1.0,1.0,fox+bart+kp
+2026,2,AUB,Auburn Tigers,Auburn,Auburn,Tigers,Southeastern Conference,245,Auburn Tigers,SEC,Auburn,SEC,Auburn,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2046,APSU,Austin Peay Governors,Austin Peay,Austin Peay,Governors,ASUN Conference,211,Austin Peay Governors,,Austin Peay,ASun,Austin Peay,ASun,,,1.0,1.0,1.0,fox+bart+kp
+2026,252,BYU,BYU Cougars,BYU,BYU,Cougars,Big 12 Conference,192,Byu Cougars,Big 12,BYU,B12,BYU,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,2050,BALL,Ball State Cardinals,Ball State,Ball State,Cardinals,Mid-American Conference,164,Ball State Cardinals,Mid-American,Ball St.,MAC,Ball St.,MAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,239,BAY,Baylor Bears,Baylor,Baylor,Bears,Big 12 Conference,41,Baylor Bears,Big 12,Baylor,B12,Baylor,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,91,BELL,Bellarmine Knights,Bellarmine,Bellarmine,Knights,ASUN Conference,908,Bellarmine Knights,Atlantic Sun,Bellarmine,ASun,Bellarmine,ASun,,,1.0,1.0,1.0,fox+bart+kp
+2026,2057,BEL,Belmont Bruins,Belmont,Belmont,Bruins,Missouri Valley Conference,134,Belmont Bruins,Missouri Valley,Belmont,MVC,Belmont,MVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2065,BCU,Bethune-Cookman Wildcats,Bethune,Bethune-Cookman,Wildcats,Southwestern Athletic Conference,170,Bethune-Cookman Wildcats,Southwestern Athletic,Bethune Cookman,SWAC,Bethune Cookman,SWAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2066,BING,Binghamton Bearcats,Binghamton,Binghamton,Bearcats,America East Conference,478,Binghamton Bearcats,America East,Binghamton,AE,Binghamton,AE,,,1.0,1.0,1.0,fox+bart+kp
+2026,68,BOIS,Boise State Broncos,Boise St,Boise State,Broncos,Mountain West Conference,95,Boise State Broncos,,Boise St.,MWC,Boise St.,MWC,,,1.0,1.0,1.0,fox+bart+kp
+2026,103,BC,Boston College Eagles,Boston College,Boston College,Eagles,Atlantic Coast Conference,53,Boston College Eagles,Atlantic Coast,Boston College,ACC,Boston College,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,104,BU,Boston University Terriers,Boston U,Boston University,Terriers,Patriot League,1,Boston University Terriers,Patriot League,Boston University,Pat,Boston University,PL,,,1.0,1.0,1.0,fox+bart+kp
+2026,189,BGSU,Bowling Green Falcons,Bowling Green,Bowling Green,Falcons,Mid-American Conference,158,Bowling Green Falcons,Mid-American,Bowling Green,MAC,Bowling Green,MAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,71,BRAD,Bradley Braves,Bradley,Bradley,Braves,Missouri Valley Conference,181,Bradley Braves,Missouri Valley,Bradley,MVC,Bradley,MVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,225,BRWN,Brown Bears,Brown,Brown,Bears,Ivy League,139,Brown Bears,Ivy League,Brown,Ivy,Brown,Ivy,,,1.0,1.0,1.0,fox+bart+kp
+2026,2803,BRY,Bryant Bulldogs,Bryant,Bryant,Bulldogs,America East Conference,820,Bryant Bulldogs,America East,Bryant,AE,Bryant,AE,,,1.0,1.0,1.0,fox+bart+kp
+2026,2083,BUCK,Bucknell Bison,Bucknell,Bucknell,Bison,Patriot League,231,Bucknell Bison,Patriot League,Bucknell,Pat,Bucknell,PL,,,1.0,1.0,1.0,fox+bart+kp
+2026,2084,BUF,Buffalo Bulls,Buffalo,Buffalo,Bulls,Mid-American Conference,159,Buffalo Bulls,Mid-American,Buffalo,MAC,Buffalo,MAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2086,BTLR,Butler Bulldogs,Butler,Butler,Bulldogs,Big East Conference,125,Butler Bulldogs,Big East,Butler,BE,Butler,BE,,,1.0,1.0,1.0,fox+bart+kp
+2026,13,CP,Cal Poly Mustangs,Cal Poly,Cal Poly,Mustangs,Big West Conference,96,Cal Poly Mustangs,Big West,Cal Poly,BW,Cal Poly,BW,,,1.0,1.0,1.0,fox+bart+kp
+2026,2934,CSUB,Cal State Bakersfield Roadrunners,Bakersfield,Cal State Bakersfield,Roadrunners,Big West Conference,335,Cal State Bakersfield Roadrunners,Big West,Cal St. Bakersfield,BW,Cal St. Bakersfield,BW,,,1.0,1.0,1.0,fox+bart+kp
+2026,2239,CSUF,Cal State Fullerton Titans,Fullerton,Cal State Fullerton,Titans,Big West Conference,97,Cal State Fullerton Titans,Big West,Cal St. Fullerton,BW,Cal St. Fullerton,BW,,,1.0,1.0,1.0,fox+bart+kp
+2026,2463,CSUN,Cal State Northridge Matadors,CSU Northridge,Cal State Northridge,Matadors,Big West Conference,67,Cal State Northridge Matadors,Big West,Cal St. Northridge,BW,CSUN,BW,,,1.0,1.0,1.0,fox+bart+kp
+2026,2856,CBU,California Baptist Lancers,CA Baptist,California Baptist,Lancers,Western Athletic Conference,648,California Baptist Lancers,,Cal Baptist,WAC,Cal Baptist,WAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,25,CAL,California Golden Bears,California,California,Golden Bears,Atlantic Coast Conference,222,California Golden Bears,Atlantic Coast,California,ACC,California,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2097,CAM,Campbell Fighting Camels,Campbell,Campbell,Fighting Camels,Coastal Athletic Association,31,Campbell Fighting Camels,Coastal Athletic Association,Campbell,CAA,Campbell,CAA,,,1.0,1.0,1.0,fox+bart+kp
+2026,2099,CAN,Canisius Golden Griffins,Canisius,Canisius,Golden Griffins,Metro Atlantic Athletic Conference,147,Canisius Golden Griffins,Metro Atlantic Athletic,Canisius,MAAC,Canisius,MAAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2110,CARK,Central Arkansas Bears,C Arkansas,Central Arkansas,Bears,ASUN Conference,465,Central Arkansas Bears,,Central Arkansas,ASun,Central Arkansas,ASun,,,1.0,1.0,1.0,fox+bart+kp
+2026,2115,CCSU,Central Connecticut Blue Devils,C Connecticut,Central Connecticut,Blue Devils,Northeast Conference,199,Central Connecticut State Blue Devils,Northeast,Central Connecticut,NEC,Central Connecticut,NEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2117,CMU,Central Michigan Chippewas,C Michigan,Central Michigan,Chippewas,Mid-American Conference,165,Central Michigan Chippewas,Mid-American,Central Michigan,MAC,Central Michigan,MAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,232,COFC,Charleston Cougars,Charleston,Charleston,Cougars,Coastal Athletic Association,249,Charleston Cougars,Coastal Athletic Association,Charleston,CAA,Charleston,CAA,,,1.0,1.0,1.0,fox+bart+kp
+2026,2127,CHSO,Charleston Southern Buccaneers,Charleston So,Charleston Southern,Buccaneers,Big South Conference,76,Charleston Southern Buccaneers,Big South,Charleston Southern,BSth,Charleston Southern,BSth,,,1.0,1.0,1.0,fox+bart+kp
+2026,2429,CLT,Charlotte 49ers,Charlotte,Charlotte,49ers,American Conference,123,Charlotte 49Ers,American,Charlotte,Amer,Charlotte,Amer,,,1.0,1.0,1.0,fox+bart+kp
+2026,236,UTC,Chattanooga Mocs,Chattanooga,Chattanooga,Mocs,Southern Conference,250,Chattanooga Mocs,Southern,Chattanooga,SC,Chattanooga,SC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2130,CHST,Chicago State Cougars,Chicago St,Chicago State,Cougars,Northeast Conference,282,Chicago State Cougars,Northeast,Chicago St.,NEC,Chicago St.,NEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2132,CIN,Cincinnati Bearcats,Cincinnati,Cincinnati,Bearcats,Big 12 Conference,119,Cincinnati Bearcats,Big 12,Cincinnati,B12,Cincinnati,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,228,CLEM,Clemson Tigers,Clemson,Clemson,Tigers,Atlantic Coast Conference,22,Clemson Tigers,Atlantic Coast,Clemson,ACC,Clemson,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,325,CLE,Cleveland State Vikings,Cleveland St,Cleveland State,Vikings,Horizon League,126,Cleveland State Vikings,Horizon,Cleveland St.,Horz,Cleveland St.,Horz,,,1.0,1.0,1.0,fox+bart+kp
+2026,324,CCU,Coastal Carolina Chanticleers,Coastal,Coastal Carolina,Chanticleers,Sun Belt Conference,77,Coastal Carolina Chanticleers,Sun Belt,Coastal Carolina,SB,Coastal Carolina,SB,,,1.0,1.0,1.0,fox+bart+kp
+2026,2142,COLG,Colgate Raiders,Colgate,Colgate,Raiders,Patriot League,232,Colgate Raiders,Patriot League,Colgate,Pat,Colgate,PL,,,1.0,1.0,1.0,fox+bart+kp
+2026,38,COLO,Colorado Buffaloes,Colorado,Colorado,Buffaloes,Big 12 Conference,42,Colorado Buffaloes,Big 12,Colorado,B12,Colorado,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,36,CSU,Colorado State Rams,Colorado St,Colorado State,Rams,Mountain West Conference,193,Colorado State Rams,,Colorado St.,MWC,Colorado St.,MWC,,,1.0,1.0,1.0,fox+bart+kp
+2026,171,COLU,Columbia Lions,Columbia,Columbia,Lions,Ivy League,140,Columbia Lions,Ivy League,Columbia,Ivy,Columbia,Ivy,,,1.0,1.0,1.0,fox+bart+kp
+2026,2154,COPP,Coppin State Eagles,Coppin St,Coppin State,Eagles,Mid-Eastern Athletic Conference,171,Coppin State Eagles,Mid-Eastern Athletic,Coppin St.,MEAC,Coppin St.,MEAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,172,COR,Cornell Big Red,Cornell,Cornell,Big Red,Ivy League,141,Cornell Big Red,Ivy League,Cornell,Ivy,Cornell,Ivy,,,1.0,1.0,1.0,fox+bart+kp
+2026,156,CREI,Creighton Bluejays,Creighton,Creighton,Bluejays,Big East Conference,182,Creighton Bluejays,Big East,Creighton,BE,Creighton,BE,,,1.0,1.0,1.0,fox+bart+kp
+2026,159,DART,Dartmouth Big Green,Dartmouth,Dartmouth,Big Green,Ivy League,142,Dartmouth Big Green,Ivy League,Dartmouth,Ivy,Dartmouth,Ivy,,,1.0,1.0,1.0,fox+bart+kp
+2026,2166,DAV,Davidson Wildcats,Davidson,Davidson,Wildcats,Atlantic 10 Conference,256,Davidson Wildcats,Atlantic 10,Davidson,A10,Davidson,A10,,,1.0,1.0,1.0,fox+bart+kp
+2026,2168,DAY,Dayton Flyers,Dayton,Dayton,Flyers,Atlantic 10 Conference,21,Dayton Flyers,Atlantic 10,Dayton,A10,Dayton,A10,,,1.0,1.0,1.0,fox+bart+kp
+2026,305,DEP,DePaul Blue Demons,DePaul,DePaul,Blue Demons,Big East Conference,120,Depaul Blue Demons,Big East,DePaul,BE,DePaul,BE,,,1.0,1.0,1.0,fox+bart+kp
+2026,48,DEL,Delaware Blue Hens,Delaware,Delaware,Blue Hens,Conference USA,2,Delaware Fightin' Blue Hens,Conference USA,Delaware,CUSA,Delaware,CUSA,,,1.0,1.0,1.0,fox+bart+kp
+2026,2169,DSU,Delaware State Hornets,Delaware St,Delaware State,Hornets,Mid-Eastern Athletic Conference,172,Delaware State Hornets,Mid-Eastern Athletic,Delaware St.,MEAC,Delaware St.,MEAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2172,DEN,Denver Pioneers,Denver,Denver,Pioneers,The Summit League,297,Denver Pioneers,,Denver,Sum,Denver,Sum,,,1.0,1.0,1.0,fox+bart+kp
+2026,2174,DETM,Detroit Mercy Titans,Detroit Mercy,Detroit Mercy,Titans,Horizon League,127,Detroit Mercy Titans,Horizon,Detroit Mercy,Horz,Detroit Mercy,Horz,,,1.0,1.0,1.0,fox+bart+kp
+2026,2181,DRKE,Drake Bulldogs,Drake,Drake,Bulldogs,Missouri Valley Conference,183,Drake Bulldogs,Missouri Valley,Drake,MVC,Drake,MVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2182,DREX,Drexel Dragons,Drexel,Drexel,Dragons,Coastal Athletic Association,3,Drexel Dragons,Coastal Athletic Association,Drexel,CAA,Drexel,CAA,,,1.0,1.0,1.0,fox+bart+kp
+2026,150,DUKE,Duke Blue Devils,Duke,Duke,Blue Devils,Atlantic Coast Conference,23,Duke Blue Devils,Atlantic Coast,Duke,ACC,Duke,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2184,DUQ,Duquesne Dukes,Duquesne,Duquesne,Dukes,Atlantic 10 Conference,11,Duquesne Dukes,Atlantic 10,Duquesne,A10,Duquesne,A10,,,1.0,1.0,1.0,fox+bart+kp
+2026,151,ECU,East Carolina Pirates,East Carolina,East Carolina,Pirates,American Conference,105,East Carolina Pirates,American,East Carolina,Amer,East Carolina,Amer,,,1.0,1.0,1.0,fox+bart+kp
+2026,2193,ETSU,East Tennessee State Buccaneers,ETSU,East Tennessee State,Buccaneers,Southern Conference,257,East Tennessee State Buccaneers,Southern,East Tennessee St.,SC,East Tennessee St.,SC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2837,ETAM,East Texas A&M Lions,East Texas A&M,East Texas A&M,Lions,Southland Conference,854,East Texas A&M Lions,Southland,East Texas A&M,Slnd,East Texas A&M,Slnd,,,1.0,1.0,1.0,fox+bart+kp
+2026,2197,EIU,Eastern Illinois Panthers,E Illinois,Eastern Illinois,Panthers,Ohio Valley Conference,212,Eastern Illinois Panthers,Ohio Valley,Eastern Illinois,OVC,Eastern Illinois,OVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2198,EKU,Eastern Kentucky Colonels,E Kentucky,Eastern Kentucky,Colonels,ASUN Conference,213,Eastern Kentucky Colonels,,Eastern Kentucky,ASun,Eastern Kentucky,ASun,,,1.0,1.0,1.0,fox+bart+kp
+2026,2199,EMU,Eastern Michigan Eagles,E Michigan,Eastern Michigan,Eagles,Mid-American Conference,166,Eastern Michigan Eagles,Mid-American,Eastern Michigan,MAC,Eastern Michigan,MAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,331,EWU,Eastern Washington Eagles,E Washington,Eastern Washington,Eagles,Big Sky Conference,68,Eastern Washington Eagles,Big Sky,Eastern Washington,BSky,Eastern Washington,BSky,,,1.0,1.0,1.0,fox+bart+kp
+2026,2210,ELON,Elon Phoenix,Elon,Elon,Phoenix,Coastal Athletic Association,78,Elon Phoenix,Coastal Athletic Association,Elon,CAA,Elon,CAA,,,1.0,1.0,1.0,fox+bart+kp
+2026,339,EVAN,Evansville Purple Aces,Evansville,Evansville,Purple Aces,Missouri Valley Conference,184,Evansville Purple Aces,Missouri Valley,Evansville,MVC,Evansville,MVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2217,FAIR,Fairfield Stags,Fairfield,Fairfield,Stags,Metro Atlantic Athletic Conference,148,Fairfield Stags,Metro Atlantic Athletic,Fairfield,MAAC,Fairfield,MAAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,161,FDU,Fairleigh Dickinson Knights,FDU,Fairleigh Dickinson,Knights,Northeast Conference,200,Fdu Knights,Northeast,Fairleigh Dickinson,NEC,Fairleigh Dickinson,NEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,50,FAMU,Florida A&M Rattlers,Florida A&M,Florida A&M,Rattlers,Southwestern Athletic Conference,173,Florida A&M Rattlers,Southwestern Athletic,Florida A&M,SWAC,Florida A&M,SWAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2226,FAU,Florida Atlantic Owls,FAU,Florida Atlantic,Owls,American Conference,33,Florida Atlantic Owls,American,Florida Atlantic,Amer,Florida Atlantic,Amer,,,1.0,1.0,1.0,fox+bart+kp
+2026,57,FLA,Florida Gators,Florida,Florida,Gators,Southeastern Conference,237,Florida Gators,SEC,Florida,SEC,Florida,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,526,FGCU,Florida Gulf Coast Eagles,FGCU,Florida Gulf Coast,Eagles,ASUN Conference,892,Florida Gulf Coast Eagles,Atlantic Sun,Florida Gulf Coast,ASun,Florida Gulf Coast,ASun,,,1.0,1.0,1.0,fox+bart+kp
+2026,2229,FIU,Florida International Panthers,FIU,Florida International,Panthers,Conference USA,293,Florida International Panthers,Conference USA,FIU,CUSA,FIU,CUSA,,,1.0,1.0,1.0,fox+bart+kp
+2026,52,FSU,Florida State Seminoles,Florida St,Florida State,Seminoles,Atlantic Coast Conference,24,Florida State Seminoles,Atlantic Coast,Florida St.,ACC,Florida St.,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2230,FOR,Fordham Rams,Fordham,Fordham,Rams,Atlantic 10 Conference,12,Fordham Rams,Atlantic 10,Fordham,A10,Fordham,A10,,,1.0,1.0,1.0,fox+bart+kp
+2026,278,FRES,Fresno State Bulldogs,Fresno St,Fresno State,Bulldogs,Mountain West Conference,311,Fresno State Bulldogs,,Fresno St.,MWC,Fresno St.,MWC,,,1.0,1.0,1.0,fox+bart+kp
+2026,231,FUR,Furman Paladins,Furman,Furman,Paladins,Southern Conference,252,Furman Paladins,Southern,Furman,SC,Furman,SC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2241,GWEB,Gardner-Webb Runnin' Bulldogs,Gardner-Webb,Gardner-Webb,Runnin' Bulldogs,Big South Conference,456,Gardner-Webb Runnin' Bulldogs,Big South,Gardner Webb,BSth,Gardner Webb,BSth,,,1.0,1.0,1.0,fox+bart+kp
+2026,2244,GMU,George Mason Patriots,George Mason,George Mason,Patriots,Atlantic 10 Conference,106,George Mason Patriots,Atlantic 10,George Mason,A10,George Mason,A10,,,1.0,1.0,1.0,fox+bart+kp
+2026,45,GW,George Washington Revolutionaries,G Washington,George Washington,Revolutionaries,Atlantic 10 Conference,13,George Washington Revolutionaries,Atlantic 10,George Washington,A10,George Washington,A10,,,1.0,1.0,1.0,fox+bart+kp
+2026,46,GTWN,Georgetown Hoyas,Georgetown,Georgetown,Hoyas,Big East Conference,60,Georgetown Hoyas,Big East,Georgetown,BE,Georgetown,BE,,,1.0,1.0,1.0,fox+bart+kp
+2026,61,UGA,Georgia Bulldogs,Georgia,Georgia,Bulldogs,Southeastern Conference,238,Georgia Bulldogs,SEC,Georgia,SEC,Georgia,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,290,GASO,Georgia Southern Eagles,GA Southern,Georgia Southern,Eagles,Sun Belt Conference,253,Georgia Southern Eagles,Sun Belt,Georgia Southern,SB,Georgia Southern,SB,,,1.0,1.0,1.0,fox+bart+kp
+2026,2247,GAST,Georgia State Panthers,Georgia St,Georgia State,Panthers,Sun Belt Conference,34,Georgia State Panthers,Sun Belt,Georgia St.,SB,Georgia St.,SB,,,1.0,1.0,1.0,fox+bart+kp
+2026,59,GT,Georgia Tech Yellow Jackets,Georgia Tech,Georgia Tech,Yellow Jackets,Atlantic Coast Conference,25,Georgia Tech Yellow Jackets,Atlantic Coast,Georgia Tech,ACC,Georgia Tech,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2250,GONZ,Gonzaga Bulldogs,Gonzaga,Gonzaga,Bulldogs,West Coast Conference,303,Gonzaga Bulldogs,,Gonzaga,WCC,Gonzaga,WCC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2755,GRAM,Grambling Tigers,Grambling,Grambling,Tigers,Southwestern Athletic Conference,276,Grambling State Tigers,Southwestern Athletic,Grambling St.,SWAC,Grambling St.,SWAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2253,GCU,Grand Canyon Lopes,Grand Canyon,Grand Canyon,Lopes,Mountain West Conference,362,Grand Canyon Lopes,Mountain West,Grand Canyon,MWC,Grand Canyon,MWC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2739,GB,Green Bay Phoenix,Green Bay,Green Bay,Phoenix,Horizon League,130,Green Bay Phoenix,Horizon,Green Bay,Horz,Green Bay,Horz,,,1.0,1.0,1.0,fox+bart+kp
+2026,2261,HAMP,Hampton Pirates,Hampton,Hampton,Pirates,Coastal Athletic Association,174,Hampton Pirates,Coastal Athletic Association,Hampton,CAA,Hampton,CAA,,,1.0,1.0,1.0,fox+bart+kp
+2026,108,HARV,Harvard Crimson,Harvard,Harvard,Crimson,Ivy League,143,Harvard Crimson,Ivy League,Harvard,Ivy,Harvard,Ivy,,,1.0,1.0,1.0,fox+bart+kp
+2026,62,HAW,Hawai'i Rainbow Warriors,Hawai'i,Hawai'i,Rainbow Warriors,Big West Conference,312,Hawai'i Rainbow Warriors,,Hawaii,BW,Hawaii,BW,,,1.0,1.0,1.0,fox+bart+kp
+2026,2272,HPU,High Point Panthers,High Point,High Point,Panthers,Big South Conference,79,High Point Panthers,Big South,High Point,BSth,High Point,BSth,,,1.0,1.0,1.0,fox+bart+kp
+2026,2275,HOF,Hofstra Pride,Hofstra,Hofstra,Pride,Coastal Athletic Association,5,Hofstra Pride,Coastal Athletic Association,Hofstra,CAA,Hofstra,CAA,,,1.0,1.0,1.0,fox+bart+kp
+2026,107,HC,Holy Cross Crusaders,Holy Cross,Holy Cross,Crusaders,Patriot League,233,Holy Cross Crusaders,Patriot League,Holy Cross,Pat,Holy Cross,PL,,,1.0,1.0,1.0,fox+bart+kp
+2026,2277,HCU,Houston Christian Huskies,Hou Christian,Houston Christian,Huskies,Southland Conference,662,Houston Christian Huskies,Southland,Houston Christian,Slnd,Houston Christian,Slnd,,,1.0,1.0,1.0,fox+bart+kp
+2026,248,HOU,Houston Cougars,Houston,Houston,Cougars,Big 12 Conference,113,Houston Cougars,Big 12,Houston,B12,Houston,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,47,HOW,Howard Bison,Howard,Howard,Bison,Mid-Eastern Athletic Conference,175,Howard Bison,Mid-Eastern Athletic,Howard,MEAC,Howard,MEAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,85,IUIN,IU Indianapolis Jaguars,IU Indy,IU Indianapolis,Jaguars,Horizon League,283,Iu Indy Jaguars,Horizon,IU Indy,Horz,IU Indy,Horz,,,1.0,1.0,1.0,fox+bart+kp
+2026,304,IDST,Idaho State Bengals,Idaho St,Idaho State,Bengals,Big Sky Conference,69,Idaho State Bengals,Big Sky,Idaho St.,BSky,Idaho St.,BSky,,,1.0,1.0,1.0,fox+bart+kp
+2026,70,IDHO,Idaho Vandals,Idaho,Idaho,Vandals,Big Sky Conference,98,Idaho Vandals,Big Sky,Idaho,BSky,Idaho,BSky,,,1.0,1.0,1.0,fox+bart+kp
+2026,356,ILL,Illinois Fighting Illini,Illinois,Illinois,Fighting Illini,Big Ten Conference,84,Illinois Fighting Illini,Big Ten,Illinois,B10,Illinois,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,2287,ILST,Illinois State Redbirds,Illinois St,Illinois State,Redbirds,Missouri Valley Conference,185,Illinois State Redbirds,Missouri Valley,Illinois St.,MVC,Illinois St.,MVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2916,UIW,Incarnate Word Cardinals,Incarnate Word,Incarnate Word,Cardinals,Southland Conference,962,Incarnate Word Cardinals,Southland,Incarnate Word,Slnd,Incarnate Word,Slnd,,,1.0,1.0,1.0,fox+bart+kp
+2026,84,IU,Indiana Hoosiers,Indiana,Indiana,Hoosiers,Big Ten Conference,85,Indiana Hoosiers,Big Ten,Indiana,B10,Indiana,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,282,INST,Indiana State Sycamores,Indiana St,Indiana State,Sycamores,Missouri Valley Conference,186,Indiana State Sycamores,Missouri Valley,Indiana St.,MVC,Indiana St.,MVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,314,IONA,Iona Gaels,Iona,Iona,Gaels,Metro Atlantic Athletic Conference,149,Iona Gaels,Metro Atlantic Athletic,Iona,MAAC,Iona,MAAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2294,IOWA,Iowa Hawkeyes,Iowa,Iowa,Hawkeyes,Big Ten Conference,86,Iowa Hawkeyes,Big Ten,Iowa,B10,Iowa,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,66,ISU,Iowa State Cyclones,Iowa State,Iowa State,Cyclones,Big 12 Conference,43,Iowa State Cyclones,Big 12,Iowa St.,B12,Iowa St.,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,2296,JKST,Jackson State Tigers,Jackson St,Jackson State,Tigers,Southwestern Athletic Conference,277,Jackson State Tigers,Southwestern Athletic,Jackson St.,SWAC,Jackson St.,SWAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,294,JAX,Jacksonville Dolphins,Jacksonville,Jacksonville,Dolphins,ASUN Conference,35,Jacksonville Dolphins,Atlantic Sun,Jacksonville,ASun,Jacksonville,ASun,,,1.0,1.0,1.0,fox+bart+kp
+2026,55,JXST,Jacksonville State Gamecocks,Jax State,Jacksonville State,Gamecocks,Conference USA,36,Jacksonville State Gamecocks,Conference USA,Jacksonville St.,CUSA,Jacksonville St.,CUSA,,,1.0,1.0,1.0,fox+bart+kp
+2026,256,JMU,James Madison Dukes,James Madison,James Madison,Dukes,Sun Belt Conference,107,James Madison Dukes,Sun Belt,James Madison,SB,James Madison,SB,,,1.0,1.0,1.0,fox+bart+kp
+2026,140,KC,Kansas City Roos,Kansas City,Kansas City,Roos,The Summit League,284,Kansas City Roos,Summit League,UMKC,Sum,Kansas City,Sum,,,1.0,1.0,1.0,fox+bart+kp
+2026,2305,KU,Kansas Jayhawks,Kansas,Kansas,Jayhawks,Big 12 Conference,44,Kansas Jayhawks,Big 12,Kansas,B12,Kansas,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,2306,KSU,Kansas State Wildcats,Kansas St,Kansas State,Wildcats,Big 12 Conference,45,Kansas State Wildcats,Big 12,Kansas St.,B12,Kansas St.,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,338,KENN,Kennesaw State Owls,Kennesaw St,Kennesaw State,Owls,Conference USA,858,Kennesaw State Owls,Conference USA,Kennesaw St.,CUSA,Kennesaw St.,CUSA,,,1.0,1.0,1.0,fox+bart+kp
+2026,2309,KENT,Kent State Golden Flashes,Kent State,Kent State,Golden Flashes,Mid-American Conference,160,Kent State Golden Flashes,Mid-American,Kent St.,MAC,Kent St.,MAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,96,UK,Kentucky Wildcats,Kentucky,Kentucky,Wildcats,Southeastern Conference,239,Kentucky Wildcats,SEC,Kentucky,SEC,Kentucky,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2443,NOLA,LSU New Orleans Privateers,LSU N Orleans,LSU New Orleans,Privateers,Southland Conference,300,Lsu New Orleans Privateers,Southland,,,,,,,1.0,,,fox_only
+2026,99,LSU,LSU Tigers,LSU,LSU,Tigers,Southeastern Conference,246,Lsu Tigers,SEC,LSU,SEC,LSU,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2325,LAS,La Salle Explorers,La Salle,La Salle,Explorers,Atlantic 10 Conference,14,La Salle Explorers,Atlantic 10,La Salle,A10,La Salle,A10,,,1.0,1.0,1.0,fox+bart+kp
+2026,322,LAF,Lafayette Leopards,Lafayette,Lafayette,Leopards,Patriot League,234,Lafayette Leopards,Patriot League,Lafayette,Pat,Lafayette,PL,,,1.0,1.0,1.0,fox+bart+kp
+2026,2320,LAM,Lamar Cardinals,Lamar,Lamar,Cardinals,Southland Conference,261,Lamar Cardinals,Southland,Lamar,Slnd,Lamar,Slnd,,,1.0,1.0,1.0,fox+bart+kp
+2026,2330,LEM,Le Moyne Dolphins,Le Moyne,Le Moyne,Dolphins,Northeast Conference,966,Le Moyne Dolphins,Northeast,Le Moyne,NEC,Le Moyne,NEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2329,LEH,Lehigh Mountain Hawks,Lehigh,Lehigh,Mountain Hawks,Patriot League,235,Lehigh Mountain Hawks,Patriot League,Lehigh,Pat,Lehigh,PL,,,1.0,1.0,1.0,fox+bart+kp
+2026,2335,LIB,Liberty Flames,Liberty,Liberty,Flames,Conference USA,80,Liberty Flames,Conference USA,Liberty,CUSA,Liberty,CUSA,,,1.0,1.0,1.0,fox+bart+kp
+2026,288,LIP,Lipscomb Bisons,Lipscomb,Lipscomb,Bisons,ASUN Conference,731,Lipscomb Bisons,Atlantic Sun,Lipscomb,ASun,Lipscomb,ASun,,,1.0,1.0,1.0,fox+bart+kp
+2026,2031,LR,Little Rock Trojans,Little Rock,Little Rock,Trojans,Ohio Valley Conference,292,Little Rock Trojans,,Little Rock,OVC,Little Rock,OVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,299,LBSU,Long Beach State Beach,Long Beach St,Long Beach State,Beach,Big West Conference,99,Long Beach State Beach,Big West,Long Beach St.,BW,Long Beach St.,BW,,,1.0,1.0,1.0,fox+bart+kp
+2026,112358,LIU,Long Island University Sharks,Long Island,Long Island University,Sharks,Northeast Conference,1468,Liu Sharks,Northeast,LIU,NEC,LIU,NEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2344,LONG,Longwood Lancers,Longwood,Longwood,Lancers,Big South Conference,376,Longwood Lancers,Big South,Longwood,BSth,Longwood,BSth,,,1.0,1.0,1.0,fox+bart+kp
+2026,309,UL,Louisiana Ragin' Cajuns,Louisiana,Louisiana,Ragin' Cajuns,Sun Belt Conference,298,Louisiana Ragin' Cajuns,Sun Belt,Louisiana,SB,Louisiana,SB,,,1.0,1.0,1.0,fox+bart+kp
+2026,2348,LT,Louisiana Tech Bulldogs,Louisiana Tech,Louisiana Tech,Bulldogs,Conference USA,294,Louisiana Tech Bulldogs,,Louisiana Tech,CUSA,Louisiana Tech,CUSA,,,1.0,1.0,1.0,fox+bart+kp
+2026,97,LOU,Louisville Cardinals,Louisville,Louisville,Cardinals,Atlantic Coast Conference,121,Louisville Cardinals,Atlantic Coast,Louisville,ACC,Louisville,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2350,LUC,Loyola Chicago Ramblers,Loyola Chicago,Loyola Chicago,Ramblers,Atlantic 10 Conference,129,Loyola Chicago Ramblers,Atlantic 10,Loyola Chicago,A10,Loyola Chicago,A10,,,1.0,1.0,1.0,fox+bart+kp
+2026,2352,L-MD,Loyola Maryland Greyhounds,Loyola MD,Loyola Maryland,Greyhounds,Patriot League,150,Loyola Maryland Greyhounds,Patriot League,Loyola MD,Pat,Loyola MD,PL,,,1.0,1.0,1.0,fox+bart+kp
+2026,2351,LMU,Loyola Marymount Lions,LMU,Loyola Marymount,Lions,West Coast Conference,304,Loyola Marymount Lions,West Coast,Loyola Marymount,WCC,Loyola Marymount,WCC,,,1.0,1.0,1.0,fox+bart+kp
+2026,311,ME,Maine Black Bears,Maine,Maine,Black Bears,America East Conference,6,Maine Black Bears,America East,Maine,AE,Maine,AE,,,1.0,1.0,1.0,fox+bart+kp
+2026,2363,MAN,Manhattan Jaspers,Manhattan,Manhattan,Jaspers,Metro Atlantic Athletic Conference,151,Manhattan Jaspers,Metro Atlantic Athletic,Manhattan,MAAC,Manhattan,MAAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2368,MRST,Marist Red Foxes,Marist,Marist,Red Foxes,Metro Atlantic Athletic Conference,152,Marist Red Foxes,Metro Atlantic Athletic,Marist,MAAC,Marist,MAAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,269,MARQ,Marquette Golden Eagles,Marquette,Marquette,Golden Eagles,Big East Conference,122,Marquette Golden Eagles,Big East,Marquette,BE,Marquette,BE,,,1.0,1.0,1.0,fox+bart+kp
+2026,276,MRSH,Marshall Thundering Herd,Marshall,Marshall,Thundering Herd,Sun Belt Conference,161,Marshall Thundering Herd,Sun Belt,Marshall,SB,Marshall,SB,,,1.0,1.0,1.0,fox+bart+kp
+2026,2379,UMES,Maryland Eastern Shore Hawks,MD Eastern,Maryland Eastern Shore,Hawks,Mid-Eastern Athletic Conference,176,Maryland-Eastern Shore Hawks,Mid-Eastern Athletic,Maryland Eastern Shore,MEAC,Maryland Eastern Shore,MEAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,120,MD,Maryland Terrapins,Maryland,Maryland,Terrapins,Big Ten Conference,26,Maryland Terrapins,Big Ten,Maryland,B10,Maryland,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,113,MASS,Massachusetts Minutemen,UMass,Massachusetts,Minutemen,Mid-American Conference,15,Umass Minutemen,Mid-American,Massachusetts,MAC,Massachusetts,MAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2377,MCN,McNeese Cowboys,McNeese,McNeese,Cowboys,Southland Conference,263,Mcneese Cowboys,Southland,McNeese St.,Slnd,McNeese,Slnd,,,1.0,1.0,1.0,fox+bart+kp
+2026,235,MEM,Memphis Tigers,Memphis,Memphis,Tigers,American Conference,114,Memphis Tigers,American,Memphis,Amer,Memphis,Amer,,,1.0,1.0,1.0,fox+bart+kp
+2026,2382,MER,Mercer Bears,Mercer,Mercer,Bears,Southern Conference,37,Mercer Bears,Southern,Mercer,SC,Mercer,SC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2385,MERC,Mercyhurst Lakers,Mercyhurst,Mercyhurst,Lakers,Northeast Conference,459,Mercyhurst Lakers,Northeast,Mercyhurst,NEC,Mercyhurst,NEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2771,MRMK,Merrimack Warriors,Merrimack,Merrimack,Warriors,Metro Atlantic Athletic Conference,972,Merrimack Warriors,Metro Atlantic Athletic,Merrimack,MAAC,Merrimack,MAAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,193,M-OH,Miami (OH) RedHawks,Miami OH,Miami (OH),RedHawks,Mid-American Conference,162,Miami (Oh) Redhawks,Mid-American,Miami OH,MAC,Miami OH,MAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2390,MIA,Miami Hurricanes,Miami,Miami,Hurricanes,Atlantic Coast Conference,55,Miami (Fl) Hurricanes,Atlantic Coast,Miami FL,ACC,Miami FL,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,127,MSU,Michigan State Spartans,Michigan St,Michigan State,Spartans,Big Ten Conference,88,Michigan State Spartans,Big Ten,Michigan St.,B10,Michigan St.,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,130,MICH,Michigan Wolverines,Michigan,Michigan,Wolverines,Big Ten Conference,87,Michigan Wolverines,Big Ten,Michigan,B10,Michigan,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,2393,MTSU,Middle Tennessee Blue Raiders,MTSU,Middle Tennessee,Blue Raiders,Conference USA,295,Middle Tennessee Blue Raiders,Conference USA,Middle Tennessee,CUSA,Middle Tennessee,CUSA,,,1.0,1.0,1.0,fox+bart+kp
+2026,270,MILW,Milwaukee Panthers,Milwaukee,Milwaukee,Panthers,Horizon League,131,Milwaukee Panthers,Horizon,Milwaukee,Horz,Milwaukee,Horz,,,1.0,1.0,1.0,fox+bart+kp
+2026,135,MINN,Minnesota Golden Gophers,Minnesota,Minnesota,Golden Gophers,Big Ten Conference,89,Minnesota Golden Gophers,Big Ten,Minnesota,B10,Minnesota,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,344,MSST,Mississippi State Bulldogs,Mississippi St,Mississippi State,Bulldogs,Southeastern Conference,248,Mississippi State Bulldogs,SEC,Mississippi St.,SEC,Mississippi St.,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2400,MVSU,Mississippi Valley State Delta Devils,Miss Valley St,Mississippi Valley State,Delta Devils,Southwestern Athletic Conference,278,Mississippi Valley State Delta Devils,Southwestern Athletic,Mississippi Valley St.,SWAC,Mississippi Valley St.,SWAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2623,MOST,Missouri State Bears,Missouri St,Missouri State,Bears,Conference USA,189,Missouri State Bears,Conference USA,Missouri St.,CUSA,Missouri St.,CUSA,,,1.0,1.0,1.0,fox+bart+kp
+2026,142,MIZ,Missouri Tigers,Missouri,Missouri,Tigers,Southeastern Conference,46,Missouri Tigers,SEC,Missouri,SEC,Missouri,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2405,MONM,Monmouth Hawks,Monmouth,Monmouth,Hawks,Coastal Athletic Association,203,Monmouth Hawks,Coastal Athletic Association,Monmouth,CAA,Monmouth,CAA,,,1.0,1.0,1.0,fox+bart+kp
+2026,149,MONT,Montana Grizzlies,Montana,Montana,Grizzlies,Big Sky Conference,70,Montana Grizzlies,Big Sky,Montana,BSky,Montana,BSky,,,1.0,1.0,1.0,fox+bart+kp
+2026,147,MTST,Montana State Bobcats,Montana St,Montana State,Bobcats,Big Sky Conference,71,Montana State Bobcats,Big Sky,Montana St.,BSky,Montana St.,BSky,,,1.0,1.0,1.0,fox+bart+kp
+2026,2413,MORE,Morehead State Eagles,Morehead St,Morehead State,Eagles,Ohio Valley Conference,214,Morehead State Eagles,Ohio Valley,Morehead St.,OVC,Morehead St.,OVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2415,MORG,Morgan State Bears,Morgan St,Morgan State,Bears,Mid-Eastern Athletic Conference,177,Morgan State Bears,Mid-Eastern Athletic,Morgan St.,MEAC,Morgan St.,MEAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,116,MSM,Mount St. Mary's Mountaineers,Mount St Marys,Mount St. Mary's,Mountaineers,Metro Atlantic Athletic Conference,204,Mount St. Mary's Mountaineers,Metro Atlantic Athletic,Mount St. Mary's,MAAC,Mount St. Mary's,MAAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,93,MUR,Murray State Racers,Murray St,Murray State,Racers,Missouri Valley Conference,215,Murray State Racers,Missouri Valley,Murray St.,MVC,Murray St.,MVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,152,NCSU,NC State Wolfpack,NC State,NC State,Wolfpack,Atlantic Coast Conference,28,Nc State Wolfpack,Atlantic Coast,N.C. State,ACC,N.C. State,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2885,NJIT,NJIT Highlanders,NJIT,NJIT,Highlanders,America East Conference,388,Njit Highlanders,America East,NJIT,AE,NJIT,AE,,,1.0,1.0,1.0,fox+bart+kp
+2026,2426,NAVY,Navy Midshipmen,Navy,Navy,Midshipmen,Patriot League,236,Navy Midshipmen,Patriot League,Navy,Pat,Navy,PL,,,1.0,1.0,1.0,fox+bart+kp
+2026,158,NEB,Nebraska Cornhuskers,Nebraska,Nebraska,Cornhuskers,Big Ten Conference,47,Nebraska Cornhuskers,Big Ten,Nebraska,B10,Nebraska,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,2440,NEV,Nevada Wolf Pack,Nevada,Nevada,Wolf Pack,Mountain West Conference,313,Nevada Wolf Pack,Mountain West,Nevada,MWC,Nevada,MWC,,,1.0,1.0,1.0,fox+bart+kp
+2026,160,UNH,New Hampshire Wildcats,New Hampshire,New Hampshire,Wildcats,America East Conference,7,New Hampshire Wildcats,America East,New Hampshire,AE,New Hampshire,AE,,,1.0,1.0,1.0,fox+bart+kp
+2026,2441,NHVN,New Haven Chargers,New Haven,New Haven,Chargers,Northeast Conference,390,New Haven Chargers,Northeast,New Haven,NEC,New Haven,NEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,167,UNM,New Mexico Lobos,New Mexico,New Mexico,Lobos,Mountain West Conference,194,New Mexico Lobos,Mountain West,New Mexico,MWC,New Mexico,MWC,,,1.0,1.0,1.0,fox+bart+kp
+2026,166,NMSU,New Mexico State Aggies,New Mexico St,New Mexico State,Aggies,Conference USA,299,New Mexico State Aggies,Conference USA,New Mexico St.,CUSA,New Mexico St.,CUSA,,,1.0,1.0,1.0,fox+bart+kp
+2026,315,NIA,Niagara Purple Eagles,Niagara,Niagara,Purple Eagles,Metro Atlantic Athletic Conference,153,Niagara Purple Eagles,Metro Atlantic Athletic,Niagara,MAAC,Niagara,MAAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2447,NICH,Nicholls Colonels,Nicholls,Nicholls,Colonels,Southland Conference,264,Nicholls State Colonels,Southland,Nicholls St.,Slnd,Nicholls,Slnd,,,1.0,1.0,1.0,fox+bart+kp
+2026,2450,NORF,Norfolk State Spartans,Norfolk St,Norfolk State,Spartans,Mid-Eastern Athletic Conference,178,Norfolk State Spartans,Mid-Eastern Athletic,Norfolk St.,MEAC,Norfolk St.,MEAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2453,UNA,North Alabama Lions,North Alabama,North Alabama,Lions,ASUN Conference,828,North Alabama Lions,,North Alabama,ASun,North Alabama,ASun,,,1.0,1.0,1.0,fox+bart+kp
+2026,2448,NCAT,North Carolina A&T Aggies,NC A&T,North Carolina A&T,Aggies,Coastal Athletic Association,179,North Carolina A&T Aggies,Coastal Athletic Association,North Carolina A&T,CAA,North Carolina A&T,CAA,,,1.0,1.0,1.0,fox+bart+kp
+2026,2428,NCCU,North Carolina Central Eagles,NC Central,North Carolina Central,Eagles,Mid-Eastern Athletic Conference,393,North Carolina Central Eagles,Mid-Eastern Athletic,North Carolina Central,MEAC,North Carolina Central,MEAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,153,UNC,North Carolina Tar Heels,North Carolina,North Carolina,Tar Heels,Atlantic Coast Conference,27,North Carolina Tar Heels,Atlantic Coast,North Carolina,ACC,North Carolina,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,155,UND,North Dakota Fighting Hawks,North Dakota,North Dakota,Fighting Hawks,The Summit League,489,North Dakota Fighting Hawks,Summit League,North Dakota,Sum,North Dakota,Sum,,,1.0,1.0,1.0,fox+bart+kp
+2026,2449,NDSU,North Dakota State Bison,N Dakota St,North Dakota State,Bison,The Summit League,490,North Dakota State Bison,Summit League,North Dakota St.,Sum,North Dakota St.,Sum,,,1.0,1.0,1.0,fox+bart+kp
+2026,2454,UNF,North Florida Ospreys,North Florida,North Florida,Ospreys,ASUN Conference,394,North Florida Ospreys,Atlantic Sun,North Florida,ASun,North Florida,ASun,,,1.0,1.0,1.0,fox+bart+kp
+2026,249,UNT,North Texas Mean Green,North Texas,North Texas,Mean Green,American Conference,301,North Texas Mean Green,American,North Texas,Amer,North Texas,Amer,,,1.0,1.0,1.0,fox+bart+kp
+2026,111,NE,Northeastern Huskies,Northeastern,Northeastern,Huskies,Coastal Athletic Association,8,Northeastern Huskies,Coastal Athletic Association,Northeastern,CAA,Northeastern,CAA,,,1.0,1.0,1.0,fox+bart+kp
+2026,2464,NAU,Northern Arizona Lumberjacks,N Arizona,Northern Arizona,Lumberjacks,Big Sky Conference,72,Northern Arizona Lumberjacks,Big Sky,Northern Arizona,BSky,Northern Arizona,BSky,,,1.0,1.0,1.0,fox+bart+kp
+2026,2458,UNCO,Northern Colorado Bears,N Colorado,Northern Colorado,Bears,Big Sky Conference,395,Northern Colorado Bears,Big Sky,Northern Colorado,BSky,Northern Colorado,BSky,,,1.0,1.0,1.0,fox+bart+kp
+2026,2459,NIU,Northern Illinois Huskies,N Illinois,Northern Illinois,Huskies,Mid-American Conference,167,Northern Illinois Huskies,,Northern Illinois,MAC,Northern Illinois,MAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2460,UNI,Northern Iowa Panthers,Northern Iowa,Northern Iowa,Panthers,Missouri Valley Conference,187,Northern Iowa Panthers,Missouri Valley,Northern Iowa,MVC,Northern Iowa,MVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,94,NKU,Northern Kentucky Norse,N Kentucky,Northern Kentucky,Norse,Horizon League,981,Northern Kentucky Norse,Horizon,Northern Kentucky,Horz,Northern Kentucky,Horz,,,1.0,1.0,1.0,fox+bart+kp
+2026,2466,NWST,Northwestern State Demons,N'Western St,Northwestern State,Demons,Southland Conference,265,Northwestern State Demons,Southland,Northwestern St.,Slnd,Northwestern St.,Slnd,,,1.0,1.0,1.0,fox+bart+kp
+2026,77,NU,Northwestern Wildcats,Northwestern,Northwestern,Wildcats,Big Ten Conference,90,Northwestern Wildcats,Big Ten,Northwestern,B10,Northwestern,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,87,ND,Notre Dame Fighting Irish,Notre Dame,Notre Dame,Fighting Irish,Atlantic Coast Conference,61,Notre Dame Fighting Irish,Atlantic Coast,Notre Dame,ACC,Notre Dame,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2473,OAK,Oakland Golden Grizzlies,Oakland,Oakland,Golden Grizzlies,Horizon League,285,Oakland Golden Grizzlies,Horizon,Oakland,Horz,Oakland,Horz,,,1.0,1.0,1.0,fox+bart+kp
+2026,195,OHIO,Ohio Bobcats,Ohio,Ohio,Bobcats,Mid-American Conference,163,Ohio Bobcats,Mid-American,Ohio,MAC,Ohio,MAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,194,OSU,Ohio State Buckeyes,Ohio State,Ohio State,Buckeyes,Big Ten Conference,91,Ohio State Buckeyes,Big Ten,Ohio St.,B10,Ohio St.,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,201,OU,Oklahoma Sooners,Oklahoma,Oklahoma,Sooners,Southeastern Conference,48,Oklahoma Sooners,SEC,Oklahoma,SEC,Oklahoma,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,197,OKST,Oklahoma State Cowboys,Oklahoma St,Oklahoma State,Cowboys,Big 12 Conference,49,Oklahoma State Cowboys,Big 12,Oklahoma St.,B12,Oklahoma St.,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,295,ODU,Old Dominion Monarchs,Old Dominion,Old Dominion,Monarchs,Sun Belt Conference,109,Old Dominion Monarchs,Sun Belt,Old Dominion,SB,Old Dominion,SB,,,1.0,1.0,1.0,fox+bart+kp
+2026,145,MISS,Ole Miss Rebels,Ole Miss,Ole Miss,Rebels,Southeastern Conference,247,Ole Miss Rebels,SEC,Mississippi,SEC,Mississippi,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2437,OMA,Omaha Mavericks,Omaha,Omaha,Mavericks,The Summit League,826,Omaha Mavericks,Summit League,Nebraska Omaha,Sum,Nebraska Omaha,Sum,,,1.0,1.0,1.0,fox+bart+kp
+2026,198,ORU,Oral Roberts Golden Eagles,Oral Roberts,Oral Roberts,Golden Eagles,The Summit League,286,Oral Roberts Golden Eagles,Summit League,Oral Roberts,Sum,Oral Roberts,Sum,,,1.0,1.0,1.0,fox+bart+kp
+2026,2483,ORE,Oregon Ducks,Oregon,Oregon,Ducks,Big Ten Conference,223,Oregon Ducks,Big Ten,Oregon,B10,Oregon,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,204,ORST,Oregon State Beavers,Oregon St,Oregon State,Beavers,West Coast Conference,224,Oregon State Beavers,,Oregon St.,WCC,Oregon St.,WCC,,,1.0,1.0,1.0,fox+bart+kp
+2026,279,PAC,Pacific Tigers,Pacific,Pacific,Tigers,West Coast Conference,100,Pacific Tigers,West Coast,Pacific,WCC,Pacific,WCC,,,1.0,1.0,1.0,fox+bart+kp
+2026,213,PSU,Penn State Nittany Lions,Penn State,Penn State,Nittany Lions,Big Ten Conference,92,Penn State Nittany Lions,Big Ten,Penn St.,B10,Penn St.,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,219,PENN,Pennsylvania Quakers,Penn,Pennsylvania,Quakers,Ivy League,144,Penn Quakers,Ivy League,Penn,Ivy,Penn,Ivy,,,1.0,1.0,1.0,fox+bart+kp
+2026,2492,PEPP,Pepperdine Waves,Pepperdine,Pepperdine,Waves,West Coast Conference,305,Pepperdine Waves,West Coast,Pepperdine,WCC,Pepperdine,WCC,,,1.0,1.0,1.0,fox+bart+kp
+2026,221,PITT,Pittsburgh Panthers,Pitt,Pittsburgh,Panthers,Atlantic Coast Conference,62,Pittsburgh Panthers,Atlantic Coast,Pittsburgh,ACC,Pittsburgh,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2501,PORT,Portland Pilots,Portland,Portland,Pilots,West Coast Conference,306,Portland Pilots,West Coast,Portland,WCC,Portland,WCC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2502,PRST,Portland State Vikings,Portland St,Portland State,Vikings,Big Sky Conference,73,Portland State Vikings,Big Sky,Portland St.,BSky,Portland St.,BSky,,,1.0,1.0,1.0,fox+bart+kp
+2026,2504,PV,Prairie View A&M Panthers,Prairie View,Prairie View A&M,Panthers,Southwestern Athletic Conference,279,Prairie View A&M Panthers,Southwestern Athletic,Prairie View A&M,SWAC,Prairie View A&M,SWAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2506,PRES,Presbyterian Blue Hose,Presbyterian,Presbyterian,Blue Hose,Big South Conference,402,Presbyterian Blue Hose,Big South,Presbyterian,BSth,Presbyterian,BSth,,,1.0,1.0,1.0,fox+bart+kp
+2026,163,PRIN,Princeton Tigers,Princeton,Princeton,Tigers,Ivy League,145,Princeton Tigers,Ivy League,Princeton,Ivy,Princeton,Ivy,,,1.0,1.0,1.0,fox+bart+kp
+2026,2507,PROV,Providence Friars,Providence,Providence,Friars,Big East Conference,56,Providence Friars,Big East,Providence,BE,Providence,BE,,,1.0,1.0,1.0,fox+bart+kp
+2026,2509,PUR,Purdue Boilermakers,Purdue,Purdue,Boilermakers,Big Ten Conference,93,Purdue Boilermakers,Big Ten,Purdue,B10,Purdue,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,2870,PFW,Purdue Fort Wayne Mastodons,Purdue FW,Purdue Fort Wayne,Mastodons,Horizon League,463,Purdue Fort Wayne Mastodons,Horizon,Purdue Fort Wayne,Horz,Purdue Fort Wayne,Horz,,,1.0,1.0,1.0,fox+bart+kp
+2026,2514,QUIN,Quinnipiac Bobcats,Quinnipiac,Quinnipiac,Bobcats,Metro Atlantic Athletic Conference,205,Quinnipiac Bobcats,Metro Atlantic Athletic,Quinnipiac,MAAC,Quinnipiac,MAAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2515,RAD,Radford Highlanders,Radford,Radford,Highlanders,Big South Conference,82,Radford Highlanders,Big South,Radford,BSth,Radford,BSth,,,1.0,1.0,1.0,fox+bart+kp
+2026,227,URI,Rhode Island Rams,Rhode Island,Rhode Island,Rams,Atlantic 10 Conference,16,Rhode Island Rams,Atlantic 10,Rhode Island,A10,Rhode Island,A10,,,1.0,1.0,1.0,fox+bart+kp
+2026,242,RICE,Rice Owls,Rice,Rice,Owls,American Conference,314,Rice Owls,American,Rice,Amer,Rice,Amer,,,1.0,1.0,1.0,fox+bart+kp
+2026,257,RICH,Richmond Spiders,Richmond,Richmond,Spiders,Atlantic 10 Conference,110,Richmond Spiders,Atlantic 10,Richmond,A10,Richmond,A10,,,1.0,1.0,1.0,fox+bart+kp
+2026,2520,RID,Rider Broncs,Rider,Rider,Broncs,Metro Atlantic Athletic Conference,154,Rider Broncs,Metro Atlantic Athletic,Rider,MAAC,Rider,MAAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2523,RMU,Robert Morris Colonials,Robert Morris,Robert Morris,Colonials,Horizon League,206,Robert Morris Colonials,Horizon,Robert Morris,Horz,Robert Morris,Horz,,,1.0,1.0,1.0,fox+bart+kp
+2026,164,RUTG,Rutgers Scarlet Knights,Rutgers,Rutgers,Scarlet Knights,Big Ten Conference,63,Rutgers Scarlet Knights,Big Ten,Rutgers,B10,Rutgers,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,2545,SELA,SE Louisiana Lions,SE Louisiana,SE Louisiana,Lions,Southland Conference,267,Southeastern Louisiana Lions,Southland,Southeastern Louisiana,Slnd,Southeastern Louisiana,Slnd,,,1.0,1.0,1.0,fox+bart+kp
+2026,2565,SIUE,SIU Edwardsville Cougars,SIUE,SIU Edwardsville,Cougars,Ohio Valley Conference,411,Siu Edwardsville Cougars,Ohio Valley,SIU Edwardsville,OVC,SIUE,OVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2567,SMU,SMU Mustangs,SMU,SMU,Mustangs,Atlantic Coast Conference,316,Smu Mustangs,Atlantic Coast,SMU,ACC,SMU,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,16,SAC,Sacramento State Hornets,Sacramento St,Sacramento State,Hornets,Big Sky Conference,74,Sacramento State Hornets,,Sacramento St.,BSky,Sacramento St.,BSky,,,1.0,1.0,1.0,fox+bart+kp
+2026,2529,SHU,Sacred Heart Pioneers,Sacred Heart,Sacred Heart,Pioneers,Metro Atlantic Athletic Conference,207,Sacred Heart Pioneers,Metro Atlantic Athletic,Sacred Heart,MAAC,Sacred Heart,MAAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2603,JOES,Saint Joseph's Hawks,Saint Joseph's,Saint Joseph's,Hawks,Atlantic 10 Conference,18,Saint Joseph's Hawks,Atlantic 10,Saint Joseph's,A10,Saint Joseph's,A10,,,1.0,1.0,1.0,fox+bart+kp
+2026,139,SLU,Saint Louis Billikens,Saint Louis,Saint Louis,Billikens,Atlantic 10 Conference,124,Saint Louis Billikens,Atlantic 10,Saint Louis,A10,Saint Louis,A10,,,1.0,1.0,1.0,fox+bart+kp
+2026,2608,SMC,Saint Mary's Gaels,Saint Mary's,Saint Mary's,Gaels,West Coast Conference,307,Saint Mary's Gaels,West Coast,Saint Mary's,WCC,Saint Mary's,WCC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2612,SPU,Saint Peter's Peacocks,Saint Peter's,Saint Peter's,Peacocks,Metro Atlantic Athletic Conference,156,Saint Peter's Peacocks,Metro Atlantic Athletic,Saint Peter's,MAAC,Saint Peter's,MAAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2534,SHSU,Sam Houston Bearkats,Sam Houston,Sam Houston,Bearkats,Conference USA,266,Sam Houston Bearkats,Conference USA,Sam Houston St.,CUSA,Sam Houston St.,CUSA,,,1.0,1.0,1.0,fox+bart+kp
+2026,2535,SAM,Samford Bulldogs,Samford,Samford,Bulldogs,Southern Conference,38,Samford Bulldogs,Southern,Samford,SC,Samford,SC,,,1.0,1.0,1.0,fox+bart+kp
+2026,21,SDSU,San Diego State Aztecs,San Diego St,San Diego State,Aztecs,Mountain West Conference,195,San Diego State Aztecs,,San Diego St.,MWC,San Diego St.,MWC,,,1.0,1.0,1.0,fox+bart+kp
+2026,301,USD,San Diego Toreros,San Diego,San Diego,Toreros,West Coast Conference,308,San Diego Toreros,West Coast,San Diego,WCC,San Diego,WCC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2539,SF,San Francisco Dons,San Francisco,San Francisco,Dons,West Coast Conference,309,San Francisco Dons,West Coast,San Francisco,WCC,San Francisco,WCC,,,1.0,1.0,1.0,fox+bart+kp
+2026,23,SJSU,San José State Spartans,San José St,San José State,Spartans,Mountain West Conference,315,San Jose State Spartans,Mountain West,San Jose St.,MWC,San Jose St.,MWC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2541,SCU,Santa Clara Broncos,Santa Clara,Santa Clara,Broncos,West Coast Conference,310,Santa Clara Broncos,West Coast,Santa Clara,WCC,Santa Clara,WCC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2547,SEA,Seattle U Redhawks,Seattle U,Seattle U,Redhawks,West Coast Conference,693,Seattle Redhawks,West Coast,Seattle,WCC,Seattle,WCC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2550,HALL,Seton Hall Pirates,Seton Hall,Seton Hall,Pirates,Big East Conference,64,Seton Hall Pirates,Big East,Seton Hall,BE,Seton Hall,BE,,,1.0,1.0,1.0,fox+bart+kp
+2026,2561,SIE,Siena Saints,Siena,Siena,Saints,Metro Atlantic Athletic Conference,155,Siena Saints,Metro Atlantic Athletic,Siena,MAAC,Siena,MAAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,6,USA,South Alabama Jaguars,South Alabama,South Alabama,Jaguars,Sun Belt Conference,302,South Alabama Jaguars,Sun Belt,South Alabama,SB,South Alabama,SB,,,1.0,1.0,1.0,fox+bart+kp
+2026,2579,SC,South Carolina Gamecocks,South Carolina,South Carolina,Gamecocks,Southeastern Conference,240,South Carolina Gamecocks,SEC,South Carolina,SEC,South Carolina,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2569,SCST,South Carolina State Bulldogs,SC State,South Carolina State,Bulldogs,Mid-Eastern Athletic Conference,180,South Carolina State Bulldogs,Mid-Eastern Athletic,South Carolina St.,MEAC,South Carolina St.,MEAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2908,UPST,South Carolina Upstate Spartans,SC Upstate,South Carolina Upstate,Spartans,Big South Conference,415,Usc Upstate Spartans,Big South,USC Upstate,BSth,USC Upstate,BSth,,,1.0,1.0,1.0,fox+bart+kp
+2026,233,SDAK,South Dakota Coyotes,South Dakota,South Dakota,Coyotes,The Summit League,416,South Dakota Coyotes,Summit League,South Dakota,Sum,South Dakota,Sum,,,1.0,1.0,1.0,fox+bart+kp
+2026,2571,SDST,South Dakota State Jackrabbits,S Dakota St,South Dakota State,Jackrabbits,The Summit League,417,South Dakota State Jackrabbits,Summit League,South Dakota St.,Sum,South Dakota St.,Sum,,,1.0,1.0,1.0,fox+bart+kp
+2026,58,USF,South Florida Bulls,South Florida,South Florida,Bulls,American Conference,115,South Florida Bulls,American,South Florida,Amer,South Florida,Amer,,,1.0,1.0,1.0,fox+bart+kp
+2026,2546,SEMO,Southeast Missouri State Redhawks,SE Missouri,Southeast Missouri State,Redhawks,Ohio Valley Conference,216,Southeast Missouri State Redhawks,Ohio Valley,Southeast Missouri St.,OVC,Southeast Missouri,OVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,79,SIU,Southern Illinois Salukis,S Illinois,Southern Illinois,Salukis,Missouri Valley Conference,188,Southern Illinois Salukis,Missouri Valley,Southern Illinois,MVC,Southern Illinois,MVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2582,SOU,Southern Jaguars,Southern,Southern,Jaguars,Southwestern Athletic Conference,280,Southern University Jaguars,Southwestern Athletic,Southern,SWAC,Southern,SWAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2572,USM,Southern Miss Golden Eagles,Southern Miss,Southern Miss,Golden Eagles,Sun Belt Conference,116,Southern Miss Golden Eagles,Sun Belt,Southern Miss,SB,Southern Miss,SB,,,1.0,1.0,1.0,fox+bart+kp
+2026,253,SUU,Southern Utah Thunderbirds,Southern Utah,Southern Utah,Thunderbirds,Western Athletic Conference,287,Southern Utah Thunderbirds,,Southern Utah,WAC,Southern Utah,WAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,179,SBU,St. Bonaventure Bonnies,St Bonaventure,St. Bonaventure,Bonnies,Atlantic 10 Conference,17,St. Bonaventure Bonnies,Atlantic 10,St. Bonaventure,A10,St. Bonaventure,A10,,,1.0,1.0,1.0,fox+bart+kp
+2026,2599,SJU,St. John's Red Storm,St John's,St. John's,Red Storm,Big East Conference,57,St. John's Red Storm,Big East,St. John's,BE,St. John's,BE,,,1.0,1.0,1.0,fox+bart+kp
+2026,2900,STMN,St. Thomas Tommies,St Thomas,St. Thomas,Tommies,The Summit League,,,,,,,,,,,,,espn_only
+2026,24,STAN,Stanford Cardinal,Stanford,Stanford,Cardinal,Atlantic Coast Conference,226,Stanford Cardinal,Atlantic Coast,Stanford,ACC,Stanford,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2617,SFA,Stephen F. Austin Lumberjacks,SF Austin,Stephen F. Austin,Lumberjacks,Southland Conference,269,Stephen F. Austin Lumberjacks,Southland,Stephen F. Austin,Slnd,Stephen F. Austin,Slnd,,,1.0,1.0,1.0,fox+bart+kp
+2026,56,STET,Stetson Hatters,Stetson,Stetson,Hatters,ASUN Conference,39,Stetson Hatters,Atlantic Sun,Stetson,ASun,Stetson,ASun,,,1.0,1.0,1.0,fox+bart+kp
+2026,284,STO,Stonehill Skyhawks,Stonehill,Stonehill,Skyhawks,Northeast Conference,904,Stonehill Skyhawks,Northeast,Stonehill,NEC,Stonehill,NEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2619,STBK,Stony Brook Seawolves,Stony Brook,Stony Brook,Seawolves,Coastal Athletic Association,136,Stony Brook Seawolves,Coastal Athletic Association,Stony Brook,CAA,Stony Brook,CAA,,,1.0,1.0,1.0,fox+bart+kp
+2026,183,SYR,Syracuse Orange,Syracuse,Syracuse,Orange,Atlantic Coast Conference,65,Syracuse Orange,Atlantic Coast,Syracuse,ACC,Syracuse,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2628,TCU,TCU Horned Frogs,TCU,TCU,Horned Frogs,Big 12 Conference,317,Tcu Horned Frogs,Big 12,TCU,B12,TCU,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,2627,TAR,Tarleton State Texans,Tarleton St,Tarleton State,Texans,Western Athletic Conference,432,Tarleton State Texans,Western Athletic,Tarleton St.,WAC,Tarleton St.,WAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,218,TEM,Temple Owls,Temple,Temple,Owls,American Conference,19,Temple Owls,American,Temple,Amer,Temple,Amer,,,1.0,1.0,1.0,fox+bart+kp
+2026,2634,TNST,Tennessee State Tigers,Tennessee St,Tennessee State,Tigers,Ohio Valley Conference,217,Tennessee State Tigers,Ohio Valley,Tennessee St.,OVC,Tennessee St.,OVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2635,TNTC,Tennessee Tech Golden Eagles,Tennessee Tech,Tennessee Tech,Golden Eagles,Ohio Valley Conference,218,Tennessee Tech Golden Eagles,,Tennessee Tech,OVC,Tennessee Tech,OVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2633,TENN,Tennessee Volunteers,Tennessee,Tennessee,Volunteers,Southeastern Conference,241,Tennessee Volunteers,SEC,Tennessee,SEC,Tennessee,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,245,TA&M,Texas A&M Aggies,Texas A&M,Texas A&M,Aggies,Southeastern Conference,51,Texas A&M Aggies,SEC,Texas A&M,SEC,Texas A&M,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,357,AMCC,Texas A&M-Corpus Christi Islanders,Texas A&M-CC,Texas A&M-Corpus Christi,Islanders,Southland Conference,137,Texas A&M-Corpus Christi Islanders,Southland,Texas A&M Corpus Chris,Slnd,Texas A&M Corpus Chris,Slnd,,,1.0,1.0,1.0,fox+bart+kp
+2026,251,TEX,Texas Longhorns,Texas,Texas,Longhorns,Southeastern Conference,50,Texas Longhorns,SEC,Texas,SEC,Texas,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2640,TXSO,Texas Southern Tigers,Texas Southern,Texas Southern,Tigers,Southwestern Athletic Conference,281,Texas Southern Tigers,Southwestern Athletic,Texas Southern,SWAC,Texas Southern,SWAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,326,TXST,Texas State Bobcats,Texas St,Texas State,Bobcats,Sun Belt Conference,268,Texas State Bobcats,,Texas St.,SB,Texas St.,SB,,,1.0,1.0,1.0,fox+bart+kp
+2026,2641,TTU,Texas Tech Red Raiders,Texas Tech,Texas Tech,Red Raiders,Big 12 Conference,52,Texas Tech Red Raiders,Big 12,Texas Tech,B12,Texas Tech,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,2643,CIT,The Citadel Bulldogs,The Citadel,The Citadel,Bulldogs,Southern Conference,251,The Citadel Bulldogs,Southern,The Citadel,SC,The Citadel,SC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2649,TOL,Toledo Rockets,Toledo,Toledo,Rockets,Mid-American Conference,168,Toledo Rockets,Mid-American,Toledo,MAC,Toledo,MAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,119,TOW,Towson Tigers,Towson,Towson,Tigers,Coastal Athletic Association,9,Towson Tigers,Coastal Athletic Association,Towson,CAA,Towson,CAA,,,1.0,1.0,1.0,fox+bart+kp
+2026,2653,TROY,Troy Trojans,Troy,Troy,Trojans,Sun Belt Conference,40,Troy Trojans,Sun Belt,Troy,SB,Troy,SB,,,1.0,1.0,1.0,fox+bart+kp
+2026,2655,TULN,Tulane Green Wave,Tulane,Tulane,Green Wave,American Conference,117,Tulane Green Wave,American,Tulane,Amer,Tulane,Amer,,,1.0,1.0,1.0,fox+bart+kp
+2026,202,TLSA,Tulsa Golden Hurricane,Tulsa,Tulsa,Golden Hurricane,American Conference,318,Tulsa Golden Hurricane,American,Tulsa,Amer,Tulsa,Amer,,,1.0,1.0,1.0,fox+bart+kp
+2026,5,UAB,UAB Blazers,UAB,UAB,Blazers,American Conference,118,Uab Blazers,American,UAB,Amer,UAB,Amer,,,1.0,1.0,1.0,fox+bart+kp
+2026,399,UALB,UAlbany Great Danes,UAlbany,UAlbany,Great Danes,America East Conference,133,University At Albany Great Danes,America East,Albany,AE,Albany,AE,,,1.0,1.0,1.0,fox+bart+kp
+2026,302,UCD,UC Davis Aggies,UC Davis,UC Davis,Aggies,Big West Conference,341,Uc Davis Aggies,,UC Davis,BW,UC Davis,BW,,,1.0,1.0,1.0,fox+bart+kp
+2026,300,UCI,UC Irvine Anteaters,UC Irvine,UC Irvine,Anteaters,Big West Conference,101,Uc Irvine Anteaters,Big West,UC Irvine,BW,UC Irvine,BW,,,1.0,1.0,1.0,fox+bart+kp
+2026,27,UCR,UC Riverside Highlanders,UC Riverside,UC Riverside,Highlanders,Big West Conference,476,Uc Riverside Highlanders,Big West,UC Riverside,BW,UC Riverside,BW,,,1.0,1.0,1.0,fox+bart+kp
+2026,28,UCSD,UC San Diego Tritons,UC San Diego,UC San Diego,Tritons,Big West Conference,610,Uc San Diego Tritons,Big West,UC San Diego,BW,UC San Diego,BW,,,1.0,1.0,1.0,fox+bart+kp
+2026,2540,UCSB,UC Santa Barbara Gauchos,Santa Barbara,UC Santa Barbara,Gauchos,Big West Conference,102,Uc Santa Barbara Gauchos,Big West,UC Santa Barbara,BW,UC Santa Barbara,BW,,,1.0,1.0,1.0,fox+bart+kp
+2026,2116,UCF,UCF Knights,UCF,UCF,Knights,Big 12 Conference,32,Ucf Knights,Big 12,UCF,B12,UCF,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,26,UCLA,UCLA Bruins,UCLA,UCLA,Bruins,Big Ten Conference,227,Ucla Bruins,Big Ten,UCLA,B10,UCLA,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,41,CONN,UConn Huskies,UConn,UConn,Huskies,Big East Conference,54,Uconn Huskies,Big East,Connecticut,BE,Connecticut,BE,,,1.0,1.0,1.0,fox+bart+kp
+2026,82,UIC,UIC Flames,UIC,UIC,Flames,Missouri Valley Conference,128,Uic Flames,Missouri Valley,Illinois Chicago,MVC,Illinois Chicago,MVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2433,ULM,UL Monroe Warhawks,UL Monroe,UL Monroe,Warhawks,Sun Belt Conference,262,Louisiana-Monroe Warhawks,Sun Belt,Louisiana Monroe,SB,Louisiana Monroe,SB,,,1.0,1.0,1.0,fox+bart+kp
+2026,2378,UMBC,UMBC Retrievers,UMBC,UMBC,Retrievers,America East Conference,202,Umbc Retrievers,America East,UMBC,AE,UMBC,AE,,,1.0,1.0,1.0,fox+bart+kp
+2026,2349,UML,UMass Lowell River Hawks,UMass Lowell,UMass Lowell,River Hawks,America East Conference,970,Umass Lowell River Hawks,America East,UMass Lowell,AE,UMass Lowell,AE,,,1.0,1.0,1.0,fox+bart+kp
+2026,2427,UNCA,UNC Asheville Bulldogs,UNC Asheville,UNC Asheville,Bulldogs,Big South Conference,81,Unc Asheville Bulldogs,Big South,UNC Asheville,BSth,UNC Asheville,BSth,,,1.0,1.0,1.0,fox+bart+kp
+2026,2430,UNCG,UNC Greensboro Spartans,UNC Greensboro,UNC Greensboro,Spartans,Southern Conference,258,Unc Greensboro Spartans,Southern,UNC Greensboro,SC,UNC Greensboro,SC,,,1.0,1.0,1.0,fox+bart+kp
+2026,350,UNCW,UNC Wilmington Seahawks,UNC Wilmington,UNC Wilmington,Seahawks,Coastal Athletic Association,108,Unc Wilmington Seahawks,Coastal Athletic Association,UNC Wilmington,CAA,UNC Wilmington,CAA,,,1.0,1.0,1.0,fox+bart+kp
+2026,2439,UNLV,UNLV Rebels,UNLV,UNLV,Rebels,Mountain West Conference,196,Unlv Runnin' Rebels,Mountain West,UNLV,MWC,UNLV,MWC,,,1.0,1.0,1.0,fox+bart+kp
+2026,30,USC,USC Trojans,USC,USC,Trojans,Big Ten Conference,225,Usc Trojans,Big Ten,USC,B10,USC,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,250,UTA,UT Arlington Mavericks,UT Arlington,UT Arlington,Mavericks,Western Athletic Conference,270,Ut Arlington Mavericks,Western Athletic,UT Arlington,WAC,UT Arlington,WAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2630,UTM,UT Martin Skyhawks,UT Martin,UT Martin,Skyhawks,Ohio Valley Conference,219,Tennessee-Martin Skyhawks,Ohio Valley,Tennessee Martin,OVC,Tennessee Martin,OVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,292,RGV,UT Rio Grande Valley Vaqueros,UT Rio Grande,UT Rio Grande Valley,Vaqueros,Southland Conference,138,Ut Rio Grande Valley Vaqueros,Southland,UT Rio Grande Valley,Slnd,UT Rio Grande Valley,Slnd,,,1.0,1.0,1.0,fox+bart+kp
+2026,2638,UTEP,UTEP Miners,UTEP,UTEP,Miners,Conference USA,319,Utep Miners,,UTEP,CUSA,UTEP,CUSA,,,1.0,1.0,1.0,fox+bart+kp
+2026,2636,UTSA,UTSA Roadrunners,UTSA,UTSA,Roadrunners,American Conference,271,Utsa Roadrunners,American,UTSA,Amer,UTSA,Amer,,,1.0,1.0,1.0,fox+bart+kp
+2026,328,USU,Utah State Aggies,Utah State,Utah State,Aggies,Mountain West Conference,103,Utah State Aggies,,Utah St.,MWC,Utah St.,MWC,,,1.0,1.0,1.0,fox+bart+kp
+2026,3101,UTU,Utah Tech Trailblazers,Utah Tech,Utah Tech,Trailblazers,Western Athletic Conference,1181,Utah Tech Trailblazers,,Utah Tech,WAC,Utah Tech,WAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,254,UTAH,Utah Utes,Utah,Utah,Utes,Big 12 Conference,197,Utah Runnin' Utes,Big 12,Utah,B12,Utah,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,3084,UVU,Utah Valley Wolverines,Utah Valley,Utah Valley,Wolverines,Western Athletic Conference,437,Utah Valley Wolverines,,Utah Valley,WAC,Utah Valley,WAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2670,VCU,VCU Rams,VCU,VCU,Rams,Atlantic 10 Conference,111,Vcu Rams,Atlantic 10,VCU,A10,VCU,A10,,,1.0,1.0,1.0,fox+bart+kp
+2026,2678,VMI,VMI Keydets,VMI,VMI,Keydets,Southern Conference,259,Vmi Keydets,Southern,VMI,SC,VMI,SC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2674,VAL,Valparaiso Beacons,Valparaiso,Valparaiso,Beacons,Missouri Valley Conference,288,Valparaiso Beacons,Missouri Valley,Valparaiso,MVC,Valparaiso,MVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,238,VAN,Vanderbilt Commodores,Vanderbilt,Vanderbilt,Commodores,Southeastern Conference,242,Vanderbilt Commodores,SEC,Vanderbilt,SEC,Vanderbilt,SEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,261,UVM,Vermont Catamounts,Vermont,Vermont,Catamounts,America East Conference,10,Vermont Catamounts,America East,Vermont,AE,Vermont,AE,,,1.0,1.0,1.0,fox+bart+kp
+2026,222,VILL,Villanova Wildcats,Villanova,Villanova,Wildcats,Big East Conference,58,Villanova Wildcats,Big East,Villanova,BE,Villanova,BE,,,1.0,1.0,1.0,fox+bart+kp
+2026,258,UVA,Virginia Cavaliers,Virginia,Virginia,Cavaliers,Atlantic Coast Conference,29,Virginia Cavaliers,Atlantic Coast,Virginia,ACC,Virginia,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,259,VT,Virginia Tech Hokies,Virginia Tech,Virginia Tech,Hokies,Atlantic Coast Conference,59,Virginia Tech Hokies,Atlantic Coast,Virginia Tech,ACC,Virginia Tech,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2681,WAG,Wagner Seahawks,Wagner,Wagner,Seahawks,Northeast Conference,210,Wagner Seahawks,Northeast,Wagner,NEC,Wagner,NEC,,,1.0,1.0,1.0,fox+bart+kp
+2026,154,WAKE,Wake Forest Demon Deacons,Wake Forest,Wake Forest,Demon Deacons,Atlantic Coast Conference,30,Wake Forest Demon Deacons,Atlantic Coast,Wake Forest,ACC,Wake Forest,ACC,,,1.0,1.0,1.0,fox+bart+kp
+2026,264,WASH,Washington Huskies,Washington,Washington,Huskies,Big Ten Conference,228,Washington Huskies,Big Ten,Washington,B10,Washington,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,265,WSU,Washington State Cougars,Washington St,Washington State,Cougars,West Coast Conference,229,Washington State Cougars,,Washington St.,WCC,Washington St.,WCC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2692,WEB,Weber State Wildcats,Weber St,Weber State,Wildcats,Big Sky Conference,75,Weber State Wildcats,Big Sky,Weber St.,BSky,Weber St.,BSky,,,1.0,1.0,1.0,fox+bart+kp
+2026,2697,UWF,West Florida Argonauts,West Florida,West Florida,Argonauts,,441,West Florida Argonauts,,,,,,,,1.0,,,fox_only
+2026,2698,WGA,West Georgia Wolves,West Georgia,West Georgia,Wolves,ASUN Conference,442,West Georgia Wolves,,West Georgia,ASun,West Georgia,ASun,,,1.0,1.0,1.0,fox+bart+kp
+2026,277,WVU,West Virginia Mountaineers,West Virginia,West Virginia,Mountaineers,Big 12 Conference,66,West Virginia Mountaineers,Big 12,West Virginia,B12,West Virginia,B12,,,1.0,1.0,1.0,fox+bart+kp
+2026,2717,WCU,Western Carolina Catamounts,W Carolina,Western Carolina,Catamounts,Southern Conference,260,Western Carolina Catamounts,Southern,Western Carolina,SC,Western Carolina,SC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2710,WIU,Western Illinois Leathernecks,W Illinois,Western Illinois,Leathernecks,Ohio Valley Conference,289,Western Illinois Leathernecks,Ohio Valley,Western Illinois,OVC,Western Illinois,OVC,,,1.0,1.0,1.0,fox+bart+kp
+2026,98,WKU,Western Kentucky Hilltoppers,Western KY,Western Kentucky,Hilltoppers,Conference USA,296,Western Kentucky Hilltoppers,Conference USA,Western Kentucky,CUSA,Western Kentucky,CUSA,,,1.0,1.0,1.0,fox+bart+kp
+2026,2711,WMU,Western Michigan Broncos,W Michigan,Western Michigan,Broncos,Mid-American Conference,169,Western Michigan Broncos,Mid-American,Western Michigan,MAC,Western Michigan,MAC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2724,WICH,Wichita State Shockers,Wichita St,Wichita State,Shockers,American Conference,190,Wichita State Shockers,American,Wichita St.,Amer,Wichita St.,Amer,,,1.0,1.0,1.0,fox+bart+kp
+2026,2729,W&M,William & Mary Tribe,William & Mary,William & Mary,Tribe,Coastal Athletic Association,112,William & Mary Tribe,Coastal Athletic Association,William & Mary,CAA,William & Mary,CAA,,,1.0,1.0,1.0,fox+bart+kp
+2026,2737,WIN,Winthrop Eagles,Winthrop,Winthrop,Eagles,Big South Conference,83,Winthrop Eagles,Big South,Winthrop,BSth,Winthrop,BSth,,,1.0,1.0,1.0,fox+bart+kp
+2026,275,WIS,Wisconsin Badgers,Wisconsin,Wisconsin,Badgers,Big Ten Conference,94,Wisconsin Badgers,Big Ten,Wisconsin,B10,Wisconsin,B10,,,1.0,1.0,1.0,fox+bart+kp
+2026,2747,WOF,Wofford Terriers,Wofford,Wofford,Terriers,Southern Conference,254,Wofford Terriers,Southern,Wofford,SC,Wofford,SC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2750,WRST,Wright State Raiders,Wright St,Wright State,Raiders,Horizon League,132,Wright State Raiders,Horizon,Wright St.,Horz,Wright St.,Horz,,,1.0,1.0,1.0,fox+bart+kp
+2026,2751,WYO,Wyoming Cowboys,Wyoming,Wyoming,Cowboys,Mountain West Conference,198,Wyoming Cowboys,Mountain West,Wyoming,MWC,Wyoming,MWC,,,1.0,1.0,1.0,fox+bart+kp
+2026,2752,XAV,Xavier Musketeers,Xavier,Xavier,Musketeers,Big East Conference,20,Xavier Musketeers,Big East,Xavier,BE,Xavier,BE,,,1.0,1.0,1.0,fox+bart+kp
+2026,43,YALE,Yale Bulldogs,Yale,Yale,Bulldogs,Ivy League,146,Yale Bulldogs,Ivy League,Yale,Ivy,Yale,Ivy,,,1.0,1.0,1.0,fox+bart+kp
+2026,2754,YSU,Youngstown State Penguins,Youngstown St,Youngstown State,Penguins,Horizon League,290,Youngstown State Penguins,Horizon,Youngstown St.,Horz,Youngstown St.,Horz,,,1.0,1.0,1.0,fox+bart+kp
