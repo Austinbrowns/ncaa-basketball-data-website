@@ -6,6 +6,7 @@ An interactive report and dashboard about recent NCAA Division I men’s basketb
 
 - `index.html` is the report page. It has nine findings, headline numbers, and a chart for every finding.
 - `dashboard.html` is the browser-side dashboard. It has filters for season, team, conference, venue, and result; four changing summary numbers; four changing charts; a two-team head-to-head comparison chart; a measure switch; a breakdown switch; a reset button; and an aggregation table.
+- `assets/` contains the locally stored public-domain historical basketball photographs used as subtle page backgrounds, with credits in `assets/README.md`.
 
 ## Data
 

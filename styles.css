@@ -25,6 +25,20 @@ body {
   line-height: 1.55;
 }
 
+body[data-page="report"] {
+  background-image: linear-gradient(rgba(246, 241, 232, 0.91), rgba(246, 241, 232, 0.91)), url("assets/basketball-1901-purdue.jpg");
+  background-position: center top;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+body[data-page="dashboard"] {
+  background-image: linear-gradient(rgba(246, 241, 232, 0.93), rgba(246, 241, 232, 0.93)), url("assets/basketball-1909-nara.jpg");
+  background-position: center top;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
 a { color: inherit; }
 
 .site-nav {
@@ -82,6 +96,12 @@ main { overflow: hidden; }
   background: var(--navy);
   color: white;
   position: relative;
+}
+
+.report-hero {
+  background-image: linear-gradient(rgba(11, 28, 49, 0.91), rgba(11, 28, 49, 0.91)), url("assets/basketball-1901-purdue.jpg");
+  background-position: center;
+  background-size: cover;
 }
 
 .hero::after {
@@ -339,4 +359,8 @@ tbody tr:hover { background: #fff8e9; }
   .next-step .button { margin-top: 22px; }
   .site-footer { display: block; }
   .site-footer span { display: block; margin-top: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="report"], body[data-page="dashboard"] { background-attachment: scroll; }
 }
