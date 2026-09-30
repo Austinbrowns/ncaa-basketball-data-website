@@ -213,7 +213,11 @@ h3 { font-size: 1.1rem; }
 .chart-bar { fill: var(--orange); }
 .chart-bar-alt { fill: var(--teal); }
 .chart-line { fill: none; stroke: var(--teal); stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
+.chart-line-alt { fill: none; stroke: var(--orange); stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
 .chart-dot { fill: var(--orange); stroke: var(--paper); stroke-width: 2; }
+.chart-dot-primary { fill: var(--teal); stroke: var(--paper); stroke-width: 2; }
+.chart-dot-alt { fill: var(--orange); stroke: var(--paper); stroke-width: 2; }
+.chart-legend { fill: var(--ink-soft); font-size: 11px; font-weight: 800; }
 .chart-dot-soft { fill: var(--blue); opacity: 0.72; }
 .empty-chart { min-height: 220px; display: grid; place-items: center; color: var(--ink-soft); background: #faf6ed; border-radius: 12px; }
 
@@ -253,8 +257,15 @@ h3 { font-size: 1.1rem; }
   box-shadow: var(--shadow);
 }
 .filter-panel { padding: 28px; }
+.comparison-panel { margin-top: 22px; padding: 28px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
 .filter-heading, .table-heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .filter-heading h2, .table-heading h2 { margin-bottom: 0; font-size: 1.6rem; }
+.comparison-heading { display: flex; align-items: end; justify-content: space-between; gap: 34px; }
+.comparison-heading h2 { margin-bottom: 8px; font-size: 1.6rem; }
+.comparison-heading p:last-child { max-width: 610px; margin: 0; color: var(--ink-soft); font-size: 0.88rem; }
+.comparison-controls { display: grid; grid-template-columns: repeat(2, minmax(170px, 1fr)); gap: 12px; min-width: min(100%, 520px); }
+.comparison-status { margin: 22px 0 0; color: var(--ink-soft); font-size: 0.9rem; }
+.comparison-chart { margin-top: 12px; }
 .filter-grid, .control-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 26px; }
 label { display: grid; gap: 7px; color: var(--ink-soft); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.04em; }
 select { width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px; background: #fffaf0; color: var(--ink); font: inherit; font-size: 0.86rem; font-weight: 600; letter-spacing: 0; }
@@ -299,9 +310,10 @@ tbody tr:hover { background: #fff8e9; }
   .methodology-section { grid-template-columns: 1fr; gap: 10px; }
   .filter-grid { grid-template-columns: repeat(2, 1fr); }
   .filter-grid label:last-child { grid-column: span 2; }
-  .dashboard-heading, .control-panel { display: block; }
+  .dashboard-heading, .control-panel, .comparison-heading { display: block; }
   .dashboard-intro { margin-top: 24px; }
   .control-grid { margin-top: 24px; }
+  .comparison-controls { margin-top: 24px; }
 }
 
 @media (max-width: 620px) {
@@ -314,9 +326,10 @@ tbody tr:hover { background: #fff8e9; }
   .headline-card strong, .summary-card strong { font-size: 1.9rem; }
   .headline-card > span:last-child, .summary-card > span:last-child { font-size: 0.7rem; }
   .intro-section { padding-top: 82px; }
-  .report-section, .filter-panel, .control-panel, .table-section { padding: 20px; }
+  .report-section, .filter-panel, .comparison-panel, .control-panel, .table-section { padding: 20px; }
   .filter-grid, .control-grid { grid-template-columns: 1fr; }
   .filter-grid label:last-child { grid-column: auto; }
+  .comparison-controls { grid-template-columns: 1fr; }
   .dashboard-charts { grid-template-columns: 1fr; }
   .chart-wide { grid-column: auto; }
   .chart-card-heading { display: block; }

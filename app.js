@@ -225,6 +225,62 @@ function renderLine(container, items, options = {}) {
   container.innerHTML = chartFrame(width, height, content, options.label || "Line chart");
 }
 
+function renderComparisonLine(container, series, options = {}) {
+  const availableSeries = series
+    .map((line) => ({ ...line, values: line.values.filter((item) => Number.isFinite(item.value)) }))
+    .filter((line) => line.values.length);
+  if (!availableSeries.length) return emptyChart(container, "No comparison rows match these filters.");
+
+  const width = 760;
+  const height = options.height || 340;
+  const margin = { top: 58, right: 22, bottom: 54, left: 52 };
+  const plotWidth = width - margin.left - margin.right;
+  const plotHeight = height - margin.top - margin.bottom;
+  const labels = [...new Set(availableSeries.flatMap((line) => line.values.map((item) => item.label)))];
+  const allValues = availableSeries.flatMap((line) => line.values.map((item) => item.value));
+  const maxValue = Math.max(...allValues, 1);
+  const step = labels.length === 1 ? plotWidth : plotWidth / (labels.length - 1);
+  let content = "";
+
+  [0, 0.5, 1].forEach((tick) => {
+    const y = margin.top + plotHeight - plotHeight * tick;
+    content += `<line x1="${margin.left}" y1="${y}" x2="${width - margin.right}" y2="${y}" class="chart-grid"/>`;
+    content += svgText(margin.left - 8, y + 4, options.valueFormat ? options.valueFormat(maxValue * tick) : formatNumber(maxValue * tick), 'class="chart-axis" text-anchor="end"');
+  });
+
+  availableSeries.forEach((line, lineIndex) => {
+    const valuesByLabel = new Map(line.values.map((item) => [item.label, item.value]));
+    const points = labels.map((label, index) => {
+      const value = valuesByLabel.get(label);
+      if (!Number.isFinite(value)) return null;
+      const x = margin.left + index * step;
+      const y = margin.top + plotHeight - (Math.max(0, value) / maxValue) * plotHeight;
+      return { label, value, x, y };
+    }).filter(Boolean);
+    const lineClass = lineIndex === 0 ? "chart-line" : "chart-line-alt";
+    const dotClass = lineIndex === 0 ? "chart-dot-primary" : "chart-dot-alt";
+    if (points.length > 1) content += `<polyline points="${points.map((point) => `${point.x},${point.y}`).join(" ")}" class="${lineClass}"/>`;
+    points.forEach((point) => {
+      content += `<circle cx="${point.x}" cy="${point.y}" r="5" class="${dotClass}"><title>${escapeHtml(line.label)} · ${escapeHtml(point.label)}: ${escapeHtml(options.valueFormat ? options.valueFormat(point.value) : formatNumber(point.value))}</title></circle>`;
+      content += svgText(point.x, point.y - 12, options.valueFormat ? options.valueFormat(point.value) : formatNumber(point.value), 'class="chart-value" text-anchor="middle"');
+    });
+  });
+
+  labels.forEach((label, index) => {
+    const x = margin.left + index * step;
+    content += svgText(x, height - 18, shortLabel(label, 15), 'class="chart-label" text-anchor="middle"');
+  });
+
+  availableSeries.forEach((line, index) => {
+    const x = margin.left + index * 230;
+    const colorClass = index === 0 ? "chart-line" : "chart-line-alt";
+    content += `<line x1="${x}" y1="25" x2="${x + 24}" y2="25" class="${colorClass}"/>`;
+    content += svgText(x + 32, 29, shortLabel(line.label, 26), 'class="chart-legend"');
+  });
+
+  container.innerHTML = chartFrame(width, height, content, options.label || "Two-team comparison line chart");
+}
+
 function renderHorizontal(container, items, options = {}) {
   if (!items.length) return emptyChart(container);
   const width = 760;
@@ -400,6 +456,59 @@ function fillSelect(selectId, values, allLabel) {
   select.innerHTML = `<option value="all">${escapeHtml(allLabel)}</option>${values.map((value) => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join("")}`;
 }
 
+function fillChoiceSelect(selectId, values, placeholder) {
+  const select = document.getElementById(selectId);
+  select.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>${values.map((value) => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join("")}`;
+}
+
+function comparisonRows(rows) {
+  const season = document.getElementById("filter-season").value;
+  const conference = document.getElementById("filter-conference").value;
+  const venue = document.getElementById("filter-venue").value;
+  const result = document.getElementById("filter-result").value;
+  return rows.filter((row) =>
+    (season === "all" || row.seasonLabel === season) &&
+    (conference === "all" || row.conference === conference) &&
+    (venue === "all" || row.venue === venue) &&
+    (result === "all" || row.result === result)
+  );
+}
+
+function updateTeamComparison(rows, measureKey) {
+  const teamA = document.getElementById("compare-team-a").value;
+  const teamB = document.getElementById("compare-team-b").value;
+  const status = document.getElementById("comparison-status");
+  const chart = document.getElementById("dashboard-chart-compare");
+  const measure = measureDefinitions[measureKey];
+
+  if (!teamA || !teamB) {
+    status.textContent = "Choose two teams to begin.";
+    return emptyChart(chart, "Choose two teams to display a comparison.");
+  }
+  if (teamA === teamB) {
+    status.textContent = "Choose two different teams for a head-to-head comparison.";
+    return emptyChart(chart, "The two comparison teams must be different.");
+  }
+
+  const filteredRows = comparisonRows(rows);
+  const seasons = optionValues(filteredRows, "seasonLabel").sort((a, b) => String(a).localeCompare(String(b), undefined, { numeric: true }));
+  const lines = [teamA, teamB].map((team) => {
+    const teamRows = filteredRows.filter((row) => row.team === team);
+    const grouped = groupRows(teamRows, (row) => row.seasonLabel, (row) => measureValue(row, measureKey));
+    const averages = new Map(grouped.map((item) => [item.label, item.average]));
+    return {
+      label: team,
+      values: seasons.map((season) => ({ label: season, value: averages.get(season) })),
+      rows: teamRows.length,
+    };
+  });
+
+  const available = lines.filter((line) => line.rows > 0);
+  status.textContent = `${measure.label} comparison for ${teamA} and ${teamB}. ${formatNumber(lines[0].rows + lines[1].rows, 0)} team-game rows match the comparison filters.`;
+  renderComparisonLine(chart, lines, { label: `${measure.label} comparison for ${teamA} and ${teamB}`, valueFormat: measure.format, height: 340 });
+  if (!available.length) status.textContent = `No rows match the comparison filters for ${teamA} or ${teamB}.`;
+}
+
 function updateDashboard(rows) {
   const filtered = selectedRows(rows);
   const measureKey = document.getElementById("measure-select").value;
@@ -415,6 +524,7 @@ function updateDashboard(rows) {
   document.getElementById("summary-average").textContent = formatNumber(mean(filtered, "points"));
   document.getElementById("summary-average-label").textContent = "Average points per team-game";
   document.getElementById("dashboard-status").textContent = `${formatNumber(filtered.length, 0)} team-game rows match the current filters. Charts use ${measure.label.toLowerCase()} and update in the browser.`;
+  updateTeamComparison(rows, measureKey);
 
   const comparison = groups.slice(0, 14).reverse();
   renderBars(document.getElementById("dashboard-chart-bars"), comparison.map((item) => ({ label: item.label, value: item.value })), { label: `${measure.label} by ${breakdownDefinitions[breakdownKey].label}`, valueFormat: measure.format, height: 340 });
@@ -435,12 +545,19 @@ function updateDashboard(rows) {
 
 function initializeDashboard(rows) {
   fillSelect("filter-season", optionValues(rows, "seasonLabel"), "All seasons");
-  fillSelect("filter-team", optionValues(rows, "team"), "All teams");
+  const teams = optionValues(rows, "team");
+  fillSelect("filter-team", teams, "All teams");
   fillSelect("filter-conference", optionValues(rows, "conference"), "All conferences");
   fillSelect("filter-venue", optionValues(rows, "venue"), "All venues");
   fillSelect("filter-result", optionValues(rows, "result"), "All results");
+  fillChoiceSelect("compare-team-a", teams, "Choose team one");
+  fillChoiceSelect("compare-team-b", teams, "Choose team two");
+  if (teams.length > 1) {
+    document.getElementById("compare-team-a").value = teams[0];
+    document.getElementById("compare-team-b").value = teams[1];
+  }
 
-  ["filter-season", "filter-team", "filter-conference", "filter-venue", "filter-result", "measure-select", "breakdown-select"].forEach((id) => {
+  ["filter-season", "filter-team", "filter-conference", "filter-venue", "filter-result", "measure-select", "breakdown-select", "compare-team-a", "compare-team-b"].forEach((id) => {
     document.getElementById(id).addEventListener("change", () => updateDashboard(rows));
   });
 
@@ -448,6 +565,10 @@ function initializeDashboard(rows) {
     ["filter-season", "filter-team", "filter-conference", "filter-venue", "filter-result"].forEach((id) => { document.getElementById(id).value = "all"; });
     document.getElementById("measure-select").value = "points";
     document.getElementById("breakdown-select").value = "season";
+    if (teams.length > 1) {
+      document.getElementById("compare-team-a").value = teams[0];
+      document.getElementById("compare-team-b").value = teams[1];
+    }
     updateDashboard(rows);
   });
   updateDashboard(rows);

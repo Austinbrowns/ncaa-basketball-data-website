@@ -22,7 +22,7 @@
           <p class="eyebrow">Browser-side exploration</p>
           <h1>Ask the box scores<br><span>a different question.</span></h1>
         </div>
-        <p class="dashboard-intro">Every number below is recalculated from the filtered rows in your browser. Start broad, then narrow the view to a season, team, conference, venue, or result.</p>
+        <p class="dashboard-intro">Every number below is recalculated from the filtered rows in your browser. Start broad, narrow the view to a season, team, conference, venue, or result, then compare two teams head-to-head.</p>
       </section>
 
       <section class="filter-panel" aria-label="Dashboard filters">
@@ -37,6 +37,22 @@
           <label>Venue<select id="filter-venue"></select></label>
           <label>Result<select id="filter-result"></select></label>
         </div>
+      </section>
+
+      <section class="comparison-panel" aria-labelledby="comparison-heading">
+        <div class="comparison-heading">
+          <div>
+            <p class="eyebrow">Head-to-head comparison</p>
+            <h2 id="comparison-heading">Put two teams on the same graph.</h2>
+            <p>Choose two programs to compare the selected chart measure by season. The comparison respects the season, conference, venue, and result filters above.</p>
+          </div>
+          <div class="comparison-controls">
+            <label>Team one<select id="compare-team-a" aria-label="First team to compare"></select></label>
+            <label>Team two<select id="compare-team-b" aria-label="Second team to compare"></select></label>
+          </div>
+        </div>
+        <p id="comparison-status" class="comparison-status">Choose two teams to begin.</p>
+        <div id="dashboard-chart-compare" class="chart comparison-chart loading">Loading…</div>
       </section>
 
       <section class="summary-grid" aria-label="Filtered summary numbers">
