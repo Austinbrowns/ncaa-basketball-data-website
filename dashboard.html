@@ -19,15 +19,23 @@
     <main class="dashboard-page">
       <section class="dashboard-heading">
         <div>
-          <p class="eyebrow">Browser-side exploration</p>
-          <h1>Ask the box scores<br><span>a different question.</span></h1>
+          <p class="eyebrow">Elite Sports Knowledge Mode</p>
+          <div class="dashboard-mode" aria-label="Elite Sports Knowledge Mode">
+            <span class="mode-dot" aria-hidden="true"></span>
+            <span>Scouting lens · 2022–2026</span>
+          </div>
+          <h1>Read the game<br><span>like a scout.</span></h1>
         </div>
-        <p class="dashboard-intro">Every number below is recalculated from the filtered rows in your browser. Start broad, narrow the view to a season, team, conference, venue, or result, then compare two teams head-to-head.</p>
+        <p class="dashboard-intro">Build a scouting lens from five seasons of Division I box scores. Filter the context, choose the signal, and compare two programs head-to-head.</p>
       </section>
 
       <section class="filter-panel" aria-label="Dashboard filters">
         <div class="filter-heading">
-          <div><p class="eyebrow">Filter the view</p><h2>Choose a slice of the game.</h2></div>
+          <div>
+            <p class="eyebrow">Build the scouting lens</p>
+            <h2>Control the context.</h2>
+            <p class="filter-heading-note">Isolate the season, program, conference, venue, or result before reading the charts.</p>
+          </div>
           <button id="reset-filters" class="button button-outline" type="button">Reset all</button>
         </div>
         <div class="filter-grid">
@@ -42,8 +50,8 @@
       <section class="comparison-panel" aria-labelledby="comparison-heading">
         <div class="comparison-heading">
           <div>
-            <p class="eyebrow">Head-to-head comparison</p>
-            <h2 id="comparison-heading">Put two teams on the same graph.</h2>
+            <p class="eyebrow">Head-to-head scouting</p>
+            <h2 id="comparison-heading">Put two programs on the same graph.</h2>
             <p>Choose two programs to compare the selected chart measure by season. The comparison respects the season, conference, venue, and result filters above.</p>
           </div>
           <div class="comparison-controls">
@@ -64,8 +72,8 @@
 
       <section class="control-panel">
         <div>
-          <p class="eyebrow">Chart controls</p>
-          <h2>Change the measure and the breakdown.</h2>
+          <p class="eyebrow">Analyst controls</p>
+          <h2>Change the lens.</h2>
         </div>
         <div class="control-grid">
           <label>Measure shown<select id="measure-select">

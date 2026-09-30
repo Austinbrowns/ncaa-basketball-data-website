@@ -340,33 +340,6 @@ function reportSection(id, heading, copy, chartTitle) {
   </section>`;
 }
 
-const recentMoments = [
-  { year: "2022", tag: "Cinderella · Elite Eight", title: "Saint Peter’s becomes the first No. 15 seed to reach the Elite Eight", detail: "The Peacocks beat Purdue 67–64 and made a small-school run the story of March.", source: "https://www.youtube.com/watch?v=oCpMehfhJs0", sourceLabel: "Watch official highlights", tone: "orange" },
-  { year: "2022", tag: "Championship · Kansas", title: "Kansas rallies past North Carolina for the national title", detail: "The Jayhawks close a 72–69 championship comeback and win their fourth NCAA title.", source: "https://www.ncaa.com/history/basketball-men/d1", sourceLabel: "See NCAA championship history", tone: "navy" },
-  { year: "2023", tag: "Upset · First round", title: "Fairleigh Dickinson becomes the second No. 16 seed to beat a No. 1", detail: "FDU defeats Purdue 63–58, one of the tournament’s most improbable results.", source: "https://www.youtube.com/watch?v=21x7VWMF5R8", sourceLabel: "Watch official replay", tone: "teal" },
-  { year: "2023", tag: "Buzzer-beater · Final Four", title: "Lamont Butler sends San Diego State to its first title game", detail: "His pull-up jumper at the buzzer finishes a 72–71 comeback over Florida Atlantic.", source: "https://www.sdsu.edu/news/2023/04/sdsus-incredible-win-puts-aztecs-in-national-title-game", sourceLabel: "Read the SDSU recap", tone: "blue" },
-  { year: "2023", tag: "Championship · UConn", title: "UConn completes a dominant run for its fifth national title", detail: "The Huskies beat San Diego State 76–59 and win every tournament game by double digits.", source: "https://www.ncaa.com/history/basketball-men/d1", sourceLabel: "See NCAA championship history", tone: "navy" },
-  { year: "2024", tag: "Conference tournament · NC State", title: "NC State wins five ACC games in five days", detail: "The No. 10 seed beats North Carolina 84–76 for its first ACC tournament title since 1987.", source: "https://theacc.com/news/2024/3/16/mens-basketball-nc-state-beats-no-4-north-carolina-to-win-the-acc-tournament-and-earn-an-automatic-ncaa-bid.aspx", sourceLabel: "Read the ACC recap", tone: "orange" },
-  { year: "2024", tag: "Championship · Repeat", title: "UConn becomes the first repeat champion since 2007", detail: "The Huskies beat Purdue 75–60 and finish a 12-game NCAA tournament winning streak.", source: "https://uconnhuskies.com/news/2024/4/9/mens-basketball-back-to-back-champs", sourceLabel: "Read the UConn recap", tone: "teal" },
-  { year: "2025", tag: "Final Four · Auburn", title: "Auburn completes an all-No. 1-seed path to the Final Four", detail: "The Tigers beat Michigan State 70–64; Johni Broome returned after an injury scare to help finish the run.", source: "https://apnews.com/article/739dfd8e727a34ba7095967dc94b8142", sourceLabel: "Read the AP recap", tone: "gold" },
-  { year: "2025", tag: "Championship · Comeback", title: "Florida erases 12 points to beat Houston for the title", detail: "The Gators win 65–63 for their third national championship and their first since 2007.", source: "https://floridagators.com/news/2025/4/7/mens-basketball-national-championship-florida-xx-houston-xx", sourceLabel: "Read the Florida recap", tone: "orange" },
-  { year: "2026", tag: "Championship · Michigan", title: "Michigan ends a 37-year title wait", detail: "The Wolverines defeat UConn 69–63 for their first NCAA championship since 1989.", source: "https://www.ncaa.com/news/basketball-men/mml-official-bracket/2026-04-06/michigan-wins-2026-di-mens-basketball-championship", sourceLabel: "Read the NCAA recap", tone: "blue" },
-];
-
-function renderRecentMoments() {
-  const container = document.getElementById("recent-moments");
-  if (!container) return;
-  container.innerHTML = recentMoments.map((moment, index) => `<a class="moment-card tone-${escapeHtml(moment.tone)}" href="${escapeHtml(moment.source)}" target="_blank" rel="noreferrer">
-    <div class="moment-card-visual"><span>${escapeHtml(moment.year)}</span><strong>${String(index + 1).padStart(2, "0")}</strong></div>
-    <div>
-      <p class="moment-meta">${escapeHtml(moment.tag)}</p>
-      <h3>${escapeHtml(moment.title)}</h3>
-      <p>${escapeHtml(moment.detail)}</p>
-      <span class="moment-link">${escapeHtml(moment.sourceLabel)} ↗</span>
-    </div>
-  </a>`).join("");
-}
-
 function getSeasonGroups(rows, measureKey) {
   return groupRows(rows, (row) => row.seasonLabel, (row) => row[measureKey])
     .sort((a, b) => a.label.localeCompare(b.label));
@@ -618,7 +591,6 @@ function showError(error) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  renderRecentMoments();
   try {
     const { rows, quality } = await loadDataset();
     if (document.body.dataset.page === "report") renderReport(rows, quality);
