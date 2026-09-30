@@ -34,6 +34,10 @@ The most important fields are:
 | `three_point_field_goals_made`, `three_point_field_goals_attempted` | Three-point totals |
 | `three_point_rate_pct` | 3PA divided by FGA, multiplied by 100 |
 | `effective_fg_pct` | (FGM + 0.5 × 3PM) divided by FGA, multiplied by 100 |
-| `total_rebounds`, `assists`, `steals`, `turnovers` | Team box-score totals |
+| `free_throws_attempted` | Free-throw attempts |
+| `points_in_paint` | Source points-in-paint total; used as a transparent proxy for shots around the rim and available in 2024–2026 |
+| `total_rebounds`, `assists`, `steals`, `blocks`, `turnovers` | Team box-score totals |
+| `possessions` | Estimated possessions = FGA − offensive rebounds + turnovers + 0.44 × FTA |
+| `turnover_rate_pct` | Turnovers divided by estimated possessions, multiplied by 100 |
 
 `quality.json` records the row counts and filtering performed by the preparation script.

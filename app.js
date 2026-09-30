@@ -108,6 +108,9 @@ function normalizeRow(row) {
     fta: number(row.free_throws_attempted),
     ftPct: number(row.free_throw_pct),
     teamTurnovers: number(row.team_turnovers),
+    pointsInPaint: number(row.points_in_paint),
+    possessions: number(row.possessions),
+    turnoverRate: number(row.turnover_rate_pct),
   };
 }
 
@@ -138,7 +141,7 @@ function groupRows(rows, keyFunction, measureFunction) {
       rows: group.length,
       games: unique(group, "gameId"),
       wins: sum(group, "win"),
-      average: values.length ? values.reduce((total, value) => total + value, 0) / values.length : 0,
+      average: values.length ? values.reduce((total, value) => total + value, 0) / values.length : null,
       averagePoints: mean(group, "points"),
       averageMargin: mean(group, "margin"),
       winRate: 100 * mean(group, "win"),
@@ -406,10 +409,16 @@ const measureDefinitions = {
   points: { label: "Average points", key: "points", format: (value) => formatNumber(value) },
   winRate: { label: "Win rate", key: "win", format: (value) => formatPercent(value) },
   threePA: { label: "Average 3PA", key: "threePA", format: (value) => formatNumber(value) },
-  threeRate: { label: "Three-point attempt rate", key: "threeRate", format: (value) => formatPercent(value) },
+  threeRate: { label: "3-point shot attempt rate", key: "threeRate", format: (value) => formatPercent(value) },
   efg: { label: "Effective FG%", key: "efg", format: (value) => formatPercent(value) },
   rebounds: { label: "Average rebounds", key: "rebounds", format: (value) => formatNumber(value) },
+  pointsInPaint: { label: "Shots around rim (paint points proxy)", key: "pointsInPaint", format: (value) => formatNumber(value) },
+  freeThrowAttempts: { label: "Free throw attempts", key: "fta", format: (value) => formatNumber(value) },
+  steals: { label: "Steals", key: "steals", format: (value) => formatNumber(value) },
+  blocks: { label: "Blocks", key: "blocks", format: (value) => formatNumber(value) },
   turnovers: { label: "Average turnovers", key: "turnovers", format: (value) => formatNumber(value) },
+  turnoverRate: { label: "Turnover rate", key: "turnoverRate", format: (value) => formatPercent(value) },
+  possessions: { label: "Number of possessions", key: "possessions", format: (value) => formatNumber(value) },
 };
 
 const breakdownDefinitions = {
@@ -443,7 +452,7 @@ function aggregateForDashboard(rows, measureKey, breakdownKey) {
   const measure = (row) => measureValue(row, measureKey);
   return groupRows(rows, definition.key, measure)
     .map((item) => ({ ...item, value: item.average }))
-    .filter((item) => item.rows > 0)
+    .filter((item) => item.rows > 0 && Number.isFinite(item.value))
     .sort((a, b) => b.value - a.value);
 }
 

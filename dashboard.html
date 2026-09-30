@@ -72,10 +72,16 @@
             <option value="points">Average points</option>
             <option value="winRate">Win rate</option>
             <option value="threePA">Average 3PA</option>
-            <option value="threeRate">Three-point attempt rate</option>
+            <option value="threeRate">3-point shot attempt rate</option>
             <option value="efg">Effective FG%</option>
             <option value="rebounds">Average rebounds</option>
+            <option value="pointsInPaint">Shots around rim (paint points proxy)</option>
+            <option value="freeThrowAttempts">Free throw attempts</option>
+            <option value="steals">Steals</option>
+            <option value="blocks">Blocks</option>
             <option value="turnovers">Average turnovers</option>
+            <option value="turnoverRate">Turnover rate</option>
+            <option value="possessions">Number of possessions</option>
           </select></label>
           <label>Break charts down by<select id="breakdown-select">
             <option value="season">Season</option>
@@ -84,6 +90,7 @@
             <option value="team">Team</option>
           </select></label>
         </div>
+        <p class="control-note">The rim measure uses the source’s points-in-paint field as a proxy and is available for 2024–2026. Estimated possessions use FGA − offensive rebounds + turnovers + 0.44 × FTA; turnover rate is turnovers divided by estimated possessions.</p>
       </section>
 
       <p id="dashboard-status" class="dashboard-status loading">Loading the data…</p>

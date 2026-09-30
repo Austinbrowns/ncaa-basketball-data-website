@@ -84,6 +84,9 @@ foreach ($File in $Files) {
         $FieldGoalsAttempted = Convert-ToNumber (Get-Field $Row 'field_goals_attempted')
         $ThreePointMade = Convert-ToNumber (Get-Field $Row 'three_point_field_goals_made')
         $ThreePointAttempted = Convert-ToNumber (Get-Field $Row 'three_point_field_goals_attempted')
+        $FreeThrowsAttempted = Convert-ToNumber (Get-Field $Row 'free_throws_attempted')
+        $OffensiveRebounds = Convert-ToNumber (Get-Field $Row 'offensive_rebounds')
+        $Turnovers = Convert-ToNumber (Get-Field $Row 'turnovers')
 
         $ThreePointRate = $null
         if ($null -ne $FieldGoalsAttempted -and $FieldGoalsAttempted -gt 0 -and $null -ne $ThreePointAttempted) {
@@ -93,6 +96,16 @@ foreach ($File in $Files) {
         $EffectiveFieldGoalPct = $null
         if ($null -ne $FieldGoalsAttempted -and $FieldGoalsAttempted -gt 0 -and $null -ne $FieldGoalsMade -and $null -ne $ThreePointMade) {
             $EffectiveFieldGoalPct = [math]::Round(100 * ($FieldGoalsMade + (0.5 * $ThreePointMade)) / $FieldGoalsAttempted, 2)
+        }
+
+        $Possessions = $null
+        if ($null -ne $FieldGoalsAttempted -and $null -ne $OffensiveRebounds -and $null -ne $Turnovers -and $null -ne $FreeThrowsAttempted) {
+            $Possessions = [math]::Round($FieldGoalsAttempted - $OffensiveRebounds + $Turnovers + (0.44 * $FreeThrowsAttempted), 2)
+        }
+
+        $TurnoverRate = $null
+        if ($null -ne $Possessions -and $Possessions -gt 0 -and $null -ne $Turnovers) {
+            $TurnoverRate = [math]::Round(100 * $Turnovers / $Possessions, 2)
         }
 
         $SeasonNumber = [int]$Season
@@ -149,6 +162,9 @@ foreach ($File in $Files) {
             free_throws_attempted = Convert-ToNumber (Get-Field $Row 'free_throws_attempted')
             free_throw_pct = Convert-ToNumber (Get-Field $Row 'free_throw_pct')
             team_turnovers = Convert-ToNumber (Get-Field $Row 'team_turnovers')
+            points_in_paint = Convert-ToNumber (Get-Field $Row 'points_in_paint')
+            possessions = $Possessions
+            turnover_rate_pct = $TurnoverRate
         })
     }
 }

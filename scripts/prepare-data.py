@@ -58,6 +58,7 @@ def main() -> None:
         "three_point_field_goals_made", "three_point_field_goals_attempted",
         "three_point_field_goal_pct", "three_point_rate_pct", "effective_fg_pct",
         "free_throws_made", "free_throws_attempted", "free_throw_pct", "team_turnovers",
+        "points_in_paint", "possessions", "turnover_rate_pct",
     ]
 
     raw_rows = 0
@@ -83,8 +84,13 @@ def main() -> None:
                 fga = number(row, "field_goals_attempted")
                 tpm = number(row, "three_point_field_goals_made")
                 tpa = number(row, "three_point_field_goals_attempted")
+                fta = number(row, "free_throws_attempted")
+                orb = number(row, "offensive_rebounds")
+                turnovers = number(row, "turnovers")
                 three_rate = 100 * tpa / fga if fga and tpa is not None else None
                 efg = 100 * (fgm + 0.5 * tpm) / fga if fga and fgm is not None and tpm is not None else None
+                possessions = fga - orb + turnovers + (0.44 * fta) if all(value is not None for value in (fga, orb, turnovers, fta)) else None
+                turnover_rate = 100 * turnovers / possessions if possessions and turnovers is not None else None
                 phase = {"2": "Regular season", "3": "Postseason"}.get(text(row, "season_type"), "Other")
 
                 item = {
@@ -122,6 +128,9 @@ def main() -> None:
                     item[field] = clean_number(number(row, field))
                 item["three_point_rate_pct"] = clean_number(three_rate)
                 item["effective_fg_pct"] = clean_number(efg)
+                item["points_in_paint"] = clean_number(number(row, "points_in_paint"))
+                item["possessions"] = clean_number(possessions)
+                item["turnover_rate_pct"] = clean_number(turnover_rate)
                 retained.append(item)
 
     with OUTPUT.open("w", newline="", encoding="utf-8") as handle:
