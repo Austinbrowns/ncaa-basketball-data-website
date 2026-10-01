@@ -245,7 +245,9 @@ h3 { font-size: 1.1rem; }
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: 0 8px 26px rgba(19, 34, 56, 0.04);
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
+.report-section:hover { border-color: rgba(39, 143, 138, 0.5); box-shadow: var(--shadow); transform: translateY(-2px); }
 
 .section-copy h2 { margin-bottom: 16px; font-size: clamp(1.6rem, 2.4vw, 2.3rem); }
 .section-copy > p:last-child { margin-bottom: 0; color: var(--ink-soft); }
@@ -255,8 +257,12 @@ h3 { font-size: 1.1rem; }
 .chart-wrap { min-width: 0; }
 .chart-title, .chart-card-heading span { color: var(--ink-soft); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
 .chart-title { margin: 0 0 8px 4px; }
-.chart { min-height: 240px; }
+.chart { min-height: 240px; position: relative; }
 .chart svg { width: 100%; height: auto; min-height: 240px; overflow: visible; }
+.chart [data-tooltip] { cursor: crosshair; outline: none; transition: filter 140ms ease, opacity 140ms ease; }
+.chart [data-tooltip]:hover, .chart [data-tooltip]:focus { filter: brightness(0.82) saturate(1.18); }
+.chart-tooltip { position: absolute; z-index: 5; max-width: 250px; padding: 9px 11px; border: 1px solid rgba(242, 193, 78, 0.45); border-radius: 9px; background: var(--navy); color: white; box-shadow: 0 10px 24px rgba(11, 28, 49, 0.2); font-size: 0.75rem; font-weight: 750; line-height: 1.35; opacity: 0; pointer-events: none; transform: translateY(3px); transition: opacity 120ms ease, transform 120ms ease; }
+.chart-tooltip.is-visible { opacity: 1; transform: translateY(0); }
 .chart-grid { stroke: #e8e0d3; stroke-width: 1; }
 .chart-axis { fill: #7b8794; font-size: 11px; }
 .chart-label { fill: #506173; font-size: 11px; }
@@ -351,7 +357,8 @@ select:focus { outline: 3px solid rgba(39, 143, 138, 0.2); border-color: var(--t
 .dashboard-status { margin-top: 22px; margin-bottom: 0; color: var(--ink-soft); font-size: 0.9rem; }
 
 .dashboard-charts { margin-top: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
-.dashboard-chart-card { min-width: 0; padding: 24px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); }
+.dashboard-chart-card { min-width: 0; padding: 24px; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease; }
+.dashboard-chart-card:hover { border-color: rgba(39, 143, 138, 0.5); box-shadow: var(--shadow); transform: translateY(-2px); }
 .chart-wide { grid-column: span 2; }
 .chart-card-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 10px; }
 .chart-card-heading h3 { margin-bottom: 0; }
@@ -419,4 +426,5 @@ tbody tr:hover { background: #fff8e9; }
 
 @media (prefers-reduced-motion: reduce) {
   body[data-page="report"], body[data-page="dashboard"] { background-attachment: scroll; }
+  .report-section, .dashboard-chart-card, .chart-tooltip { transition: none; }
 }

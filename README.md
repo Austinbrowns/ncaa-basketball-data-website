@@ -5,7 +5,7 @@ An interactive report and dashboard about recent NCAA Division I men’s basketb
 ## Pages
 
 - `index.html` is the report page. It has ten evidence-based findings, headline numbers, and a chart for every finding.
-- `dashboard.html` is the browser-side dashboard. It has filters for season, team, conference, venue, and result; four changing summary numbers; four changing charts; a two-team season comparison chart; a conference-only head-to-head matchup history with scores and a game table; a measure switch; a breakdown switch; a reset button; and an aggregation table.
+- `dashboard.html` is the browser-side dashboard. It has filters for season, team, conference, venue, and result; March-focused measures for effective FG%, turnover rate, offensive-rebound rate, and free-throw rate plus context measures; hoverable charts; four changing summary numbers; a two-team season comparison chart; a conference-only head-to-head matchup history with scores and a game table; a breakdown switch; a reset button; and an aggregation table.
 - `assets/` contains the locally stored public-domain historical basketball photographs used as subtle page backgrounds, with credits in `assets/README.md`.
 
 The dashboard’s conference head-to-head history defines a conference meeting as a regular-season game where both selected teams appear as opponents and both rows carry the same conference. Postseason and conference-tournament games are excluded.

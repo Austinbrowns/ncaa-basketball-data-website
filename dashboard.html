@@ -26,7 +26,7 @@
           </div>
           <h1>Read the game<br><span>like a scout.</span></h1>
         </div>
-        <p class="dashboard-intro">Build a scouting lens from five seasons of Division I box scores. Filter the context, choose the signal, and compare two programs head-to-head.</p>
+        <p class="dashboard-intro">Build a scouting lens from five seasons of Division I box scores. Start with the factors that travel in March, hover any chart mark for exact values, and compare two programs head-to-head.</p>
       </section>
 
       <section class="filter-panel" aria-label="Dashboard filters">
@@ -95,29 +95,35 @@
         <article class="summary-card"><span class="card-label">Team-game rows</span><strong id="summary-teamgames" class="loading">—</strong><span>current view</span></article>
         <article class="summary-card"><span class="card-label">Unique games</span><strong id="summary-games" class="loading">—</strong><span>current view</span></article>
         <article class="summary-card"><span class="card-label">D-I teams</span><strong id="summary-teams" class="loading">—</strong><span>current view</span></article>
-        <article class="summary-card accent-card"><span class="card-label" id="summary-average-label">Average points per team-game</span><strong id="summary-average" class="loading">—</strong><span>always shown for context</span></article>
+        <article class="summary-card accent-card"><span class="card-label" id="summary-average-label">Average effective FG%</span><strong id="summary-average" class="loading">—</strong><span>always shown for context</span></article>
       </section>
 
       <section class="control-panel">
         <div>
-          <p class="eyebrow">Analyst controls</p>
-          <h2>Change the lens.</h2>
+          <p class="eyebrow">March Madness factors</p>
+          <h2>Measure what travels in March.</h2>
         </div>
         <div class="control-grid">
           <label>Measure shown<select id="measure-select">
-            <option value="points">Average points</option>
-            <option value="winRate">Win rate</option>
-            <option value="threePA">Average 3PA</option>
-            <option value="threeRate">3-point shot attempt rate</option>
-            <option value="efg">Effective FG%</option>
-            <option value="rebounds">Average rebounds</option>
-            <option value="pointsInPaint">Shots around rim (paint points proxy)</option>
-            <option value="freeThrowAttempts">Free throw attempts</option>
-            <option value="steals">Steals</option>
-            <option value="blocks">Blocks</option>
-            <option value="turnovers">Average turnovers</option>
-            <option value="turnoverRate">Turnover rate</option>
-            <option value="possessions">Number of possessions</option>
+            <optgroup label="March-winning factors">
+              <option value="efg">Effective FG%</option>
+              <option value="turnoverRate">Turnover rate</option>
+              <option value="orbRate">Offensive-rebound rate</option>
+              <option value="freeThrowRate">Free-throw rate</option>
+            </optgroup>
+            <optgroup label="Context measures">
+              <option value="points">Average points</option>
+              <option value="winRate">Win rate</option>
+              <option value="threePA">Average 3PA</option>
+              <option value="threeRate">3-point shot attempt rate</option>
+              <option value="rebounds">Average rebounds</option>
+              <option value="pointsInPaint">Shots around rim (paint points proxy)</option>
+              <option value="freeThrowAttempts">Free throw attempts</option>
+              <option value="steals">Steals</option>
+              <option value="blocks">Blocks</option>
+              <option value="turnovers">Average turnovers</option>
+              <option value="possessions">Number of possessions</option>
+            </optgroup>
           </select></label>
           <label>Break charts down by<select id="breakdown-select">
             <option value="season">Season</option>
@@ -126,16 +132,16 @@
             <option value="team">Team</option>
           </select></label>
         </div>
-        <p class="control-note">The rim measure uses the source’s points-in-paint field as a proxy and is available for 2024–2026. Estimated possessions use FGA − offensive rebounds + turnovers + 0.44 × FTA; turnover rate is turnovers divided by estimated possessions.</p>
+        <p class="control-note">The four primary March factors are effective FG%, turnover rate, offensive-rebound rate, and free-throw rate. ORB rate uses ORB ÷ (ORB + opponent defensive rebounds); free-throw rate uses FTA ÷ FGA. Context measures remain available for scouting detail.</p>
       </section>
 
       <p id="dashboard-status" class="dashboard-status loading">Loading the data…</p>
 
       <section class="dashboard-charts" aria-label="Interactive charts">
-        <article class="dashboard-chart-card chart-wide"><div class="chart-card-heading"><h3>Comparison by selected breakdown</h3><span>Switches with both controls</span></div><div id="dashboard-chart-bars" class="chart loading">Loading…</div></article>
-        <article class="dashboard-chart-card chart-wide"><div class="chart-card-heading"><h3>Trend across seasons</h3><span>Switches with the measure</span></div><div id="dashboard-chart-line" class="chart loading">Loading…</div></article>
-        <article class="dashboard-chart-card"><div class="chart-card-heading"><h3>Team leaderboard</h3><span>Top ten teams</span></div><div id="dashboard-chart-top" class="chart loading">Loading…</div></article>
-        <article class="dashboard-chart-card"><div class="chart-card-heading"><h3>Group size and measure</h3><span>Each dot is a group</span></div><div id="dashboard-chart-dots" class="chart loading">Loading…</div></article>
+        <article class="dashboard-chart-card chart-wide"><div class="chart-card-heading"><h3>Comparison by selected breakdown</h3><span>Hover bars for exact values</span></div><div id="dashboard-chart-bars" class="chart loading">Loading…</div></article>
+        <article class="dashboard-chart-card chart-wide"><div class="chart-card-heading"><h3>Trend across seasons</h3><span>Hover points for exact values</span></div><div id="dashboard-chart-line" class="chart loading">Loading…</div></article>
+        <article class="dashboard-chart-card"><div class="chart-card-heading"><h3>Team leaderboard</h3><span>Hover any team</span></div><div id="dashboard-chart-top" class="chart loading">Loading…</div></article>
+        <article class="dashboard-chart-card"><div class="chart-card-heading"><h3>Group size and measure</h3><span>Hover any dot</span></div><div id="dashboard-chart-dots" class="chart loading">Loading…</div></article>
       </section>
 
       <section class="table-section">

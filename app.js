@@ -123,6 +123,24 @@ function normalizeRow(row) {
   };
 }
 
+function enrichRows(rows) {
+  const games = new Map();
+  rows.forEach((row) => {
+    if (!games.has(row.gameId)) games.set(row.gameId, new Map());
+    games.get(row.gameId).set(row.teamId, row);
+  });
+  return rows.map((row) => {
+    const game = games.get(row.gameId);
+    const opponent = game?.get(row.opponentTeamId) || [...(game?.values() || [])].find((candidate) => candidate.team === row.opponent);
+    const orbDenominator = opponent ? row.offensiveRebounds + opponent.defensiveRebounds : 0;
+    return {
+      ...row,
+      freeThrowRate: row.fga ? 100 * row.fta / row.fga : null,
+      orbRate: orbDenominator ? 100 * row.offensiveRebounds / orbDenominator : null,
+    };
+  });
+}
+
 async function loadDataset() {
   const [dataResponse, qualityResponse] = await Promise.all([
     fetch(DATA_URL),
@@ -130,7 +148,7 @@ async function loadDataset() {
   ]);
   if (!dataResponse.ok) throw new Error(`Could not load ${DATA_URL}`);
   const dataText = await dataResponse.text();
-  const rows = parseCSV(dataText).map(normalizeRow).filter((row) => row.teamId && row.team);
+  const rows = enrichRows(parseCSV(dataText).map(normalizeRow).filter((row) => row.teamId && row.team));
   const quality = qualityResponse.ok ? await qualityResponse.json() : {};
   return { rows, quality };
 }
@@ -175,6 +193,47 @@ function chartFrame(width, height, content, label) {
   return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(label)}" preserveAspectRatio="none">${content}</svg>`;
 }
 
+function activateChartTooltips(container) {
+  const tooltip = container.querySelector(".chart-tooltip");
+  const targets = container.querySelectorAll("[data-tooltip]");
+  if (!tooltip || !targets.length) return;
+
+  const hide = () => {
+    tooltip.classList.remove("is-visible");
+  };
+  const move = (event, target) => {
+    const containerRect = container.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const pointerX = event?.clientX > 0 ? event.clientX : targetRect.left + targetRect.width / 2;
+    const pointerY = event?.clientY > 0 ? event.clientY : targetRect.top + targetRect.height / 2;
+    const rawLeft = pointerX - containerRect.left + 14;
+    const rawTop = pointerY - containerRect.top + 14;
+    const left = Math.min(Math.max(8, rawLeft), Math.max(8, containerRect.width - tooltip.offsetWidth - 8));
+    const top = Math.min(Math.max(8, rawTop), Math.max(8, containerRect.height - tooltip.offsetHeight - 8));
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+  };
+  const show = (event, target) => {
+    tooltip.textContent = target.dataset.tooltip;
+    tooltip.classList.add("is-visible");
+    move(event, target);
+  };
+
+  targets.forEach((target) => {
+    target.setAttribute("tabindex", "0");
+    target.addEventListener("pointerenter", (event) => show(event, target));
+    target.addEventListener("pointermove", (event) => move(event, target));
+    target.addEventListener("pointerleave", hide);
+    target.addEventListener("focus", (event) => show(event, target));
+    target.addEventListener("blur", hide);
+  });
+}
+
+function setChart(container, svg) {
+  container.innerHTML = `${svg}<div class="chart-tooltip" role="tooltip"></div>`;
+  activateChartTooltips(container);
+}
+
 function renderBars(container, items, options = {}) {
   if (!items.length) return emptyChart(container);
   const width = 760;
@@ -197,12 +256,13 @@ function renderBars(container, items, options = {}) {
     const x = margin.left + barSpace * index + (barSpace - barWidth) / 2;
     const barHeight = (Math.max(0, item.value) / maxValue) * plotHeight;
     const y = margin.top + plotHeight - barHeight;
-    content += `<rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="5" class="chart-bar"/>`;
-    content += svgText(x + barWidth / 2, y - 8, options.valueFormat ? options.valueFormat(item.value) : formatNumber(item.value), 'class="chart-value" text-anchor="middle"');
+    const displayValue = options.valueFormat ? options.valueFormat(item.value) : formatNumber(item.value);
+    content += `<rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="5" class="chart-bar" data-tooltip="${escapeHtml(`${item.label}: ${displayValue}`)}" aria-label="${escapeHtml(`${item.label}: ${displayValue}`)}"/>`;
+    content += svgText(x + barWidth / 2, y - 8, displayValue, 'class="chart-value" text-anchor="middle"');
     content += `<text x="${x + barWidth / 2}" y="${height - margin.bottom + 22}" class="chart-label" text-anchor="end" transform="rotate(-35 ${x + barWidth / 2} ${height - margin.bottom + 22})">${escapeHtml(shortLabel(item.label, 22))}</text>`;
   });
 
-  container.innerHTML = chartFrame(width, height, content, options.label || "Bar chart");
+  setChart(container, chartFrame(width, height, content, options.label || "Bar chart"));
 }
 
 function renderLine(container, items, options = {}) {
@@ -229,12 +289,13 @@ function renderLine(container, items, options = {}) {
 
   content += `<polyline points="${points.map((point) => `${point.x},${point.y}`).join(" ")}" class="chart-line"/>`;
   points.forEach((point) => {
-    content += `<circle cx="${point.x}" cy="${point.y}" r="5" class="chart-dot"/>`;
+    const displayValue = options.valueFormat ? options.valueFormat(point.value) : formatNumber(point.value);
+    content += `<circle cx="${point.x}" cy="${point.y}" r="5" class="chart-dot" data-tooltip="${escapeHtml(`${point.label}: ${displayValue}`)}" aria-label="${escapeHtml(`${point.label}: ${displayValue}`)}"/>`;
     content += svgText(point.x, height - 18, shortLabel(point.label, 15), 'class="chart-label" text-anchor="middle"');
-    content += svgText(point.x, point.y - 12, options.valueFormat ? options.valueFormat(point.value) : formatNumber(point.value), 'class="chart-value" text-anchor="middle"');
+    content += svgText(point.x, point.y - 12, displayValue, 'class="chart-value" text-anchor="middle"');
   });
 
-  container.innerHTML = chartFrame(width, height, content, options.label || "Line chart");
+  setChart(container, chartFrame(width, height, content, options.label || "Line chart"));
 }
 
 function renderComparisonLine(container, series, options = {}) {
@@ -273,8 +334,10 @@ function renderComparisonLine(container, series, options = {}) {
     const dotClass = lineIndex === 0 ? "chart-dot-primary" : "chart-dot-alt";
     if (points.length > 1) content += `<polyline points="${points.map((point) => `${point.x},${point.y}`).join(" ")}" class="${lineClass}"/>`;
     points.forEach((point) => {
-      content += `<circle cx="${point.x}" cy="${point.y}" r="5" class="${dotClass}"><title>${escapeHtml(line.label)} · ${escapeHtml(point.label)}: ${escapeHtml(options.valueFormat ? options.valueFormat(point.value) : formatNumber(point.value))}</title></circle>`;
-      content += svgText(point.x, point.y - 12, options.valueFormat ? options.valueFormat(point.value) : formatNumber(point.value), 'class="chart-value" text-anchor="middle"');
+      const displayValue = options.valueFormat ? options.valueFormat(point.value) : formatNumber(point.value);
+      const tooltipText = `${line.label} · ${point.label}: ${displayValue}`;
+      content += `<circle cx="${point.x}" cy="${point.y}" r="5" class="${dotClass}" data-tooltip="${escapeHtml(tooltipText)}" aria-label="${escapeHtml(tooltipText)}"><title>${escapeHtml(tooltipText)}</title></circle>`;
+      content += svgText(point.x, point.y - 12, displayValue, 'class="chart-value" text-anchor="middle"');
     });
   });
 
@@ -290,7 +353,7 @@ function renderComparisonLine(container, series, options = {}) {
     content += svgText(x + 32, 29, shortLabel(line.label, 26), 'class="chart-legend"');
   });
 
-  container.innerHTML = chartFrame(width, height, content, options.label || "Two-team comparison line chart");
+  setChart(container, chartFrame(width, height, content, options.label || "Two-team comparison line chart"));
 }
 
 function renderHorizontal(container, items, options = {}) {
@@ -307,12 +370,13 @@ function renderHorizontal(container, items, options = {}) {
   visible.forEach((item, index) => {
     const y = margin.top + index * rowHeight;
     const barWidth = Math.max(2, (Math.max(0, item.value) / maxValue) * plotWidth);
+    const displayValue = options.valueFormat ? options.valueFormat(item.value) : formatNumber(item.value);
     content += svgText(margin.left - 10, y + 17, shortLabel(item.label, 23), 'class="chart-label" text-anchor="end"');
-    content += `<rect x="${margin.left}" y="${y + 4}" width="${barWidth}" height="20" rx="4" class="chart-bar chart-bar-alt"/>`;
-    content += svgText(margin.left + barWidth + 8, y + 19, options.valueFormat ? options.valueFormat(item.value) : formatNumber(item.value), 'class="chart-value"');
+    content += `<rect x="${margin.left}" y="${y + 4}" width="${barWidth}" height="20" rx="4" class="chart-bar chart-bar-alt" data-tooltip="${escapeHtml(`${item.label}: ${displayValue}`)}" aria-label="${escapeHtml(`${item.label}: ${displayValue}`)}"/>`;
+    content += svgText(margin.left + barWidth + 8, y + 19, displayValue, 'class="chart-value"');
   });
 
-  container.innerHTML = chartFrame(width, height, content, options.label || "Horizontal bar chart");
+  setChart(container, chartFrame(width, height, content, options.label || "Horizontal bar chart"));
 }
 
 function renderDots(container, items, options = {}) {
@@ -335,11 +399,13 @@ function renderDots(container, items, options = {}) {
   items.slice(0, 60).forEach((item) => {
     const x = margin.left + (item.rows / maxX) * plotWidth;
     const y = margin.top + plotHeight - (item.value / maxY) * plotHeight;
-    content += `<circle cx="${x}" cy="${y}" r="5" class="chart-dot chart-dot-soft"><title>${escapeHtml(item.label)}: ${formatNumber(item.value)}</title></circle>`;
+    const displayValue = options.valueFormat ? options.valueFormat(item.value) : formatNumber(item.value);
+    const tooltipText = `${item.label} · ${formatNumber(item.rows, 0)} rows: ${displayValue}`;
+    content += `<circle cx="${x}" cy="${y}" r="5" class="chart-dot chart-dot-soft" data-tooltip="${escapeHtml(tooltipText)}" aria-label="${escapeHtml(tooltipText)}"><title>${escapeHtml(tooltipText)}</title></circle>`;
   });
   content += svgText(width / 2, height - 15, "Rows in group", 'class="chart-axis" text-anchor="middle"');
   content += `<text x="16" y="${height / 2}" class="chart-axis" text-anchor="middle" transform="rotate(-90 16 ${height / 2})">${escapeHtml(options.yLabel || "Value")}</text>`;
-  container.innerHTML = chartFrame(width, height, content, options.label || "Dot chart");
+  setChart(container, chartFrame(width, height, content, options.label || "Dot chart"));
 }
 
 const MARCH_MODEL = {
@@ -455,7 +521,7 @@ function renderMarchTakeaway(model, latestSeason) {
 
   document.getElementById("march-takeaway-lede").textContent = `The formula was estimated from ${formatNumber(model.postseasonGameRows, 0)} postseason team-game rows across ${formatNumber(model.postseasonProfileCount, 0)} team-seasons. ${strongest.label} carries ${formatNumber(100 * Math.abs(strongest.coefficient) / model.totalWeight, 0)}% of the model’s relative factor weight in this sample, followed by ${MARCH_MODEL.features.filter((feature) => feature !== strongest).sort((a, b) => Math.abs(b.coefficient) - Math.abs(a.coefficient))[0].label.toLowerCase()}.`;
   document.getElementById("march-formula").textContent = formula;
-  document.getElementById("march-model-footnote").textContent = `The chart estimates a six-game path by raising each team’s one-game win probability to the sixth power. It is a historical postseason proxy—not a sportsbook line, seed model, or literal bracket forecast.`;
+  document.getElementById("march-model-footnote").textContent = `The chart estimates a six-game path by raising each team’s one-game win probability to the sixth power. It is a historical postseason proxy—not a sportsbook line, seed model, or literal bracket forecast. Hover any bar or point for the exact value.`;
   document.getElementById("march-factor-grid").innerHTML = MARCH_MODEL.features.map((feature) => {
     const sign = feature.coefficient >= 0 ? "+" : "−";
     const weight = 100 * Math.abs(feature.coefficient) / model.totalWeight;
@@ -501,29 +567,24 @@ function renderReport(rows, quality) {
   const seasonThreeRate = getSeasonGroups(rows, "threeRate");
   const seasonPace = getSeasonGroups(rows, "possessions");
   const seasonEfficiency = groupRows(rows, (row) => row.seasonLabel, (row) => row.possessions ? row.points / row.possessions : null).sort((a, b) => a.label.localeCompare(b.label));
-  const closeGameRate = groupRows(gameRows, (row) => row.seasonLabel, (row) => Math.abs(row.margin) <= 5 ? 100 : 0).sort((a, b) => a.label.localeCompare(b.label));
-  const homeAway = groupRows(rows, (row) => row.venue, (row) => row.win).sort((a, b) => a.label.localeCompare(b.label));
-  const homeAwayBySeason = ["Home", "Away"].map((venue) => ({
-    label: `${venue} win rate`,
-    values: seasons.map((season) => {
-      const group = rows.filter((row) => row.seasonLabel === season && row.venue === venue);
-      return { label: season, value: group.length ? 100 * mean(group, "win") : null };
-    }),
-  }));
   const turnoverRateByResult = groupRows(rows, (row) => row.result, (row) => row.turnoverRate).sort((a, b) => a.label.localeCompare(b.label));
   const efgByResult = groupRows(rows, (row) => row.result, (row) => row.efg).sort((a, b) => a.label.localeCompare(b.label));
-  const ftaByResult = groupRows(rows, (row) => row.result, (row) => row.fta).sort((a, b) => a.label.localeCompare(b.label));
+  const orbRateByResult = groupRows(rows, (row) => row.result, (row) => row.orbRate).sort((a, b) => a.label.localeCompare(b.label));
+  const freeThrowRateByResult = groupRows(rows, (row) => row.result, (row) => row.freeThrowRate).sort((a, b) => a.label.localeCompare(b.label));
   const teamEfficiency = groupRows(rows, (row) => row.team, (row) => row.possessions ? row.points / row.possessions : null)
     .filter((item) => item.rows >= 100)
     .sort((a, b) => b.average - a.average)
     .slice(0, 8);
-  const conferencePace = groupRows(rows, (row) => row.conference, (row) => row.possessions)
-    .filter((item) => item.label && item.rows >= 100)
-    .sort((a, b) => b.average - a.average);
-  const conferencePaceChart = [
-    ...[...conferencePace].sort((a, b) => a.average - b.average).slice(0, 5),
-    ...conferencePace.slice(0, 5),
-  ];
+  const modelProfiles = marchModel.profiles.filter((profile) => profile.postseasonGames > 0).sort((a, b) => a.logit - b.logit);
+  const quartileSize = Math.max(1, Math.ceil(modelProfiles.length / 4));
+  const modelQuartiles = ["Lowest factor score", "Lower-middle factor score", "Upper-middle factor score", "Highest factor score"].map((label, index) => {
+    const group = modelProfiles.slice(index * quartileSize, (index + 1) * quartileSize);
+    return { label, average: mean(group, "postseasonWinRate"), rows: group.length };
+  }).filter((item) => item.rows);
+  const factorWeights = MARCH_MODEL.features.map((feature) => ({
+    label: feature.shortLabel,
+    value: 100 * Math.abs(feature.coefficient) / marchModel.totalWeight,
+  }));
 
   document.getElementById("headline-seasons").textContent = seasons.length;
   document.getElementById("headline-teamgames").textContent = formatNumber(rows.length, 0);
@@ -532,50 +593,47 @@ function renderReport(rows, quality) {
   document.getElementById("hero-summary").textContent = `This report uses ${formatNumber(rows.length, 0)} Division I team-game observations from ${firstSeason} through ${lastSeason}. It turns repeated box scores into evidence about competitive games, home court, pace, shot quality, ball security, and the margins that separate winning from losing.`;
   renderMarchTakeaway(marchModel, lastSeason);
 
-  const firstClose = closeGameRate[0]?.average || 0;
-  const lastClose = closeGameRate.at(-1)?.average || 0;
   const firstThree = seasonThreeRate[0]?.average || 0;
   const lastThree = seasonThreeRate.at(-1)?.average || 0;
   const firstPace = seasonPace[0]?.average || 0;
   const lastPace = seasonPace.at(-1)?.average || 0;
   const firstEfficiency = seasonEfficiency[0]?.average || 0;
   const lastEfficiency = seasonEfficiency.at(-1)?.average || 0;
-  const overallClose = gameRows.length ? 100 * gameRows.filter((row) => Math.abs(row.margin) <= 5).length / gameRows.length : 0;
-  const homeRate = homeAway.find((item) => item.label === "Home")?.winRate || 0;
-  const awayRate = homeAway.find((item) => item.label === "Away")?.winRate || 0;
   const winTurnoverRate = turnoverRateByResult.find((item) => item.label === "Win")?.average || 0;
   const lossTurnoverRate = turnoverRateByResult.find((item) => item.label === "Loss")?.average || 0;
   const winEfg = efgByResult.find((item) => item.label === "Win")?.average || 0;
   const lossEfg = efgByResult.find((item) => item.label === "Loss")?.average || 0;
-  const winFta = ftaByResult.find((item) => item.label === "Win")?.average || 0;
-  const lossFta = ftaByResult.find((item) => item.label === "Loss")?.average || 0;
-  const fastestConference = conferencePace[0];
-  const slowestConference = conferencePace.at(-1);
+  const winOrbRate = orbRateByResult.find((item) => item.label === "Win")?.average || 0;
+  const lossOrbRate = orbRateByResult.find((item) => item.label === "Loss")?.average || 0;
+  const winFreeThrowRate = freeThrowRateByResult.find((item) => item.label === "Win")?.average || 0;
+  const lossFreeThrowRate = freeThrowRateByResult.find((item) => item.label === "Loss")?.average || 0;
+  const highestQuartileWinRate = modelQuartiles.at(-1)?.average || 0;
+  const lowestQuartileWinRate = modelQuartiles[0]?.average || 0;
   const topEfficiencyTeam = teamEfficiency[0];
 
   document.getElementById("report-sections").innerHTML = [
     reportSection("01", `The panel covers ${formatNumber(gameRows.length, 0)} games, not just a handful of headlines`, `The file contains ${formatNumber(rows.length, 0)} team-game observations from ${formatNumber(unique(rows, "teamId"), 0)} Division I teams across ${seasons.length} seasons. Each game contributes a team-level box score, so the report can test whether a pattern repeats instead of relying on a single tournament run.`, "Games by season", "A large repeated sample makes it possible to benchmark teams and test whether a basketball idea survives across seasons."),
-    reportSection("02", `About ${formatPercent(overallClose)} of games finished within five points`, `The share of five-point games moved from ${formatPercent(firstClose)} in ${firstSeason} to ${formatPercent(lastClose)} in ${lastSeason}. The game-level calculation uses each game ID once, so a close game is never counted twice just because both teams have rows.`, "Games decided by five points or fewer", "Close-game rate measures competitive pressure better than an average score. It shows how often late possessions, coaching choices, and execution can change the result."),
-    reportSection("03", `Home court created a ${formatNumber(homeRate - awayRate)} percentage-point win-rate gap`, `Home teams won ${formatPercent(homeRate)} of their team-game rows compared with ${formatPercent(awayRate)} for away teams. The chart shows whether that advantage was stable from ${firstSeason} through ${lastSeason}.`, "Home and away win rate by season", "Venue is a context variable that changes the meaning of a box score. Comparing it across thousands of games reveals the baseline challenge a road team faces."),
+    reportSection("02", `The highest factor-score quartile averaged a ${formatPercent(highestQuartileWinRate)} postseason win rate`, `Team-seasons in the highest four-factor score quartile averaged ${formatPercent(highestQuartileWinRate)} across their observed postseason games compared with ${formatPercent(lowestQuartileWinRate)} for the lowest quartile. This is the model’s calibration check across ${formatNumber(modelProfiles.length, 0)} postseason team-seasons.`, "Postseason win rate by factor-score quartile", "A metric earns its place when stronger profiles show up with stronger results. This comparison connects the formula to actual postseason outcomes."),
+    reportSection("03", `Offensive-rebound rate carries ${formatNumber(factorWeights.find((item) => item.label === "Second chances")?.value || 0, 0)}% of the model weight`, `The model ranks second chances ahead of effective shooting, turnover rate, and free-throw rate in this five-season postseason sample. These weights describe this dataset’s signal, not a universal law of basketball.`, "Relative weight of each March factor", "The weighting tells the reader where the model is finding repeatable information—and where a stat is better treated as context than as a standalone prediction."),
     reportSection("04", `Winning teams posted ${formatPercent(winEfg)} effective field-goal shooting`, `Winning rows averaged ${formatPercent(winEfg)} eFG compared with ${formatPercent(lossEfg)} for losing rows, a gap of ${formatNumber(winEfg - lossEfg)} percentage points. Effective field goal percentage gives extra credit for made threes.`, "Effective field-goal percentage by result", "Raw field-goal percentage can hide shot value. This metric connects shot selection and shot making to the result in one comparable measure."),
     reportSection("05", `Winners turned the ball over on ${formatPercent(winTurnoverRate)} of possessions`, `Losing rows turned the ball over on ${formatPercent(lossTurnoverRate)} of estimated possessions, a ${formatNumber(lossTurnoverRate - winTurnoverRate)} percentage-point gap. Turnover rate normalizes giveaways by the number of possessions available.`, "Turnover rate by result", "Possessions are limited. A small difference in turnover rate can quietly remove several scoring opportunities over the course of a game."),
-    reportSection("06", `Winning teams reached the line ${formatNumber(winFta - lossFta)} more times per team-game`, `Winning rows averaged ${formatNumber(winFta)} free-throw attempts compared with ${formatNumber(lossFta)} for losing rows. This is an outcome association, not proof that free throws alone caused the win.`, "Free-throw attempts by result", "Free throws show how often a team creates high-value, clock-stopped scoring chances—one useful window into rim pressure and physicality."),
-    reportSection("07", `The average game barely changed pace, but each possession became more productive`, `Estimated pace moved from ${formatNumber(firstPace)} to ${formatNumber(lastPace)} possessions per team-game, while points per possession rose from ${formatNumber(firstEfficiency, 3)} to ${formatNumber(lastEfficiency, 3)}. That is a ${formatPercent(100 * (lastEfficiency / firstEfficiency - 1))} increase in scoring efficiency.`, "Points per possession by season", "Per-possession measures separate tempo from efficiency. They help compare a fast team and a slow team without rewarding either style for simply creating more trips."),
-    reportSection("08", `${topEfficiencyTeam?.label || "The leading offense"} led the efficiency table`, `Among teams with at least 100 team-game rows, ${topEfficiencyTeam?.label || "the leader"} produced ${formatNumber(topEfficiencyTeam?.average || 0, 3)} points per estimated possession. The ranking uses a minimum sample so a short hot streak does not dominate the comparison.`, "Top teams by points per possession", "A team can score a lot because it plays fast. Points per possession asks the more useful scouting question: how well does each trip produce?"),
-    reportSection("09", `Three-point attempts rose from ${formatPercent(firstThree)} to ${formatPercent(lastThree)} of field-goal attempts`, `Three-point attempt rate measures shot selection, not shooting accuracy. The change across the five seasons is ${formatNumber(lastThree - firstThree)} percentage points, showing how strategic choices can shift even when pace stays nearly flat.`, "Three-point attempt rate by season", "Shot mix is a style fingerprint. It helps explain how teams create offense and why two teams with similar scores can play very different games."),
-    reportSection("10", `${fastestConference?.label || "The fastest conference"} played about ${formatNumber((fastestConference?.average || 0) - (slowestConference?.average || 0), 1)} more possessions than ${slowestConference?.label || "the slowest conference"}`, `Conference pace ranges from ${formatNumber(slowestConference?.average || 0, 1)} to ${formatNumber(fastestConference?.average || 0, 1)} estimated possessions per team-game. The comparison includes conferences with at least 100 team-game rows.`, "Fastest and slowest conference pace", "Conference context matters when evaluating a team. A raw points total means something different in a high-possession environment than in a deliberate one."),
+    reportSection("06", `Winners created a ${formatNumber(winOrbRate - lossOrbRate)} percentage-point offensive-rebound edge`, `Winning rows averaged ${formatPercent(winOrbRate)} offensive-rebound rate compared with ${formatPercent(lossOrbRate)} for losing rows. The rate uses offensive rebounds divided by offensive rebounds plus the opponent’s defensive rebounds.`, "Offensive-rebound rate by result", "Second chances are extra possessions. This is the factor the postseason model weighted most heavily in this sample."),
+    reportSection("07", `Winning teams had a ${formatNumber(winFreeThrowRate - lossFreeThrowRate)}-point free-throw-rate edge`, `Winning rows averaged ${formatPercent(winFreeThrowRate)} FTA per FGA compared with ${formatPercent(lossFreeThrowRate)} for losing rows. The model keeps this factor in context because its independent coefficient is negative after the other factors are included.`, "Free-throw rate by result", "Getting to the line still describes pressure and scoring opportunity, but a multivariable model can reveal when a stat overlaps with stronger signals."),
+    reportSection("08", `The average game barely changed pace, but each possession became more productive`, `Estimated pace moved from ${formatNumber(firstPace)} to ${formatNumber(lastPace)} possessions per team-game, while points per possession rose from ${formatNumber(firstEfficiency, 3)} to ${formatNumber(lastEfficiency, 3)}. That is a ${formatPercent(100 * (lastEfficiency / firstEfficiency - 1))} increase in scoring efficiency.`, "Points per possession by season", "Per-possession measures separate tempo from efficiency. They help compare a fast team and a slow team without rewarding either style for simply creating more trips."),
+    reportSection("09", `${topEfficiencyTeam?.label || "The leading offense"} led the efficiency table`, `Among teams with at least 100 team-game rows, ${topEfficiencyTeam?.label || "the leader"} produced ${formatNumber(topEfficiencyTeam?.average || 0, 3)} points per estimated possession. The ranking uses a minimum sample so a short hot streak does not dominate the comparison.`, "Top teams by points per possession", "A team can score a lot because it plays fast. Points per possession asks the more useful scouting question: how well does each trip produce?"),
+    reportSection("10", `Three-point attempts rose from ${formatPercent(firstThree)} to ${formatPercent(lastThree)} of field-goal attempts`, `Three-point attempt rate measures shot selection, not shooting accuracy. The change across the five seasons is ${formatNumber(lastThree - firstThree)} percentage points, showing why shot volume belongs in the dashboard as context rather than in the core odds formula.`, "Three-point attempt rate by season", "Shot mix is a style fingerprint. It helps explain how teams create offense without confusing volume with winning probability."),
   ].join("");
 
   renderBars(document.getElementById("report-chart-01"), seasonGames.map((item) => ({ label: item.label, value: item.rows })), { digits: 0, label: "Games by season" });
-  renderLine(document.getElementById("report-chart-02"), closeGameRate.map((item) => ({ label: item.label, value: item.average })), { label: "Share of games decided by five points or fewer", valueFormat: (value) => formatPercent(value) });
-  renderComparisonLine(document.getElementById("report-chart-03"), homeAwayBySeason, { label: "Home and away win rate by season", valueFormat: (value) => formatPercent(value), height: 340 });
+  renderBars(document.getElementById("report-chart-02"), modelQuartiles.map((item) => ({ label: item.label, value: item.average })), { label: "Postseason win rate by factor-score quartile", valueFormat: (value) => formatPercent(value) });
+  renderBars(document.getElementById("report-chart-03"), factorWeights, { label: "Relative weight of each March factor", valueFormat: (value) => formatPercent(value) });
   renderBars(document.getElementById("report-chart-04"), efgByResult.map((item) => ({ label: item.label, value: item.average })), { label: "Effective field-goal percentage by result", valueFormat: (value) => formatPercent(value) });
   renderBars(document.getElementById("report-chart-05"), turnoverRateByResult.map((item) => ({ label: item.label, value: item.average })), { label: "Turnover rate by result", valueFormat: (value) => formatPercent(value) });
-  renderBars(document.getElementById("report-chart-06"), ftaByResult.map((item) => ({ label: item.label, value: item.average })), { label: "Free-throw attempts by result" });
-  renderLine(document.getElementById("report-chart-07"), seasonEfficiency.map((item) => ({ label: item.label, value: item.average })), { label: "Points per possession by season", valueFormat: (value) => formatNumber(value, 3) });
-  renderHorizontal(document.getElementById("report-chart-08"), teamEfficiency.map((item) => ({ label: item.label, value: item.average })), { top: 8, label: "Top teams by points per possession", valueFormat: (value) => formatNumber(value, 3) });
-  renderLine(document.getElementById("report-chart-09"), seasonThreeRate.map((item) => ({ label: item.label, value: item.average })), { label: "Three-point attempt rate by season", valueFormat: (value) => formatPercent(value) });
-  renderHorizontal(document.getElementById("report-chart-10"), conferencePaceChart.map((item) => ({ label: item.label, value: item.average })), { top: conferencePaceChart.length, label: "Fastest and slowest conference pace", valueFormat: (value) => formatNumber(value, 1) });
+  renderBars(document.getElementById("report-chart-06"), orbRateByResult.map((item) => ({ label: item.label, value: item.average })), { label: "Offensive-rebound rate by result", valueFormat: (value) => formatPercent(value) });
+  renderBars(document.getElementById("report-chart-07"), freeThrowRateByResult.map((item) => ({ label: item.label, value: item.average })), { label: "Free-throw rate by result", valueFormat: (value) => formatPercent(value) });
+  renderLine(document.getElementById("report-chart-08"), seasonEfficiency.map((item) => ({ label: item.label, value: item.average })), { label: "Points per possession by season", valueFormat: (value) => formatNumber(value, 3) });
+  renderHorizontal(document.getElementById("report-chart-09"), teamEfficiency.map((item) => ({ label: item.label, value: item.average })), { top: 8, label: "Top teams by points per possession", valueFormat: (value) => formatNumber(value, 3) });
+  renderLine(document.getElementById("report-chart-10"), seasonThreeRate.map((item) => ({ label: item.label, value: item.average })), { label: "Three-point attempt rate by season", valueFormat: (value) => formatPercent(value) });
 
   const dropped = quality.dropped_rows ?? 0;
   document.getElementById("methodology-copy").innerHTML = `The raw ESPN/SportsDataverse files contain one row per team per game. I combined seasons 2022–2026, kept rows whose team ID appears in the public 2026 Division I crosswalk, and dropped ${formatNumber(dropped, 0)} rows belonging to non-D-I teams or rows missing a required score/team identifier. The final file contains ${formatNumber(rows.length, 0)} rows and ${formatNumber(unique(rows, "teamId"), 0)} teams. A team-game row is the unit of analysis; the opponent is retained as a descriptive field. Game-level margin findings use each game ID once. Points, rebounds, assists, turnovers, free throws, and shooting percentages are taken from the source box score. Three-point rate equals 3PA/FGA × 100. Effective field-goal percentage equals (FGM + 0.5 × 3PM)/FGA × 100. Estimated possessions equal FGA − offensive rebounds + turnovers + 0.44 × FTA; turnover rate equals turnovers divided by estimated possessions. Win rate equals winning team-game rows divided by all team-game rows. The March model uses regular-season profiles for effective FG%, turnover rate, offensive-rebound rate, and free-throw rate, then estimates a one-game postseason win probability and raises it to six for a simple title-path proxy.`;
@@ -587,13 +645,15 @@ const measureDefinitions = {
   threePA: { label: "Average 3PA", key: "threePA", format: (value) => formatNumber(value) },
   threeRate: { label: "3-point shot attempt rate", key: "threeRate", format: (value) => formatPercent(value) },
   efg: { label: "Effective FG%", key: "efg", format: (value) => formatPercent(value) },
+  turnoverRate: { label: "Turnover rate", key: "turnoverRate", format: (value) => formatPercent(value) },
+  orbRate: { label: "Offensive-rebound rate", key: "orbRate", format: (value) => formatPercent(value) },
+  freeThrowRate: { label: "Free-throw rate", key: "freeThrowRate", format: (value) => formatPercent(value) },
   rebounds: { label: "Average rebounds", key: "rebounds", format: (value) => formatNumber(value) },
   pointsInPaint: { label: "Shots around rim (paint points proxy)", key: "pointsInPaint", format: (value) => formatNumber(value) },
   freeThrowAttempts: { label: "Free throw attempts", key: "fta", format: (value) => formatNumber(value) },
   steals: { label: "Steals", key: "steals", format: (value) => formatNumber(value) },
   blocks: { label: "Blocks", key: "blocks", format: (value) => formatNumber(value) },
   turnovers: { label: "Average turnovers", key: "turnovers", format: (value) => formatNumber(value) },
-  turnoverRate: { label: "Turnover rate", key: "turnoverRate", format: (value) => formatPercent(value) },
   possessions: { label: "Number of possessions", key: "possessions", format: (value) => formatNumber(value) },
 };
 
@@ -795,8 +855,8 @@ function updateDashboard(rows) {
   document.getElementById("summary-teamgames").textContent = formatNumber(filtered.length, 0);
   document.getElementById("summary-games").textContent = formatNumber(unique(filtered, "gameId"), 0);
   document.getElementById("summary-teams").textContent = formatNumber(unique(filtered, "teamId"), 0);
-  document.getElementById("summary-average").textContent = formatNumber(mean(filtered, "points"));
-  document.getElementById("summary-average-label").textContent = "Average points per team-game";
+  document.getElementById("summary-average").textContent = formatPercent(mean(filtered, "efg"));
+  document.getElementById("summary-average-label").textContent = "Average effective FG%";
   document.getElementById("dashboard-status").textContent = `${formatNumber(filtered.length, 0)} team-game rows match the current filters. Charts use ${measure.label.toLowerCase()} and update in the browser.`;
   updateTeamComparison(rows, measureKey);
   updateHeadToHead(rows);
@@ -838,7 +898,7 @@ function initializeDashboard(rows) {
 
   document.getElementById("reset-filters").addEventListener("click", () => {
     ["filter-season", "filter-team", "filter-conference", "filter-venue", "filter-result"].forEach((id) => { document.getElementById(id).value = "all"; });
-    document.getElementById("measure-select").value = "points";
+    document.getElementById("measure-select").value = "efg";
     document.getElementById("breakdown-select").value = "season";
     if (teams.length > 1) {
       document.getElementById("compare-team-a").value = teams[0];
