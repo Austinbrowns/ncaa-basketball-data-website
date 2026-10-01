@@ -15,6 +15,14 @@ const sum = (rows, key) => rows.reduce((total, row) => total + (number(row[key])
 
 const unique = (rows, key) => new Set(rows.map((row) => row[key])).size;
 
+function uniqueGameRows(rows) {
+  const games = new Map();
+  rows.forEach((row) => {
+    if (!games.has(row.gameId)) games.set(row.gameId, row);
+  });
+  return [...games.values()];
+}
+
 const formatNumber = (value, digits = 1) => {
   if (!Number.isFinite(value)) return "—";
   return new Intl.NumberFormat("en-US", { maximumFractionDigits: digits }).format(value);
@@ -333,9 +341,9 @@ function renderDots(container, items, options = {}) {
   container.innerHTML = chartFrame(width, height, content, options.label || "Dot chart");
 }
 
-function reportSection(id, heading, copy, chartTitle) {
+function reportSection(id, heading, copy, chartTitle, why) {
   return `<section class="report-section">
-    <div class="section-copy"><p class="eyebrow">Finding ${id}</p><h2>${escapeHtml(heading)}</h2><p>${copy}</p></div>
+    <div class="section-copy"><p class="eyebrow">Finding ${id}</p><h2>${escapeHtml(heading)}</h2><p>${escapeHtml(copy)}</p><div class="why-it-matters"><span>Why it matters</span><p>${escapeHtml(why)}</p></div></div>
     <div class="chart-wrap"><div class="chart-title">${escapeHtml(chartTitle)}</div><div id="report-chart-${id}" class="chart"></div></div>
   </section>`;
 }
@@ -346,63 +354,91 @@ function getSeasonGroups(rows, measureKey) {
 }
 
 function renderReport(rows, quality) {
-  const averagePoints = mean(rows, "points");
+  const gameRows = uniqueGameRows(rows);
   const seasons = [...new Set(rows.map((row) => row.seasonLabel))].sort();
   const firstSeason = seasons[0];
   const lastSeason = seasons[seasons.length - 1];
-  const seasonPoints = getSeasonGroups(rows, "points");
+  const seasonGames = groupRows(gameRows, (row) => row.seasonLabel, () => 1).sort((a, b) => a.label.localeCompare(b.label));
   const seasonThreeRate = getSeasonGroups(rows, "threeRate");
+  const seasonPace = getSeasonGroups(rows, "possessions");
+  const seasonEfficiency = groupRows(rows, (row) => row.seasonLabel, (row) => row.possessions ? row.points / row.possessions : null).sort((a, b) => a.label.localeCompare(b.label));
+  const closeGameRate = groupRows(gameRows, (row) => row.seasonLabel, (row) => Math.abs(row.margin) <= 5 ? 100 : 0).sort((a, b) => a.label.localeCompare(b.label));
   const homeAway = groupRows(rows, (row) => row.venue, (row) => row.win).sort((a, b) => a.label.localeCompare(b.label));
-  const turnoverByResult = groupRows(rows, (row) => row.result, (row) => row.turnovers).sort((a, b) => a.label.localeCompare(b.label));
+  const homeAwayBySeason = ["Home", "Away"].map((venue) => ({
+    label: `${venue} win rate`,
+    values: seasons.map((season) => {
+      const group = rows.filter((row) => row.seasonLabel === season && row.venue === venue);
+      return { label: season, value: group.length ? 100 * mean(group, "win") : null };
+    }),
+  }));
+  const turnoverRateByResult = groupRows(rows, (row) => row.result, (row) => row.turnoverRate).sort((a, b) => a.label.localeCompare(b.label));
   const efgByResult = groupRows(rows, (row) => row.result, (row) => row.efg).sort((a, b) => a.label.localeCompare(b.label));
-  const teamGroups = groupRows(rows, (row) => row.team, (row) => row.points).filter((item) => item.rows >= 100);
-  const topScoring = [...teamGroups].sort((a, b) => b.average - a.average).slice(0, 8);
-  const topWinning = [...teamGroups].sort((a, b) => b.winRate - a.winRate).slice(0, 8);
-  topWinning.forEach((item) => { item.value = item.winRate; });
-  const conferenceGroups = groupRows(rows, (row) => row.conference, (row) => row.points).filter((item) => item.rows >= 100);
-  const conferencePoints = [...conferenceGroups].sort((a, b) => b.average - a.average).slice(0, 10);
+  const ftaByResult = groupRows(rows, (row) => row.result, (row) => row.fta).sort((a, b) => a.label.localeCompare(b.label));
+  const teamEfficiency = groupRows(rows, (row) => row.team, (row) => row.possessions ? row.points / row.possessions : null)
+    .filter((item) => item.rows >= 100)
+    .sort((a, b) => b.average - a.average)
+    .slice(0, 8);
+  const conferencePace = groupRows(rows, (row) => row.conference, (row) => row.possessions)
+    .filter((item) => item.label && item.rows >= 100)
+    .sort((a, b) => b.average - a.average);
+  const conferencePaceChart = [
+    ...[...conferencePace].sort((a, b) => a.average - b.average).slice(0, 5),
+    ...conferencePace.slice(0, 5),
+  ];
 
   document.getElementById("headline-seasons").textContent = seasons.length;
   document.getElementById("headline-teamgames").textContent = formatNumber(rows.length, 0);
   document.getElementById("headline-teams").textContent = formatNumber(unique(rows, "teamId"), 0);
-  document.getElementById("headline-points").textContent = formatNumber(averagePoints, 1);
-  document.getElementById("hero-summary").textContent = `This report uses ${formatNumber(rows.length, 0)} Division I team-game observations from ${firstSeason} through ${lastSeason}. It follows scoring, shot selection, home-court advantage, team leaders, conference differences, turnovers, and shooting efficiency.`;
+  document.getElementById("headline-pace").textContent = formatNumber(mean(rows, "possessions"), 1);
+  document.getElementById("hero-summary").textContent = `This report uses ${formatNumber(rows.length, 0)} Division I team-game observations from ${firstSeason} through ${lastSeason}. It turns repeated box scores into evidence about competitive games, home court, pace, shot quality, ball security, and the margins that separate winning from losing.`;
 
-  const firstPoints = seasonPoints[0]?.average || 0;
-  const lastPoints = seasonPoints.at(-1)?.average || 0;
+  const firstClose = closeGameRate[0]?.average || 0;
+  const lastClose = closeGameRate.at(-1)?.average || 0;
   const firstThree = seasonThreeRate[0]?.average || 0;
   const lastThree = seasonThreeRate.at(-1)?.average || 0;
+  const firstPace = seasonPace[0]?.average || 0;
+  const lastPace = seasonPace.at(-1)?.average || 0;
+  const firstEfficiency = seasonEfficiency[0]?.average || 0;
+  const lastEfficiency = seasonEfficiency.at(-1)?.average || 0;
+  const overallClose = gameRows.length ? 100 * gameRows.filter((row) => Math.abs(row.margin) <= 5).length / gameRows.length : 0;
   const homeRate = homeAway.find((item) => item.label === "Home")?.winRate || 0;
   const awayRate = homeAway.find((item) => item.label === "Away")?.winRate || 0;
-  const winTurnovers = turnoverByResult.find((item) => item.label === "Win")?.average || 0;
-  const lossTurnovers = turnoverByResult.find((item) => item.label === "Loss")?.average || 0;
+  const winTurnoverRate = turnoverRateByResult.find((item) => item.label === "Win")?.average || 0;
+  const lossTurnoverRate = turnoverRateByResult.find((item) => item.label === "Loss")?.average || 0;
   const winEfg = efgByResult.find((item) => item.label === "Win")?.average || 0;
   const lossEfg = efgByResult.find((item) => item.label === "Loss")?.average || 0;
+  const winFta = ftaByResult.find((item) => item.label === "Win")?.average || 0;
+  const lossFta = ftaByResult.find((item) => item.label === "Loss")?.average || 0;
+  const fastestConference = conferencePace[0];
+  const slowestConference = conferencePace.at(-1);
+  const topEfficiencyTeam = teamEfficiency[0];
 
   document.getElementById("report-sections").innerHTML = [
-    reportSection("01", `The sample contains ${formatNumber(rows.length, 0)} D-I team-game rows`, `The five-season file covers ${formatNumber(unique(rows, "teamId"), 0)} Division I teams and ${formatNumber(unique(rows, "gameId"), 0)} games. Each row represents one team’s box score in one game, which makes team and season comparisons direct.`, "Team-game rows by season"),
-    reportSection("02", `Average scoring changed from ${formatNumber(firstPoints)} to ${formatNumber(lastPoints)} points`, `Across all team-game rows, the average score was ${formatNumber(averagePoints)} points. The season trend shows whether the scoring environment moved upward or downward over the selected period.`, "Average team points"),
-    reportSection("03", `Three-point attempts made up ${formatPercent(firstThree)} to ${formatPercent(lastThree)} of field-goal attempts`, `Three-point rate is calculated as three-point attempts divided by all field-goal attempts. It measures shot selection rather than simply made threes, so it remains comparable when shooting accuracy changes.`, "Three-point attempt rate"),
-    reportSection("04", `Home teams won ${formatPercent(homeRate)} of their team-game rows`, `Home teams won ${formatPercent(homeRate)} of rows compared with ${formatPercent(awayRate)} for away teams, a difference of ${formatPercent(homeRate - awayRate)} percentage points. The comparison includes the same five seasons and uses the row-level winner indicator.`, "Win rate by venue"),
-    reportSection("05", `${escapeHtml(topScoring[0]?.label || "The leading teams")} led the scoring table`, `To keep the comparison from favoring teams with only a handful of observations, this ranking requires at least 100 team-game rows per team. The leading team averaged ${formatNumber(topScoring[0]?.average || 0)} points per team-game.`, "Top teams by average points"),
-    reportSection("06", `${escapeHtml(topWinning[0]?.label || "The leading teams")} had the highest win rate among durable samples`, `This ranking uses the same 100-row minimum and calculates wins divided by team-game rows. The leading team won ${formatPercent(topWinning[0]?.winRate || 0)} of its observed games.`, "Top teams by win rate"),
-    reportSection("07", `Winning teams averaged ${formatNumber(winTurnovers)} turnovers versus ${formatNumber(lossTurnovers)} for losing teams`, `Turnovers are averaged per team-game row. The difference is ${formatNumber(lossTurnovers - winTurnovers)} turnovers, which shows the relationship between ball security and the result without claiming that turnovers alone caused the result.`, "Average turnovers by result"),
-    reportSection("08", `Winning teams posted ${formatPercent(winEfg)} effective field-goal shooting`, `Effective field-goal percentage is calculated as (field goals made + 0.5 × three-pointers made) divided by field-goal attempts. Winning rows averaged ${formatPercent(winEfg)} compared with ${formatPercent(lossEfg)} for losing rows.`, "Effective field-goal percentage by result"),
-    reportSection("09", `${escapeHtml(conferencePoints[0]?.label || "The leading conference")} led conference scoring`, `Conference averages are based on team-game rows and are limited to conferences with at least 100 observations. The top conference averaged ${formatNumber(conferencePoints[0]?.average || 0)} points per team-game.`, "Top conferences by average points"),
+    reportSection("01", `The panel covers ${formatNumber(gameRows.length, 0)} games, not just a handful of headlines`, `The file contains ${formatNumber(rows.length, 0)} team-game observations from ${formatNumber(unique(rows, "teamId"), 0)} Division I teams across ${seasons.length} seasons. Each game contributes a team-level box score, so the report can test whether a pattern repeats instead of relying on a single tournament run.`, "Games by season", "A large repeated sample makes it possible to benchmark teams and test whether a basketball idea survives across seasons."),
+    reportSection("02", `About ${formatPercent(overallClose)} of games finished within five points`, `The share of five-point games moved from ${formatPercent(firstClose)} in ${firstSeason} to ${formatPercent(lastClose)} in ${lastSeason}. The game-level calculation uses each game ID once, so a close game is never counted twice just because both teams have rows.`, "Games decided by five points or fewer", "Close-game rate measures competitive pressure better than an average score. It shows how often late possessions, coaching choices, and execution can change the result."),
+    reportSection("03", `Home court created a ${formatNumber(homeRate - awayRate)} percentage-point win-rate gap`, `Home teams won ${formatPercent(homeRate)} of their team-game rows compared with ${formatPercent(awayRate)} for away teams. The chart shows whether that advantage was stable from ${firstSeason} through ${lastSeason}.`, "Home and away win rate by season", "Venue is a context variable that changes the meaning of a box score. Comparing it across thousands of games reveals the baseline challenge a road team faces."),
+    reportSection("04", `Winning teams posted ${formatPercent(winEfg)} effective field-goal shooting`, `Winning rows averaged ${formatPercent(winEfg)} eFG compared with ${formatPercent(lossEfg)} for losing rows, a gap of ${formatNumber(winEfg - lossEfg)} percentage points. Effective field goal percentage gives extra credit for made threes.`, "Effective field-goal percentage by result", "Raw field-goal percentage can hide shot value. This metric connects shot selection and shot making to the result in one comparable measure."),
+    reportSection("05", `Winners turned the ball over on ${formatPercent(winTurnoverRate)} of possessions`, `Losing rows turned the ball over on ${formatPercent(lossTurnoverRate)} of estimated possessions, a ${formatNumber(lossTurnoverRate - winTurnoverRate)} percentage-point gap. Turnover rate normalizes giveaways by the number of possessions available.`, "Turnover rate by result", "Possessions are limited. A small difference in turnover rate can quietly remove several scoring opportunities over the course of a game."),
+    reportSection("06", `Winning teams reached the line ${formatNumber(winFta - lossFta)} more times per team-game`, `Winning rows averaged ${formatNumber(winFta)} free-throw attempts compared with ${formatNumber(lossFta)} for losing rows. This is an outcome association, not proof that free throws alone caused the win.`, "Free-throw attempts by result", "Free throws show how often a team creates high-value, clock-stopped scoring chances—one useful window into rim pressure and physicality."),
+    reportSection("07", `The average game barely changed pace, but each possession became more productive`, `Estimated pace moved from ${formatNumber(firstPace)} to ${formatNumber(lastPace)} possessions per team-game, while points per possession rose from ${formatNumber(firstEfficiency, 3)} to ${formatNumber(lastEfficiency, 3)}. That is a ${formatPercent(100 * (lastEfficiency / firstEfficiency - 1))} increase in scoring efficiency.`, "Points per possession by season", "Per-possession measures separate tempo from efficiency. They help compare a fast team and a slow team without rewarding either style for simply creating more trips."),
+    reportSection("08", `${topEfficiencyTeam?.label || "The leading offense"} led the efficiency table`, `Among teams with at least 100 team-game rows, ${topEfficiencyTeam?.label || "the leader"} produced ${formatNumber(topEfficiencyTeam?.average || 0, 3)} points per estimated possession. The ranking uses a minimum sample so a short hot streak does not dominate the comparison.`, "Top teams by points per possession", "A team can score a lot because it plays fast. Points per possession asks the more useful scouting question: how well does each trip produce?"),
+    reportSection("09", `Three-point attempts rose from ${formatPercent(firstThree)} to ${formatPercent(lastThree)} of field-goal attempts`, `Three-point attempt rate measures shot selection, not shooting accuracy. The change across the five seasons is ${formatNumber(lastThree - firstThree)} percentage points, showing how strategic choices can shift even when pace stays nearly flat.`, "Three-point attempt rate by season", "Shot mix is a style fingerprint. It helps explain how teams create offense and why two teams with similar scores can play very different games."),
+    reportSection("10", `${fastestConference?.label || "The fastest conference"} played about ${formatNumber((fastestConference?.average || 0) - (slowestConference?.average || 0), 1)} more possessions than ${slowestConference?.label || "the slowest conference"}`, `Conference pace ranges from ${formatNumber(slowestConference?.average || 0, 1)} to ${formatNumber(fastestConference?.average || 0, 1)} estimated possessions per team-game. The comparison includes conferences with at least 100 team-game rows.`, "Fastest and slowest conference pace", "Conference context matters when evaluating a team. A raw points total means something different in a high-possession environment than in a deliberate one."),
   ].join("");
 
-  renderBars(document.getElementById("report-chart-01"), seasonPoints.map((item) => ({ label: item.label, value: item.rows })), { digits: 0, label: "Team-game rows by season" });
-  renderLine(document.getElementById("report-chart-02"), seasonPoints.map((item) => ({ label: item.label, value: item.average })), { label: "Average team points by season" });
-  renderLine(document.getElementById("report-chart-03"), seasonThreeRate.map((item) => ({ label: item.label, value: item.average })), { label: "Three-point attempt rate by season", valueFormat: (value) => formatPercent(value) });
-  renderBars(document.getElementById("report-chart-04"), homeAway.map((item) => ({ label: item.label, value: item.winRate })), { label: "Win rate by venue", valueFormat: (value) => formatPercent(value) });
-  renderHorizontal(document.getElementById("report-chart-05"), topScoring.map((item) => ({ label: item.label, value: item.average })), { top: 8, label: "Top teams by average points" });
-  renderHorizontal(document.getElementById("report-chart-06"), topWinning.map((item) => ({ label: item.label, value: item.winRate })), { top: 8, label: "Top teams by win rate", valueFormat: (value) => formatPercent(value) });
-  renderBars(document.getElementById("report-chart-07"), turnoverByResult.map((item) => ({ label: item.label, value: item.average })), { label: "Average turnovers by result" });
-  renderBars(document.getElementById("report-chart-08"), efgByResult.map((item) => ({ label: item.label, value: item.average })), { label: "Effective field-goal percentage by result", valueFormat: (value) => formatPercent(value) });
-  renderHorizontal(document.getElementById("report-chart-09"), conferencePoints.map((item) => ({ label: item.label, value: item.average })), { top: 10, label: "Top conferences by average points" });
+  renderBars(document.getElementById("report-chart-01"), seasonGames.map((item) => ({ label: item.label, value: item.rows })), { digits: 0, label: "Games by season" });
+  renderLine(document.getElementById("report-chart-02"), closeGameRate.map((item) => ({ label: item.label, value: item.average })), { label: "Share of games decided by five points or fewer", valueFormat: (value) => formatPercent(value) });
+  renderComparisonLine(document.getElementById("report-chart-03"), homeAwayBySeason, { label: "Home and away win rate by season", valueFormat: (value) => formatPercent(value), height: 340 });
+  renderBars(document.getElementById("report-chart-04"), efgByResult.map((item) => ({ label: item.label, value: item.average })), { label: "Effective field-goal percentage by result", valueFormat: (value) => formatPercent(value) });
+  renderBars(document.getElementById("report-chart-05"), turnoverRateByResult.map((item) => ({ label: item.label, value: item.average })), { label: "Turnover rate by result", valueFormat: (value) => formatPercent(value) });
+  renderBars(document.getElementById("report-chart-06"), ftaByResult.map((item) => ({ label: item.label, value: item.average })), { label: "Free-throw attempts by result" });
+  renderLine(document.getElementById("report-chart-07"), seasonEfficiency.map((item) => ({ label: item.label, value: item.average })), { label: "Points per possession by season", valueFormat: (value) => formatNumber(value, 3) });
+  renderHorizontal(document.getElementById("report-chart-08"), teamEfficiency.map((item) => ({ label: item.label, value: item.average })), { top: 8, label: "Top teams by points per possession", valueFormat: (value) => formatNumber(value, 3) });
+  renderLine(document.getElementById("report-chart-09"), seasonThreeRate.map((item) => ({ label: item.label, value: item.average })), { label: "Three-point attempt rate by season", valueFormat: (value) => formatPercent(value) });
+  renderHorizontal(document.getElementById("report-chart-10"), conferencePaceChart.map((item) => ({ label: item.label, value: item.average })), { top: conferencePaceChart.length, label: "Fastest and slowest conference pace", valueFormat: (value) => formatNumber(value, 1) });
 
   const dropped = quality.dropped_rows ?? 0;
-  document.getElementById("methodology-copy").innerHTML = `The raw ESPN/SportsDataverse files contain one row per team per game. I combined seasons 2022–2026, kept rows whose team ID appears in the public 2026 Division I crosswalk, and dropped ${formatNumber(dropped, 0)} rows belonging to non-D-I teams or rows missing a required score/team identifier. The final file contains ${formatNumber(rows.length, 0)} rows and ${formatNumber(unique(rows, "teamId"), 0)} teams. A team-game row is the unit of analysis; the opponent is retained as a descriptive field. Points, rebounds, assists, turnovers, and shooting percentages are taken from the source box score. Three-point rate equals 3PA/FGA × 100. Effective field-goal percentage equals (FGM + 0.5 × 3PM)/FGA × 100. Win rate equals winning team-game rows divided by all team-game rows.`;
+  document.getElementById("methodology-copy").innerHTML = `The raw ESPN/SportsDataverse files contain one row per team per game. I combined seasons 2022–2026, kept rows whose team ID appears in the public 2026 Division I crosswalk, and dropped ${formatNumber(dropped, 0)} rows belonging to non-D-I teams or rows missing a required score/team identifier. The final file contains ${formatNumber(rows.length, 0)} rows and ${formatNumber(unique(rows, "teamId"), 0)} teams. A team-game row is the unit of analysis; the opponent is retained as a descriptive field. Game-level margin findings use each game ID once. Points, rebounds, assists, turnovers, free throws, and shooting percentages are taken from the source box score. Three-point rate equals 3PA/FGA × 100. Effective field-goal percentage equals (FGM + 0.5 × 3PM)/FGA × 100. Estimated possessions equal FGA − offensive rebounds + turnovers + 0.44 × FTA; turnover rate equals turnovers divided by estimated possessions. Win rate equals winning team-game rows divided by all team-game rows.`;
 }
 
 const measureDefinitions = {
