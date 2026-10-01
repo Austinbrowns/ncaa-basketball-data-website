@@ -226,12 +226,27 @@ function activateChartTooltips(container) {
     target.addEventListener("pointerleave", hide);
     target.addEventListener("focus", (event) => show(event, target));
     target.addEventListener("blur", hide);
+    target.addEventListener("click", () => {
+      const filterId = target.dataset.filterId;
+      const filterValue = target.dataset.filterValue;
+      if (!filterId || filterValue === undefined) return;
+      const select = document.getElementById(filterId);
+      if (!select || ![...select.options].some((option) => option.value === filterValue)) return;
+      select.value = filterValue;
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+    });
   });
 }
 
 function setChart(container, svg) {
   container.innerHTML = `${svg}<div class="chart-tooltip" role="tooltip"></div>`;
   activateChartTooltips(container);
+}
+
+function chartFilterAttributes(options, item) {
+  if (!options.filterId) return "";
+  const value = options.filterValue ? options.filterValue(item) : item.label;
+  return ` data-filter-id="${escapeHtml(options.filterId)}" data-filter-value="${escapeHtml(value)}"`;
 }
 
 function renderBars(container, items, options = {}) {
@@ -257,7 +272,7 @@ function renderBars(container, items, options = {}) {
     const barHeight = (Math.max(0, item.value) / maxValue) * plotHeight;
     const y = margin.top + plotHeight - barHeight;
     const displayValue = options.valueFormat ? options.valueFormat(item.value) : formatNumber(item.value);
-    content += `<rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="5" class="chart-bar" data-tooltip="${escapeHtml(`${item.label}: ${displayValue}`)}" aria-label="${escapeHtml(`${item.label}: ${displayValue}`)}"/>`;
+    content += `<rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" rx="5" class="chart-bar" data-tooltip="${escapeHtml(`${item.label}: ${displayValue}`)}" aria-label="${escapeHtml(`${item.label}: ${displayValue}`)}"${chartFilterAttributes(options, item)}/>`;
     content += svgText(x + barWidth / 2, y - 8, displayValue, 'class="chart-value" text-anchor="middle"');
     content += `<text x="${x + barWidth / 2}" y="${height - margin.bottom + 22}" class="chart-label" text-anchor="end" transform="rotate(-35 ${x + barWidth / 2} ${height - margin.bottom + 22})">${escapeHtml(shortLabel(item.label, 22))}</text>`;
   });
@@ -290,7 +305,7 @@ function renderLine(container, items, options = {}) {
   content += `<polyline points="${points.map((point) => `${point.x},${point.y}`).join(" ")}" class="chart-line"/>`;
   points.forEach((point) => {
     const displayValue = options.valueFormat ? options.valueFormat(point.value) : formatNumber(point.value);
-    content += `<circle cx="${point.x}" cy="${point.y}" r="5" class="chart-dot" data-tooltip="${escapeHtml(`${point.label}: ${displayValue}`)}" aria-label="${escapeHtml(`${point.label}: ${displayValue}`)}"/>`;
+    content += `<circle cx="${point.x}" cy="${point.y}" r="5" class="chart-dot" data-tooltip="${escapeHtml(`${point.label}: ${displayValue}`)}" aria-label="${escapeHtml(`${point.label}: ${displayValue}`)}"${chartFilterAttributes(options, point)}/>`;
     content += svgText(point.x, height - 18, shortLabel(point.label, 15), 'class="chart-label" text-anchor="middle"');
     content += svgText(point.x, point.y - 12, displayValue, 'class="chart-value" text-anchor="middle"');
   });
@@ -336,7 +351,7 @@ function renderComparisonLine(container, series, options = {}) {
     points.forEach((point) => {
       const displayValue = options.valueFormat ? options.valueFormat(point.value) : formatNumber(point.value);
       const tooltipText = `${line.label} · ${point.label}: ${displayValue}`;
-      content += `<circle cx="${point.x}" cy="${point.y}" r="5" class="${dotClass}" data-tooltip="${escapeHtml(tooltipText)}" aria-label="${escapeHtml(tooltipText)}"><title>${escapeHtml(tooltipText)}</title></circle>`;
+      content += `<circle cx="${point.x}" cy="${point.y}" r="5" class="${dotClass}" data-tooltip="${escapeHtml(tooltipText)}" aria-label="${escapeHtml(tooltipText)}"${chartFilterAttributes(options, point)}><title>${escapeHtml(tooltipText)}</title></circle>`;
       content += svgText(point.x, point.y - 12, displayValue, 'class="chart-value" text-anchor="middle"');
     });
   });
@@ -372,7 +387,7 @@ function renderHorizontal(container, items, options = {}) {
     const barWidth = Math.max(2, (Math.max(0, item.value) / maxValue) * plotWidth);
     const displayValue = options.valueFormat ? options.valueFormat(item.value) : formatNumber(item.value);
     content += svgText(margin.left - 10, y + 17, shortLabel(item.label, 23), 'class="chart-label" text-anchor="end"');
-    content += `<rect x="${margin.left}" y="${y + 4}" width="${barWidth}" height="20" rx="4" class="chart-bar chart-bar-alt" data-tooltip="${escapeHtml(`${item.label}: ${displayValue}`)}" aria-label="${escapeHtml(`${item.label}: ${displayValue}`)}"/>`;
+    content += `<rect x="${margin.left}" y="${y + 4}" width="${barWidth}" height="20" rx="4" class="chart-bar chart-bar-alt" data-tooltip="${escapeHtml(`${item.label}: ${displayValue}`)}" aria-label="${escapeHtml(`${item.label}: ${displayValue}`)}"${chartFilterAttributes(options, item)}/>`;
     content += svgText(margin.left + barWidth + 8, y + 19, displayValue, 'class="chart-value"');
   });
 
@@ -401,7 +416,7 @@ function renderDots(container, items, options = {}) {
     const y = margin.top + plotHeight - (item.value / maxY) * plotHeight;
     const displayValue = options.valueFormat ? options.valueFormat(item.value) : formatNumber(item.value);
     const tooltipText = `${item.label} · ${formatNumber(item.rows, 0)} rows: ${displayValue}`;
-    content += `<circle cx="${x}" cy="${y}" r="5" class="chart-dot chart-dot-soft" data-tooltip="${escapeHtml(tooltipText)}" aria-label="${escapeHtml(tooltipText)}"><title>${escapeHtml(tooltipText)}</title></circle>`;
+    content += `<circle cx="${x}" cy="${y}" r="5" class="chart-dot chart-dot-soft" data-tooltip="${escapeHtml(tooltipText)}" aria-label="${escapeHtml(tooltipText)}"${chartFilterAttributes(options, item)}><title>${escapeHtml(tooltipText)}</title></circle>`;
   });
   content += svgText(width / 2, height - 15, "Rows in group", 'class="chart-axis" text-anchor="middle"');
   content += `<text x="16" y="${height / 2}" class="chart-axis" text-anchor="middle" transform="rotate(-90 16 ${height / 2})">${escapeHtml(options.yLabel || "Value")}</text>`;
@@ -505,6 +520,58 @@ function buildMarchModel(rows) {
     postseasonGameRows: rows.filter((row) => row.seasonPhase === "Postseason").length,
     totalWeight,
   };
+}
+
+function scoreMarchMetrics(metrics, model) {
+  const zScores = {};
+  let logit = MARCH_MODEL.intercept;
+  MARCH_MODEL.features.forEach((feature) => {
+    const zScore = (metrics[feature.key] - model.reference[feature.key].average) / model.reference[feature.key].deviation;
+    zScores[feature.key] = zScore;
+    logit += feature.coefficient * zScore;
+  });
+  const winProbability = 1 / (1 + Math.exp(-logit));
+  return { zScores, logit, winProbability, titlePathProbability: winProbability ** MARCH_MODEL.pathLength };
+}
+
+function getTeamModelProfile(model, rows, team, seasonFilter = "all") {
+  if (!team || !model) return null;
+  const profiles = model.profiles
+    .filter((profile) => profile.team === team && (seasonFilter === "all" || profile.seasonLabel === seasonFilter))
+    .sort((a, b) => String(b.seasonLabel).localeCompare(String(a.seasonLabel), undefined, { numeric: true }));
+  if (profiles.length) return profiles[0];
+
+  const teamRows = rows.filter((row) => row.team === team && row.seasonPhase === "Regular season" && (seasonFilter === "all" || row.seasonLabel === seasonFilter));
+  if (!teamRows.length) return null;
+  const profile = {
+    key: `${teamRows[0].seasonLabel}::${teamRows[0].teamId}`,
+    seasonLabel: teamRows[0].seasonLabel,
+    teamId: teamRows[0].teamId,
+    team,
+    regularGames: teamRows.length,
+  };
+  MARCH_MODEL.features.forEach((feature) => { profile[feature.key] = mean(teamRows, feature.key); });
+  return { ...profile, ...scoreMarchMetrics(profile, model), postseasonGames: 0, postseasonWins: 0, postseasonWinRate: null };
+}
+
+function teamStyle(profile) {
+  if (!profile) return "Profile waiting";
+  const styles = [
+    { key: "efg", label: "Shot-making team" },
+    { key: "turnoverRate", label: "Low-turnover team", reverse: true },
+    { key: "orbRate", label: "Second-chance machine" },
+    { key: "freeThrowRate", label: "Pressure-at-the-line team" },
+  ];
+  return styles.sort((a, b) => {
+    const aScore = (a.reverse ? -1 : 1) * (profile.zScores?.[a.key] || 0);
+    const bScore = (b.reverse ? -1 : 1) * (profile.zScores?.[b.key] || 0);
+    return bScore - aScore;
+  })[0].label;
+}
+
+function getFeatureStrength(profile, feature) {
+  const zScore = profile?.zScores?.[feature.key] || 0;
+  return feature.coefficient < 0 ? -zScore : zScore;
 }
 
 function renderMarchTakeaway(model, latestSeason) {
@@ -658,10 +725,10 @@ const measureDefinitions = {
 };
 
 const breakdownDefinitions = {
-  season: { label: "Season", key: (row) => row.seasonLabel },
-  conference: { label: "Conference", key: (row) => row.conference },
-  venue: { label: "Venue", key: (row) => row.venue },
-  team: { label: "Team", key: (row) => row.team },
+  season: { label: "Season", key: (row) => row.seasonLabel, filterId: "filter-season" },
+  conference: { label: "Conference", key: (row) => row.conference, filterId: "filter-conference" },
+  venue: { label: "Venue", key: (row) => row.venue, filterId: "filter-venue" },
+  team: { label: "Team", key: (row) => row.team, filterId: "filter-team" },
 };
 
 function measureValue(row, measureKey) {
@@ -705,6 +772,177 @@ function fillChoiceSelect(selectId, values, placeholder) {
   const select = document.getElementById(selectId);
   select.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>${values.map((value) => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join("")}`;
 }
+
+function renderActiveFilters(rows) {
+  const container = document.getElementById("active-filters");
+  if (!container) return;
+  const filters = [
+    ["filter-season", "Season"],
+    ["filter-team", "Team"],
+    ["filter-conference", "Conference"],
+    ["filter-venue", "Venue"],
+    ["filter-result", "Result"],
+  ].map(([id, label]) => {
+    const select = document.getElementById(id);
+    return { id, label, value: select.value, text: select.options[select.selectedIndex]?.textContent || select.value };
+  }).filter((filter) => filter.value !== "all");
+
+  if (!filters.length) {
+    container.innerHTML = `<span class="active-filter-empty">No filters pinned. Click a chart mark to lock in a view.</span>`;
+    return;
+  }
+  container.innerHTML = filters.map((filter) => `<button type="button" class="filter-chip" data-clear-filter="${escapeHtml(filter.id)}"><span>${escapeHtml(filter.label)}</span>${escapeHtml(filter.text)} <b aria-hidden="true">×</b></button>`).join("");
+  container.querySelectorAll("[data-clear-filter]").forEach((button) => {
+    button.addEventListener("click", () => {
+      document.getElementById(button.dataset.clearFilter).value = "all";
+      updateDashboard(rows);
+    });
+  });
+}
+
+function renderTeamDNA(rows, model) {
+  const grid = document.getElementById("team-dna-grid");
+  const status = document.getElementById("team-dna-status");
+  const teamA = document.getElementById("compare-team-a").value;
+  const teamB = document.getElementById("compare-team-b").value;
+  const season = document.getElementById("filter-season").value;
+  if (!teamA || !teamB || teamA === teamB) {
+    status.textContent = "Choose two different teams to build their profiles.";
+    grid.innerHTML = `<div class="empty-chart">Choose two different teams to display their Team DNA.</div>`;
+    return;
+  }
+
+  const profiles = [getTeamModelProfile(model, rows, teamA, season), getTeamModelProfile(model, rows, teamB, season)];
+  if (profiles.some((profile) => !profile)) {
+    status.textContent = "One of these teams does not have enough regular-season rows for a profile.";
+    grid.innerHTML = `<div class="empty-chart">Not enough regular-season data for both team profiles.</div>`;
+    return;
+  }
+
+  status.textContent = `Regular-season profiles · ${season === "all" ? "latest available season" : season}`;
+  grid.innerHTML = profiles.map((profile, index) => {
+    const accent = index === 0 ? "dna-card-a" : "dna-card-b";
+    const score = formatPercent(100 * profile.titlePathProbability);
+    return `<article class="dna-card ${accent}">
+      <div class="dna-card-top"><div><span class="card-label">${index === 0 ? "Team one" : "Team two"}</span><h3>${escapeHtml(profile.team)}</h3><span class="dna-style">${escapeHtml(teamStyle(profile))}</span></div><div class="dna-score"><strong>${score}</strong><span>March profile</span></div></div>
+      <div class="dna-metrics">${MARCH_MODEL.features.map((feature) => {
+        const zScore = profile.zScores[feature.key] || 0;
+        const strength = Math.max(8, Math.min(92, 50 + getFeatureStrength(profile, feature) * 17));
+        return `<div class="dna-metric"><div><span>${escapeHtml(feature.label)}</span><strong>${formatPercent(profile[feature.key])}</strong></div><div class="dna-track"><span style="width:${strength}%"></span><i aria-hidden="true"></i></div><small>${zScore >= 0 ? "+" : "−"}${formatNumber(Math.abs(zScore), 1)} standard deviations vs postseason reference</small></div>`;
+      }).join("")}</div>
+    </article>`;
+  }).join("");
+}
+
+function renderMatchupInsights(rows, model) {
+  const container = document.getElementById("matchup-insights");
+  const teamA = document.getElementById("compare-team-a").value;
+  const teamB = document.getElementById("compare-team-b").value;
+  const season = document.getElementById("filter-season").value;
+  if (!container || !teamA || !teamB || teamA === teamB) {
+    if (container) container.innerHTML = "";
+    return;
+  }
+  const profileA = getTeamModelProfile(model, rows, teamA, season);
+  const profileB = getTeamModelProfile(model, rows, teamB, season);
+  if (!profileA || !profileB) {
+    container.innerHTML = `<div class="empty-chart">Not enough regular-season data to calculate the four-factor matchup edge.</div>`;
+    return;
+  }
+
+  const edges = MARCH_MODEL.features.map((feature) => {
+    const valueA = profileA[feature.key];
+    const valueB = profileB[feature.key];
+    const signedModelEdge = feature.coefficient * (valueA - valueB);
+    const winner = signedModelEdge >= 0 ? teamA : teamB;
+    return { feature, valueA, valueB, winner, difference: Math.abs(valueA - valueB), signedModelEdge };
+  }).sort((a, b) => Math.abs(b.signedModelEdge) - Math.abs(a.signedModelEdge));
+  const strongest = edges[0];
+  const counter = edges[1];
+  const lead = strongest.winner;
+  const other = lead === teamA ? teamB : teamA;
+  container.innerHTML = `<div class="matchup-insight-copy"><span class="eyebrow">Four-factor scouting read</span><strong>${escapeHtml(lead)} owns the biggest model edge.</strong><p>${escapeHtml(lead)} leads ${escapeHtml(strongest.feature.label.toLowerCase())} by ${formatNumber(strongest.difference)} percentage points. ${escapeHtml(other)} counters with ${escapeHtml(counter.feature.label.toLowerCase())}. Click a card to keep exploring the matchup.</p></div><div class="matchup-edge-grid">${edges.map((edge) => {
+    const winnerIsA = edge.winner === teamA;
+    return `<button type="button" class="matchup-edge-card ${winnerIsA ? "edge-a" : "edge-b"}" data-matchup-feature="${escapeHtml(edge.feature.key)}"><span class="card-label">${escapeHtml(edge.feature.shortLabel)}</span><strong>${escapeHtml(edge.winner)}</strong><span>${formatNumber(edge.difference)} pp edge</span><small>${escapeHtml(teamA)} ${formatPercent(edge.valueA)} · ${escapeHtml(teamB)} ${formatPercent(edge.valueB)}</small></button>`;
+  }).join("")}</div>`;
+  container.querySelectorAll("[data-matchup-feature]").forEach((card) => {
+    card.addEventListener("click", () => {
+      document.getElementById("measure-select").value = card.dataset.matchupFeature;
+      document.getElementById("breakdown-select").value = "team";
+      updateDashboard(rows);
+      document.getElementById("dashboard-chart-bars")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  });
+}
+
+function renderScenarioSliders() {
+  const container = document.getElementById("scenario-sliders");
+  if (!container) return;
+  container.innerHTML = MARCH_MODEL.features.map((feature) => `<label class="scenario-slider" for="scenario-${feature.key}"><span><b>${escapeHtml(feature.label)}</b><output id="scenario-output-${feature.key}">0.0 pp</output></span><input id="scenario-${feature.key}" type="range" min="-3" max="3" step="0.1" value="0" data-scenario-feature="${escapeHtml(feature.key)}" aria-label="Change ${escapeHtml(feature.label)} by percentage points"><small>Move by percentage points · ${escapeHtml(feature.definition)}</small></label>`).join("");
+}
+
+function updateScenario(model, rows) {
+  const team = document.getElementById("scenario-team")?.value;
+  const season = document.getElementById("filter-season")?.value || "all";
+  const profile = getTeamModelProfile(model, rows, team, season);
+  const probability = document.getElementById("scenario-probability");
+  const baseline = document.getElementById("scenario-baseline");
+  const insight = document.getElementById("scenario-insight");
+  if (!profile) {
+    probability.textContent = "—";
+    baseline.textContent = "Choose a team with regular-season data.";
+    insight.textContent = "The model will explain which change moved the estimate.";
+    return;
+  }
+
+  const adjusted = { ...profile };
+  const changes = [];
+  MARCH_MODEL.features.forEach((feature) => {
+    const input = document.getElementById(`scenario-${feature.key}`);
+    const output = document.getElementById(`scenario-output-${feature.key}`);
+    const delta = Number(input?.value || 0);
+    adjusted[feature.key] = profile[feature.key] + delta;
+    if (output) output.textContent = `${delta >= 0 ? "+" : "−"}${formatNumber(Math.abs(delta), 1)} pp`;
+    if (delta) changes.push({ feature, delta });
+  });
+  const scenario = scoreMarchMetrics(adjusted, model);
+  const basePercent = 100 * profile.titlePathProbability;
+  const scenarioPercent = 100 * scenario.titlePathProbability;
+  probability.textContent = formatPercent(scenarioPercent);
+  baseline.textContent = `${profile.team} baseline: ${formatPercent(basePercent)} · ${profile.seasonLabel}`;
+  if (!changes.length) {
+    insight.textContent = "Move a slider to test how a better or worse factor profile changes the estimate.";
+    return;
+  }
+  const change = scenarioPercent - basePercent;
+  const strongestChange = changes.sort((a, b) => Math.abs(b.delta * b.feature.coefficient) - Math.abs(a.delta * a.feature.coefficient))[0];
+  const direction = change >= 0 ? "up" : "down";
+  insight.textContent = `${strongestChange.feature.label} is the biggest modeled lever in this scenario. The estimated title path moves ${direction} ${formatNumber(Math.abs(change), 2)} percentage points.`;
+}
+
+const DASHBOARD_MODES = {
+  scout: { badge: "Scouting lens · 2022–2026", title: "Read the game<br><span>like a scout.</span>", description: "Keep every control available and build a custom scouting report.", measure: "efg", breakdown: "season" },
+  march: { badge: "March lens · four factors", title: "Find the edge<br><span>that travels.</span>", description: "Put effective shooting, ball security, second chances, and pressure at the line in the spotlight.", measure: "efg", breakdown: "team" },
+  fan: { badge: "Fan lens · big picture", title: "Make the numbers<br><span>feel like a game.</span>", description: "See team stories, scoring, and rankings first; switch back to Scout or March mode for deeper detail.", measure: "points", breakdown: "team" },
+};
+
+function setDashboardMode(mode, rows) {
+  const config = DASHBOARD_MODES[mode] || DASHBOARD_MODES.scout;
+  document.body.dataset.dashboardMode = mode;
+  document.querySelectorAll("[data-dashboard-mode]").forEach((button) => {
+    const isActive = button.dataset.dashboardMode === mode;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-selected", String(isActive));
+  });
+  document.getElementById("dashboard-mode-badge").textContent = config.badge;
+  document.getElementById("dashboard-heading-title").innerHTML = config.title;
+  document.getElementById("mode-description").textContent = config.description;
+  document.getElementById("measure-select").value = config.measure;
+  document.getElementById("breakdown-select").value = config.breakdown;
+  updateDashboard(rows);
+}
+
+let dashboardModel = null;
 
 function comparisonRows(rows) {
   const season = document.getElementById("filter-season").value;
@@ -857,15 +1095,20 @@ function updateDashboard(rows) {
   document.getElementById("summary-teams").textContent = formatNumber(unique(filtered, "teamId"), 0);
   document.getElementById("summary-average").textContent = formatPercent(mean(filtered, "efg"));
   document.getElementById("summary-average-label").textContent = "Average effective FG%";
-  document.getElementById("dashboard-status").textContent = `${formatNumber(filtered.length, 0)} team-game rows match the current filters. Charts use ${measure.label.toLowerCase()} and update in the browser.`;
+  const mode = DASHBOARD_MODES[document.body.dataset.dashboardMode] || DASHBOARD_MODES.scout;
+  document.getElementById("dashboard-status").textContent = `${formatNumber(filtered.length, 0)} team-game rows match the current filters. ${mode.badge} uses ${measure.label.toLowerCase()} and updates in the browser.`;
+  renderActiveFilters(rows);
   updateTeamComparison(rows, measureKey);
   updateHeadToHead(rows);
+  renderTeamDNA(rows, dashboardModel);
+  renderMatchupInsights(rows, dashboardModel);
+  updateScenario(dashboardModel, rows);
 
   const comparison = groups.slice(0, 14).reverse();
-  renderBars(document.getElementById("dashboard-chart-bars"), comparison.map((item) => ({ label: item.label, value: item.value })), { label: `${measure.label} by ${breakdownDefinitions[breakdownKey].label}`, valueFormat: measure.format, height: 340 });
-  renderLine(document.getElementById("dashboard-chart-line"), seasonal.map((item) => ({ label: item.label, value: item.value })), { label: `${measure.label} by season`, valueFormat: measure.format, height: 340 });
-  renderHorizontal(document.getElementById("dashboard-chart-top"), byTeam.map((item) => ({ label: item.label, value: item.value })), { top: 10, label: `Top teams by ${measure.label.toLowerCase()}`, valueFormat: measure.format });
-  renderDots(document.getElementById("dashboard-chart-dots"), groups, { label: `${measure.label} and group size`, yLabel: measure.label, height: 340 });
+  renderBars(document.getElementById("dashboard-chart-bars"), comparison.map((item) => ({ label: item.label, value: item.value })), { label: `${measure.label} by ${breakdownDefinitions[breakdownKey].label}`, valueFormat: measure.format, height: 340, filterId: breakdownDefinitions[breakdownKey].filterId });
+  renderLine(document.getElementById("dashboard-chart-line"), seasonal.map((item) => ({ label: item.label, value: item.value })), { label: `${measure.label} by season`, valueFormat: measure.format, height: 340, filterId: "filter-season" });
+  renderHorizontal(document.getElementById("dashboard-chart-top"), byTeam.map((item) => ({ label: item.label, value: item.value })), { top: 10, label: `Top teams by ${measure.label.toLowerCase()}`, valueFormat: measure.format, filterId: "filter-team" });
+  renderDots(document.getElementById("dashboard-chart-dots"), groups, { label: `${measure.label} and group size`, yLabel: measure.label, height: 340, filterId: breakdownDefinitions[breakdownKey].filterId });
 
   const table = document.getElementById("dashboard-table-body");
   table.innerHTML = groups.slice(0, 30).map((item) => `<tr>
@@ -879,6 +1122,7 @@ function updateDashboard(rows) {
 }
 
 function initializeDashboard(rows) {
+  dashboardModel = buildMarchModel(rows);
   fillSelect("filter-season", optionValues(rows, "seasonLabel"), "All seasons");
   const teams = optionValues(rows, "team");
   fillSelect("filter-team", teams, "All teams");
@@ -887,13 +1131,25 @@ function initializeDashboard(rows) {
   fillSelect("filter-result", optionValues(rows, "result"), "All results");
   fillChoiceSelect("compare-team-a", teams, "Choose team one");
   fillChoiceSelect("compare-team-b", teams, "Choose team two");
+  fillChoiceSelect("scenario-team", teams, "Choose a team");
   if (teams.length > 1) {
     document.getElementById("compare-team-a").value = teams[0];
     document.getElementById("compare-team-b").value = teams[1];
+    document.getElementById("scenario-team").value = teams[0];
   }
+  renderScenarioSliders();
 
   ["filter-season", "filter-team", "filter-conference", "filter-venue", "filter-result", "measure-select", "breakdown-select", "compare-team-a", "compare-team-b"].forEach((id) => {
     document.getElementById(id).addEventListener("change", () => updateDashboard(rows));
+  });
+  document.getElementById("scenario-team").addEventListener("change", () => updateScenario(dashboardModel, rows));
+  document.querySelectorAll("[data-scenario-feature]").forEach((input) => input.addEventListener("input", () => updateScenario(dashboardModel, rows)));
+  document.getElementById("reset-scenario").addEventListener("click", () => {
+    document.querySelectorAll("[data-scenario-feature]").forEach((input) => { input.value = "0"; });
+    updateScenario(dashboardModel, rows);
+  });
+  document.querySelectorAll("[data-dashboard-mode]").forEach((button) => {
+    button.addEventListener("click", () => setDashboardMode(button.dataset.dashboardMode, rows));
   });
 
   document.getElementById("reset-filters").addEventListener("click", () => {
@@ -906,7 +1162,7 @@ function initializeDashboard(rows) {
     }
     updateDashboard(rows);
   });
-  updateDashboard(rows);
+  setDashboardMode("scout", rows);
 }
 
 function showError(error) {

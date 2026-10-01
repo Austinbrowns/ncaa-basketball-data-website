@@ -5,7 +5,7 @@ An interactive report and dashboard about recent NCAA Division I men’s basketb
 ## Pages
 
 - `index.html` is the report page. It has ten evidence-based findings, headline numbers, and a chart for every finding.
-- `dashboard.html` is the browser-side dashboard. It has filters for season, team, conference, venue, and result; March-focused measures for effective FG%, turnover rate, offensive-rebound rate, and free-throw rate plus context measures; hoverable charts; four changing summary numbers; a two-team season comparison chart; a conference-only head-to-head matchup history with scores and a game table; a breakdown switch; a reset button; and an aggregation table.
+- `dashboard.html` is the browser-side dashboard. It has filters for season, team, conference, venue, and result; Scout, March, and Fan modes; March-focused measures for effective FG%, turnover rate, offensive-rebound rate, and free-throw rate plus context measures; hoverable and clickable charts; Team DNA profiles; four-factor matchup edges; a what-if title-path simulator; four changing summary numbers; a two-team season comparison chart; a conference-only head-to-head matchup history with scores and a game table; a breakdown switch; a reset button; and an aggregation table.
 - `assets/` contains the locally stored public-domain historical basketball photographs used as subtle page backgrounds, with credits in `assets/README.md`.
 
 The dashboard’s conference head-to-head history defines a conference meeting as a regular-season game where both selected teams appear as opponents and both rows carry the same conference. Postseason and conference-tournament games are excluded.
@@ -22,6 +22,14 @@ six-game title path ≈ p^6
 ```
 
 The six-game value is a simple average-opponent path estimate, not a sportsbook line, seed model, or literal NCAA championship probability. The dataset identifies postseason games but does not separately label NCAA tournament games or provide a bracket.
+
+## Interactive features
+
+- Chart marks can be hovered or keyboard-focused for exact values. Clickable dashboard bars, points, and leaderboard marks pin their group as a filter; active filters appear as removable chips.
+- Team DNA uses the four model factors to show each selected team’s style, standardized profile, and historical title-path proxy.
+- Head-to-head scouting cards identify which team has the modeled edge in each factor and let the reader jump directly to that measure.
+- The what-if lab adjusts a selected team’s factor profile by percentage points and recalculates the model estimate in the browser.
+- Mode buttons change the dashboard lens: Scout keeps full detail, March foregrounds the four model factors, and Fan starts with team scoring and rankings.
 
 ## Data
 
