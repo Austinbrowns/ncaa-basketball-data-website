@@ -63,6 +63,34 @@
         <div id="dashboard-chart-compare" class="chart comparison-chart loading">Loading…</div>
       </section>
 
+      <section class="matchup-panel" aria-labelledby="matchup-heading">
+        <div class="matchup-heading">
+          <div>
+            <p class="eyebrow">Conference head-to-head</p>
+            <h2 id="matchup-heading">Show me when they actually met.</h2>
+            <p>Use the same two team selectors above to see their regular-season conference meetings, game by game. The season filter narrows the history; venue and result filters do not hide a meeting from this matchup record.</p>
+          </div>
+          <div class="matchup-rule"><span class="mode-dot" aria-hidden="true"></span><span>Same conference · regular season only</span></div>
+        </div>
+        <p id="matchup-status" class="comparison-status">Choose two teams to see their conference history.</p>
+        <div class="matchup-summary" aria-label="Head-to-head summary">
+          <article class="matchup-stat"><span class="card-label">Meetings</span><strong id="matchup-meetings">—</strong><span>conference games</span></article>
+          <article class="matchup-stat"><span class="card-label" id="matchup-team-a-label">Team one record</span><strong id="matchup-team-a-record">—</strong><span>in these meetings</span></article>
+          <article class="matchup-stat"><span class="card-label" id="matchup-team-b-label">Team two record</span><strong id="matchup-team-b-record">—</strong><span>in these meetings</span></article>
+          <article class="matchup-stat matchup-stat-accent"><span class="card-label">Average margin</span><strong id="matchup-average-margin">—</strong><span>absolute points</span></article>
+        </div>
+        <div class="matchup-chart-wrap">
+          <div class="chart-title">Scores in each conference meeting</div>
+          <div id="dashboard-chart-matchup" class="chart loading">Loading…</div>
+        </div>
+        <div class="table-scroll matchup-table-scroll">
+          <table>
+            <thead><tr><th>Season</th><th>Date</th><th>Winner</th><th>Score</th><th>Margin</th><th>Venue</th></tr></thead>
+            <tbody id="matchup-table-body"><tr><td colspan="6" class="empty-cell">Choose two teams to see the matchup history.</td></tr></tbody>
+          </table>
+        </div>
+      </section>
+
       <section class="summary-grid" aria-label="Filtered summary numbers">
         <article class="summary-card"><span class="card-label">Team-game rows</span><strong id="summary-teamgames" class="loading">—</strong><span>current view</span></article>
         <article class="summary-card"><span class="card-label">Unique games</span><strong id="summary-games" class="loading">—</strong><span>current view</span></article>

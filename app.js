@@ -519,6 +519,95 @@ function comparisonRows(rows) {
   );
 }
 
+function conferenceHeadToHeadRows(rows, teamA, teamB) {
+  const season = document.getElementById("filter-season").value;
+  const games = new Map();
+  rows.forEach((row) => {
+    if (row.seasonPhase !== "Regular season") return;
+    if (season !== "all" && row.seasonLabel !== season) return;
+    const isMatchupRow = (row.team === teamA && row.opponent === teamB) || (row.team === teamB && row.opponent === teamA);
+    if (!isMatchupRow) return;
+    if (!games.has(row.gameId)) games.set(row.gameId, []);
+    games.get(row.gameId).push(row);
+  });
+
+  return [...games.values()]
+    .map((game) => {
+      const rowA = game.find((row) => row.team === teamA);
+      const rowB = game.find((row) => row.team === teamB);
+      if (!rowA || !rowB || !rowA.conference || rowA.conference !== rowB.conference) return null;
+      return {
+        gameId: rowA.gameId,
+        seasonLabel: rowA.seasonLabel,
+        date: rowA.date || rowB.date,
+        conference: rowA.conference,
+        teamAScore: rowA.points,
+        teamBScore: rowB.points,
+        teamAWon: rowA.win === 1,
+        teamAVenue: rowA.venue,
+        teamBVenue: rowB.venue,
+        margin: Math.abs(rowA.margin ?? 0),
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+}
+
+function clearHeadToHead(message = "Choose two teams to see the matchup history.", teamA = "", teamB = "") {
+  document.getElementById("matchup-status").textContent = message;
+  document.getElementById("matchup-meetings").textContent = teamA && teamB ? "0" : "—";
+  document.getElementById("matchup-team-a-label").textContent = teamA ? `${teamA} record` : "Team one record";
+  document.getElementById("matchup-team-b-label").textContent = teamB ? `${teamB} record` : "Team two record";
+  document.getElementById("matchup-team-a-record").textContent = teamA && teamB ? "0–0" : "—";
+  document.getElementById("matchup-team-b-record").textContent = teamA && teamB ? "0–0" : "—";
+  document.getElementById("matchup-average-margin").textContent = "—";
+  document.getElementById("matchup-table-body").innerHTML = `<tr><td colspan="6" class="empty-cell">${escapeHtml(message)}</td></tr>`;
+  emptyChart(document.getElementById("dashboard-chart-matchup"), "Choose two teams to display their conference meetings.");
+}
+
+function updateHeadToHead(rows) {
+  const teamA = document.getElementById("compare-team-a").value;
+  const teamB = document.getElementById("compare-team-b").value;
+  if (!teamA || !teamB) return clearHeadToHead();
+  if (teamA === teamB) return clearHeadToHead("Choose two different teams for a head-to-head matchup.");
+
+  const meetings = conferenceHeadToHeadRows(rows, teamA, teamB);
+  const teamAWins = meetings.filter((meeting) => meeting.teamAWon).length;
+  const teamBWins = meetings.length - teamAWins;
+  const averageMargin = meetings.length ? mean(meetings, "margin") : 0;
+  const status = document.getElementById("matchup-status");
+  document.getElementById("matchup-team-a-label").textContent = `${teamA} record`;
+  document.getElementById("matchup-team-b-label").textContent = `${teamB} record`;
+  document.getElementById("matchup-meetings").textContent = formatNumber(meetings.length, 0);
+  document.getElementById("matchup-team-a-record").textContent = `${teamAWins}–${teamBWins}`;
+  document.getElementById("matchup-team-b-record").textContent = `${teamBWins}–${teamAWins}`;
+  document.getElementById("matchup-average-margin").textContent = formatNumber(averageMargin);
+
+  if (!meetings.length) {
+    return clearHeadToHead(`No regular-season same-conference meetings found for ${teamA} and ${teamB} in the selected season filter.`, teamA, teamB);
+  }
+
+  status.textContent = `${meetings.length} regular-season conference meeting${meetings.length === 1 ? "" : "s"} found for ${teamA} and ${teamB}. Postseason games are excluded.`;
+  const series = [
+    { label: teamA, values: meetings.map((meeting) => ({ label: meeting.date, value: meeting.teamAScore })) },
+    { label: teamB, values: meetings.map((meeting) => ({ label: meeting.date, value: meeting.teamBScore })) },
+  ];
+  renderComparisonLine(document.getElementById("dashboard-chart-matchup"), series, { label: `Conference meeting scores for ${teamA} and ${teamB}`, valueFormat: (value) => formatNumber(value, 0), height: 340 });
+
+  document.getElementById("matchup-table-body").innerHTML = meetings.map((meeting) => {
+    const winner = meeting.teamAWon ? teamA : teamB;
+    const venue = `${teamA}: ${meeting.teamAVenue}; ${teamB}: ${meeting.teamBVenue}`;
+    return `<tr>
+      <td>${escapeHtml(meeting.seasonLabel)}</td>
+      <td>${escapeHtml(meeting.date)}</td>
+      <td><strong>${escapeHtml(winner)}</strong></td>
+      <td>${escapeHtml(teamA)} ${formatNumber(meeting.teamAScore, 0)}–${formatNumber(meeting.teamBScore, 0)} ${escapeHtml(teamB)}</td>
+      <td>${formatNumber(meeting.margin, 0)}</td>
+      <td>${escapeHtml(venue)}</td>
+    </tr>`;
+  }).join("");
+}
+
 function updateTeamComparison(rows, measureKey) {
   const teamA = document.getElementById("compare-team-a").value;
   const teamB = document.getElementById("compare-team-b").value;
@@ -570,6 +659,7 @@ function updateDashboard(rows) {
   document.getElementById("summary-average-label").textContent = "Average points per team-game";
   document.getElementById("dashboard-status").textContent = `${formatNumber(filtered.length, 0)} team-game rows match the current filters. Charts use ${measure.label.toLowerCase()} and update in the browser.`;
   updateTeamComparison(rows, measureKey);
+  updateHeadToHead(rows);
 
   const comparison = groups.slice(0, 14).reverse();
   renderBars(document.getElementById("dashboard-chart-bars"), comparison.map((item) => ({ label: item.label, value: item.value })), { label: `${measure.label} by ${breakdownDefinitions[breakdownKey].label}`, valueFormat: measure.format, height: 340 });
