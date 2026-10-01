@@ -43,6 +43,27 @@
         <p>This report treats a team’s box score in a particular game as the observation. Across five seasons, that creates enough repeated evidence to separate a one-night story from a pattern: which advantages travel, which styles produce efficiency, and which small margins decide thousands of games.</p>
       </section>
 
+      <section class="march-takeaway" aria-labelledby="march-takeaway-heading">
+        <div class="march-takeaway-header">
+          <p class="eyebrow">Main takeaway · March Madness odds</p>
+          <h2 id="march-takeaway-heading">Winning March games starts with winning possessions.</h2>
+          <p id="march-takeaway-lede">The model is loading the postseason evidence behind the formula.</p>
+        </div>
+        <div class="march-model-layout">
+          <div class="march-model-explainer">
+            <p class="march-model-label">The formula</p>
+            <div id="march-formula" class="march-formula">logit(p) = intercept + weighted factor z-scores</div>
+            <p class="march-model-note">Each z-score asks how far a team’s regular-season profile sits above or below the typical postseason team-season. Positive coefficients raise the estimated chance; negative coefficients lower it. Pace, raw points, steals, blocks, and three-point volume remain useful style measures but are not treated as standalone odds drivers here. The negative free-throw term is a sample result after the other factors are included, not a claim that free throws hurt.</p>
+            <div id="march-factor-grid" class="march-factor-grid"></div>
+          </div>
+          <div class="march-model-chart">
+            <div class="chart-title">Estimated six-game title path · latest season</div>
+            <div id="report-chart-march" class="chart loading">Loading…</div>
+            <p id="march-model-footnote" class="march-model-footnote">This is a historical model of a six-game path against an average postseason opponent—not a sportsbook line or a bracket forecast.</p>
+          </div>
+        </div>
+      </section>
+
       <div id="report-sections" class="report-sections">
         <div class="loading-panel loading">Building the report findings and charts…</div>
       </div>

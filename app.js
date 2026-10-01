@@ -86,6 +86,7 @@ function normalizeRow(row) {
     date: row.game_date,
     teamId: row.team_id,
     team: row.team_name,
+    opponentTeamId: row.opponent_team_id,
     teamLocation: row.team_location,
     abbreviation: row.team_abbreviation,
     conference: row.conference,
@@ -341,6 +342,143 @@ function renderDots(container, items, options = {}) {
   container.innerHTML = chartFrame(width, height, content, options.label || "Dot chart");
 }
 
+const MARCH_MODEL = {
+  intercept: -0.0314,
+  pathLength: 6,
+  features: [
+    { key: "efg", label: "Effective FG%", shortLabel: "Shot quality", definition: "(FGM + 0.5 × 3PM) ÷ FGA", coefficient: 0.1268 },
+    { key: "turnoverRate", label: "Turnover rate", shortLabel: "Ball security", definition: "Turnovers ÷ estimated possessions", coefficient: -0.0799 },
+    { key: "orbRate", label: "Offensive-rebound rate", shortLabel: "Second chances", definition: "ORB ÷ (ORB + opponent DRB)", coefficient: 0.2408 },
+    { key: "freeThrowRate", label: "Free-throw rate", shortLabel: "Pressure at the line", definition: "FTA ÷ FGA", coefficient: -0.0500 },
+  ],
+};
+
+function standardDeviation(items, key, average) {
+  const values = items.map((item) => number(item[key])).filter((value) => value !== null);
+  if (!values.length) return 1;
+  return Math.sqrt(values.reduce((total, value) => total + ((value - average) ** 2), 0) / values.length) || 1;
+}
+
+function buildMarchModel(rows) {
+  const regularRows = rows.filter((row) => row.seasonPhase === "Regular season");
+  const games = new Map();
+  regularRows.forEach((row) => {
+    if (!games.has(row.gameId)) games.set(row.gameId, new Map());
+    games.get(row.gameId).set(row.teamId, row);
+  });
+
+  const buckets = new Map();
+  regularRows.forEach((row) => {
+    const game = games.get(row.gameId);
+    const opponent = game?.get(row.opponentTeamId) || [...(game?.values() || [])].find((candidate) => candidate.team === row.opponent);
+    const orbDenominator = opponent ? row.offensiveRebounds + opponent.defensiveRebounds : 0;
+    const freeThrowRate = row.fga ? 100 * row.fta / row.fga : null;
+    const metrics = {
+      efg: row.efg,
+      turnoverRate: row.turnoverRate,
+      orbRate: orbDenominator ? 100 * row.offensiveRebounds / orbDenominator : null,
+      freeThrowRate,
+    };
+    if (MARCH_MODEL.features.some((feature) => !Number.isFinite(metrics[feature.key]))) return;
+    const key = `${row.seasonLabel}::${row.teamId}`;
+    if (!buckets.has(key)) buckets.set(key, { key, seasonLabel: row.seasonLabel, teamId: row.teamId, team: row.team, values: [] });
+    buckets.get(key).values.push(metrics);
+  });
+
+  const postseason = new Map();
+  rows.filter((row) => row.seasonPhase === "Postseason").forEach((row) => {
+    const key = `${row.seasonLabel}::${row.teamId}`;
+    if (!postseason.has(key)) postseason.set(key, { games: 0, wins: 0 });
+    const result = postseason.get(key);
+    result.games += 1;
+    result.wins += row.win;
+  });
+
+  const profiles = [...buckets.values()]
+    .filter((bucket) => bucket.values.length >= 10)
+    .map((bucket) => {
+      const profile = {
+        key: bucket.key,
+        seasonLabel: bucket.seasonLabel,
+        teamId: bucket.teamId,
+        team: bucket.team,
+        regularGames: bucket.values.length,
+      };
+      MARCH_MODEL.features.forEach((feature) => { profile[feature.key] = mean(bucket.values, feature.key); });
+      const postseasonRecord = postseason.get(bucket.key) || { games: 0, wins: 0 };
+      profile.postseasonGames = postseasonRecord.games;
+      profile.postseasonWins = postseasonRecord.wins;
+      profile.postseasonWinRate = postseasonRecord.games ? 100 * postseasonRecord.wins / postseasonRecord.games : null;
+      return profile;
+    });
+
+  const postseasonProfiles = profiles.filter((profile) => profile.postseasonGames > 0);
+  const referenceProfiles = postseasonProfiles.length ? postseasonProfiles : profiles;
+  const reference = Object.fromEntries(MARCH_MODEL.features.map((feature) => {
+    const average = mean(referenceProfiles, feature.key);
+    return [feature.key, { average, deviation: standardDeviation(referenceProfiles, feature.key, average) }];
+  }));
+  const totalWeight = MARCH_MODEL.features.reduce((total, feature) => total + Math.abs(feature.coefficient), 0);
+
+  const scoredProfiles = profiles.map((profile) => {
+    const zScores = {};
+    let logit = MARCH_MODEL.intercept;
+    MARCH_MODEL.features.forEach((feature) => {
+      const zScore = (profile[feature.key] - reference[feature.key].average) / reference[feature.key].deviation;
+      zScores[feature.key] = zScore;
+      logit += feature.coefficient * zScore;
+    });
+    const winProbability = 1 / (1 + Math.exp(-logit));
+    return { ...profile, zScores, logit, winProbability, titlePathProbability: winProbability ** MARCH_MODEL.pathLength };
+  });
+
+  return {
+    profiles: scoredProfiles,
+    reference,
+    postseasonProfileCount: postseasonProfiles.length,
+    postseasonGameRows: rows.filter((row) => row.seasonPhase === "Postseason").length,
+    totalWeight,
+  };
+}
+
+function renderMarchTakeaway(model, latestSeason) {
+  const strongest = [...MARCH_MODEL.features].sort((a, b) => Math.abs(b.coefficient) - Math.abs(a.coefficient))[0];
+  const latestProfiles = model.profiles.filter((profile) => profile.seasonLabel === latestSeason);
+  const rankedProfiles = (latestProfiles.length ? latestProfiles : model.profiles)
+    .sort((a, b) => b.titlePathProbability - a.titlePathProbability)
+    .slice(0, 10);
+  const formulaParts = MARCH_MODEL.features.map((feature) => {
+    const sign = feature.coefficient >= 0 ? "+" : "−";
+    return `${sign} ${formatNumber(Math.abs(feature.coefficient), 3)} z(${feature.shortLabel})`;
+  }).join(" ");
+  const formula = `logit(p) = ${formatNumber(MARCH_MODEL.intercept, 3)} ${formulaParts};  p = 1 ÷ (1 + e⁻ˡ);  title path ≈ p⁶`;
+
+  document.getElementById("march-takeaway-lede").textContent = `The formula was estimated from ${formatNumber(model.postseasonGameRows, 0)} postseason team-game rows across ${formatNumber(model.postseasonProfileCount, 0)} team-seasons. ${strongest.label} carries ${formatNumber(100 * Math.abs(strongest.coefficient) / model.totalWeight, 0)}% of the model’s relative factor weight in this sample, followed by ${MARCH_MODEL.features.filter((feature) => feature !== strongest).sort((a, b) => Math.abs(b.coefficient) - Math.abs(a.coefficient))[0].label.toLowerCase()}.`;
+  document.getElementById("march-formula").textContent = formula;
+  document.getElementById("march-model-footnote").textContent = `The chart estimates a six-game path by raising each team’s one-game win probability to the sixth power. It is a historical postseason proxy—not a sportsbook line, seed model, or literal bracket forecast.`;
+  document.getElementById("march-factor-grid").innerHTML = MARCH_MODEL.features.map((feature) => {
+    const sign = feature.coefficient >= 0 ? "+" : "−";
+    const weight = 100 * Math.abs(feature.coefficient) / model.totalWeight;
+    const reference = model.reference[feature.key].average;
+    return `<article class="march-factor">
+      <span class="card-label">${escapeHtml(feature.shortLabel)}</span>
+      <strong>${formatNumber(weight, 0)}%</strong>
+      <span>${sign} ${formatNumber(Math.abs(feature.coefficient), 3)} × z-score</span>
+      <small>${escapeHtml(feature.label)} · reference ${formatNumber(reference)}%</small>
+      <small>${escapeHtml(feature.definition)}</small>
+    </article>`;
+  }).join("");
+
+  renderHorizontal(document.getElementById("report-chart-march"), rankedProfiles.map((profile) => ({
+    label: `${profile.team} · ${profile.seasonLabel}`,
+    value: 100 * profile.titlePathProbability,
+  })), {
+    top: 10,
+    label: `Estimated six-game title path for ${latestSeason}`,
+    valueFormat: (value) => formatPercent(value),
+  });
+}
+
 function reportSection(id, heading, copy, chartTitle, why) {
   return `<section class="report-section">
     <div class="section-copy"><p class="eyebrow">Finding ${id}</p><h2>${escapeHtml(heading)}</h2><p>${escapeHtml(copy)}</p><div class="why-it-matters"><span>Why it matters</span><p>${escapeHtml(why)}</p></div></div>
@@ -355,6 +493,7 @@ function getSeasonGroups(rows, measureKey) {
 
 function renderReport(rows, quality) {
   const gameRows = uniqueGameRows(rows);
+  const marchModel = buildMarchModel(rows);
   const seasons = [...new Set(rows.map((row) => row.seasonLabel))].sort();
   const firstSeason = seasons[0];
   const lastSeason = seasons[seasons.length - 1];
@@ -391,6 +530,7 @@ function renderReport(rows, quality) {
   document.getElementById("headline-teams").textContent = formatNumber(unique(rows, "teamId"), 0);
   document.getElementById("headline-pace").textContent = formatNumber(mean(rows, "possessions"), 1);
   document.getElementById("hero-summary").textContent = `This report uses ${formatNumber(rows.length, 0)} Division I team-game observations from ${firstSeason} through ${lastSeason}. It turns repeated box scores into evidence about competitive games, home court, pace, shot quality, ball security, and the margins that separate winning from losing.`;
+  renderMarchTakeaway(marchModel, lastSeason);
 
   const firstClose = closeGameRate[0]?.average || 0;
   const lastClose = closeGameRate.at(-1)?.average || 0;
@@ -438,7 +578,7 @@ function renderReport(rows, quality) {
   renderHorizontal(document.getElementById("report-chart-10"), conferencePaceChart.map((item) => ({ label: item.label, value: item.average })), { top: conferencePaceChart.length, label: "Fastest and slowest conference pace", valueFormat: (value) => formatNumber(value, 1) });
 
   const dropped = quality.dropped_rows ?? 0;
-  document.getElementById("methodology-copy").innerHTML = `The raw ESPN/SportsDataverse files contain one row per team per game. I combined seasons 2022–2026, kept rows whose team ID appears in the public 2026 Division I crosswalk, and dropped ${formatNumber(dropped, 0)} rows belonging to non-D-I teams or rows missing a required score/team identifier. The final file contains ${formatNumber(rows.length, 0)} rows and ${formatNumber(unique(rows, "teamId"), 0)} teams. A team-game row is the unit of analysis; the opponent is retained as a descriptive field. Game-level margin findings use each game ID once. Points, rebounds, assists, turnovers, free throws, and shooting percentages are taken from the source box score. Three-point rate equals 3PA/FGA × 100. Effective field-goal percentage equals (FGM + 0.5 × 3PM)/FGA × 100. Estimated possessions equal FGA − offensive rebounds + turnovers + 0.44 × FTA; turnover rate equals turnovers divided by estimated possessions. Win rate equals winning team-game rows divided by all team-game rows.`;
+  document.getElementById("methodology-copy").innerHTML = `The raw ESPN/SportsDataverse files contain one row per team per game. I combined seasons 2022–2026, kept rows whose team ID appears in the public 2026 Division I crosswalk, and dropped ${formatNumber(dropped, 0)} rows belonging to non-D-I teams or rows missing a required score/team identifier. The final file contains ${formatNumber(rows.length, 0)} rows and ${formatNumber(unique(rows, "teamId"), 0)} teams. A team-game row is the unit of analysis; the opponent is retained as a descriptive field. Game-level margin findings use each game ID once. Points, rebounds, assists, turnovers, free throws, and shooting percentages are taken from the source box score. Three-point rate equals 3PA/FGA × 100. Effective field-goal percentage equals (FGM + 0.5 × 3PM)/FGA × 100. Estimated possessions equal FGA − offensive rebounds + turnovers + 0.44 × FTA; turnover rate equals turnovers divided by estimated possessions. Win rate equals winning team-game rows divided by all team-game rows. The March model uses regular-season profiles for effective FG%, turnover rate, offensive-rebound rate, and free-throw rate, then estimates a one-game postseason win probability and raises it to six for a simple title-path proxy.`;
 }
 
 const measureDefinitions = {

@@ -10,6 +10,19 @@ An interactive report and dashboard about recent NCAA Division I men’s basketb
 
 The dashboard’s conference head-to-head history defines a conference meeting as a regular-season game where both selected teams appear as opponents and both rows carry the same conference. Postseason and conference-tournament games are excluded.
 
+## March Madness odds model
+
+The report’s main takeaway is a historical postseason win-likelihood model. It builds regular-season team-season profiles from four possession-level factors, standardizes each factor against team-seasons that reached the postseason, and applies coefficients estimated from the 2022–2026 postseason rows:
+
+```text
+logit(p) = -0.031 + 0.127 z(effective FG%) - 0.080 z(turnover rate)
+           + 0.241 z(offensive-rebound rate) - 0.050 z(free-throw rate)
+p = 1 / (1 + e^(-logit(p)))
+six-game title path ≈ p^6
+```
+
+The six-game value is a simple average-opponent path estimate, not a sportsbook line, seed model, or literal NCAA championship probability. The dataset identifies postseason games but does not separately label NCAA tournament games or provide a bracket.
+
 ## Data
 
 The project uses the public [ESPN men's college basketball team box-score release](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/espn_mens_college_basketball_team_boxscores) from SportsDataverse and the public [2026 team crosswalk](https://github.com/sportsdataverse/sportsdataverse-data/releases/tag/mbb_crosswalk).
