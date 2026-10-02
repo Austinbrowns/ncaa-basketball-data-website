@@ -636,3 +636,238 @@ tbody tr:hover { background: #fff8e9; }
   .report-section, .dashboard-chart-card, .chart-tooltip { transition: none; }
   .chart-is-refreshing > svg, .chart-is-refreshing > .empty-chart, .chart-is-refreshing > svg * { animation: none !important; }
 }
+
+/* Broadcast desk theme: compact, high-contrast, and scoreboard-led. */
+:root {
+  --ink: #111820;
+  --ink-soft: #53616e;
+  --navy: #0b1622;
+  --cream: #edf0f2;
+  --paper: #ffffff;
+  --line: #d5dbe0;
+  --orange: #cf1234;
+  --gold: #f5c242;
+  --teal: #1379a5;
+  --blue: #254b76;
+  --shadow: 0 8px 24px rgba(11, 22, 34, 0.09);
+  --radius: 4px;
+}
+
+body {
+  background-color: var(--cream);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body[data-page="report"], body[data-page="dashboard"] {
+  background-image: linear-gradient(rgba(237, 240, 242, 0.965), rgba(237, 240, 242, 0.965)), url("assets/basketball-1901-purdue.jpg");
+  background-position: center top;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+body[data-page="dashboard"] {
+  background-image: linear-gradient(rgba(237, 240, 242, 0.975), rgba(237, 240, 242, 0.975)), url("assets/basketball-1909-nara.jpg");
+}
+
+.site-nav {
+  height: 64px;
+  padding: 0 clamp(18px, 5vw, 76px);
+  background: var(--navy);
+  border-bottom: 4px solid var(--orange);
+  color: white;
+  box-shadow: 0 3px 14px rgba(11, 22, 34, 0.18);
+}
+
+.brand {
+  color: white;
+  font-family: "Arial Narrow", Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.brand-mark {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+  border-radius: 2px;
+  background: var(--orange);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+nav { gap: 2px; }
+nav a {
+  padding: 9px 14px;
+  border-radius: 2px;
+  color: #b8c1ca;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+nav a:hover, nav a.active { background: var(--orange); color: white; }
+
+h1, h2, h3 {
+  font-family: "Arial Narrow", Arial, Helvetica, sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+
+h1 { font-size: clamp(3rem, 6.5vw, 7rem); }
+h2 { font-size: clamp(1.65rem, 2.8vw, 2.8rem); }
+h3 { font-size: 1rem; letter-spacing: -0.01em; }
+
+.eyebrow {
+  color: var(--orange);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.hero {
+  min-height: 450px;
+  border-bottom: 7px solid var(--orange);
+}
+
+.report-hero {
+  background-image: linear-gradient(112deg, rgba(11, 22, 34, 0.97) 0%, rgba(11, 22, 34, 0.91) 55%, rgba(207, 18, 52, 0.58) 100%), url("assets/basketball-1901-purdue.jpg");
+}
+
+.hero .eyebrow { color: var(--gold); }
+.hero-summary { color: #c9d1d8; }
+.hero-note { border-left: 2px solid var(--orange); padding-left: 14px; }
+.hero-note p { color: var(--gold); font-family: "Arial Narrow", Arial, sans-serif; text-transform: uppercase; }
+.button { border-radius: 2px; text-transform: uppercase; letter-spacing: 0.06em; }
+.button-light { background: var(--gold); color: var(--navy); }
+.button-dark { background: var(--orange); color: white; }
+.button-outline { border-color: #aeb8c0; }
+.button-outline:hover { background: var(--orange); border-color: var(--orange); color: white; }
+
+.headline-card, .summary-card {
+  min-height: 138px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--navy);
+  border-radius: 2px;
+  box-shadow: var(--shadow);
+}
+.headline-card.accent-card, .summary-card.accent-card { border-top-color: var(--orange); background: var(--orange); }
+.card-label { color: var(--ink-soft); font-size: 0.64rem; font-weight: 900; letter-spacing: 0.12em; }
+.headline-card strong, .summary-card strong { font-family: "Arial Narrow", Arial, sans-serif; font-weight: 900; }
+.headline-card > span:last-child, .summary-card > span:last-child { color: var(--ink-soft); font-size: 0.72rem; }
+
+.intro-section { padding-top: 92px; padding-bottom: 48px; }
+.intro-section h2 { max-width: 900px; }
+.intro-section p:not(.interaction-note) { color: var(--ink-soft); font-size: 0.98rem; }
+.interaction-note { color: var(--orange); }
+.interaction-note span { border-radius: 2px; background: var(--orange); color: white; }
+
+.march-takeaway, .mode-panel, .team-dna-panel, .simulator-panel {
+  border-radius: 2px;
+  box-shadow: 0 12px 28px rgba(11, 22, 34, 0.15);
+}
+.march-takeaway { border-left: 5px solid var(--orange); }
+.march-takeaway .eyebrow, .mode-panel .eyebrow, .team-dna-panel .eyebrow, .simulator-panel .eyebrow { color: var(--gold); }
+.march-takeaway-header h2, .team-dna-heading h2, .simulator-heading h2 { letter-spacing: -0.025em; }
+.march-model-chart { border-radius: 2px; }
+.march-factor { border-radius: 2px; }
+
+.report-section, .filter-panel, .comparison-panel, .matchup-panel, .control-panel, .table-section, .dashboard-chart-card {
+  border-radius: 2px;
+  border-color: var(--line);
+  box-shadow: var(--shadow);
+}
+.report-section { border-left: 4px solid var(--navy); }
+.report-section:hover, .dashboard-chart-card:hover { border-color: var(--orange); box-shadow: 0 12px 28px rgba(11, 22, 34, 0.12); }
+.why-it-matters { border-left-color: var(--orange); border-radius: 0 2px 2px 0; background: #f7f8f9; }
+.why-it-matters span { color: var(--orange); }
+
+.dashboard-heading { padding-top: 62px; padding-bottom: 34px; }
+.dashboard-heading h1 { font-size: clamp(3rem, 6vw, 6.4rem); }
+.dashboard-mode { border-radius: 2px; border-color: rgba(207, 18, 52, 0.38); background: white; color: var(--navy); }
+.mode-dot { background: var(--orange); box-shadow: 0 0 0 4px rgba(207, 18, 52, 0.12); }
+.mode-panel { border-top: 4px solid var(--orange); }
+.mode-button { border-radius: 2px; }
+.mode-button.is-active { background: var(--orange); border-color: var(--orange); color: white; }
+.mode-button.is-active span { color: #ffe8ec; }
+
+.filter-panel, .control-panel, .table-section { background: var(--paper); }
+.filter-panel { border-top: 4px solid var(--navy); }
+.filter-heading, .table-heading { border-bottom: 1px solid var(--line); padding-bottom: 18px; }
+.filter-heading-note, .control-note { color: var(--ink-soft); }
+select { border-radius: 2px; border-color: #bac3ca; background: #f8fafb; }
+select:focus { outline: 3px solid rgba(207, 18, 52, 0.14); border-color: var(--orange); }
+.multi-team-field select option:checked { background: var(--orange) linear-gradient(0deg, var(--orange), var(--orange)); }
+.filter-chip { border-radius: 2px; background: #fff1f3; border-color: rgba(207, 18, 52, 0.3); }
+.filter-chip span, .filter-chip b { color: var(--orange); }
+
+.comparison-panel, .matchup-panel, .control-panel, .table-section { position: relative; background: var(--paper); }
+.comparison-panel::before, .matchup-panel::before, .control-panel::before, .table-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 74px;
+  height: 4px;
+  background: var(--orange);
+}
+.comparison-heading, .matchup-heading { padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.comparison-status { color: var(--ink-soft); font-size: 0.78rem; }
+.comparison-identities { border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+.comparison-team-identity { font-weight: 900; }
+.vs-mark { color: var(--orange); }
+.head-to-head-factor-panel { border-radius: 2px; background: #f5f7f8; }
+.factor-duel-row { border-radius: 2px; border-color: #dfe4e7; }
+.factor-duel-row:hover, .factor-duel-row:focus-visible { border-color: var(--orange); }
+.factor-duel-heading strong, .factor-duel-b .factor-duel-heading strong { color: var(--orange); }
+.concept-explainer { border-radius: 2px; }
+.multi-comparison-block { border-top-color: var(--line); }
+
+.team-dna-panel { border-left: 5px solid var(--orange); }
+.dna-card, .scenario-slider { border-radius: 2px; }
+.matchup-rule { border-radius: 2px; border-color: rgba(207, 18, 52, 0.3); }
+.matchup-rule .mode-dot { background: var(--orange); box-shadow: none; }
+.matchup-insights { border-radius: 2px; }
+.matchup-edge-card { border-radius: 2px; }
+.matchup-edge-card:hover, .matchup-edge-card:focus-visible { border-color: var(--orange); }
+.matchup-edge-card.edge-b { border-top-color: var(--blue); }
+.matchup-summary { border-top: 1px solid var(--line); padding-top: 18px; }
+.matchup-stat { border-radius: 2px; }
+.matchup-stat-accent { background: var(--navy); }
+
+.simulator-panel { border-left: 5px solid var(--gold); }
+.scenario-result { border-radius: 2px; }
+
+.dashboard-chart-card { padding: 20px; }
+.chart-card-heading { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.chart-title, .chart-card-heading span { color: var(--ink-soft); font-size: 0.64rem; }
+.chart-grid { stroke: #dfe4e7; }
+.chart-axis, .chart-label { fill: #64717c; }
+.chart-value { fill: var(--navy); }
+.chart-bar, .chart-dumbbell-loss, .chart-lollipop-point { fill: var(--orange); }
+.chart-line-alt { stroke: var(--orange); }
+.chart-dumbbell-win { fill: var(--teal); }
+.chart-tooltip { border-radius: 2px; background: var(--navy); }
+
+table { background: white; }
+th { background: var(--navy); color: #d5dde4; font-size: 0.62rem; }
+td { border-top-color: var(--line); }
+tbody tr:hover { background: #fff4f5; }
+.site-footer { border-top: 4px solid var(--navy); }
+.noscript { background: var(--orange); }
+
+@media (max-width: 620px) {
+  .site-nav { height: 62px; }
+  .brand { font-size: 0.86rem; }
+  nav a { padding: 8px 9px; font-size: 0.64rem; }
+  .hero { border-bottom-width: 5px; }
+  .dashboard-heading { padding-top: 44px; }
+  .filter-heading, .table-heading { display: block; }
+  .filter-heading .button { margin-top: 18px; }
+  .comparison-heading, .matchup-heading { padding-bottom: 14px; }
+}
