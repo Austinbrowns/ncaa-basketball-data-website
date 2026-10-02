@@ -26,6 +26,7 @@ The six-game value is a simple average-opponent path estimate, not a sportsbook 
 ## Interactive features
 
 - Chart marks can be hovered or keyboard-focused for exact values. Clickable dashboard bars, points, and leaderboard marks pin their group as a filter; active filters appear as removable chips.
+- Dashboard charts refresh with a short fade-and-slide sequence, a subtle card stagger, and animated bars, lines, points, and radar areas. The motion is disabled automatically when a reader prefers reduced motion.
 - Team DNA uses the four model factors to show each selected team’s style, standardized profile, and historical title-path proxy.
 - Head-to-head scouting cards identify which team has the modeled edge in each factor and let the reader jump directly to that measure.
 - The head-to-head faceoff uses each program’s school color, reports the percentage-point gap, and opens an explainer for effective field-goal percentage, turnover rate, offensive-rebound rate, or free-throw rate. The eFG and offensive-rebound explainers embed short public YouTube teaching examples; the other concepts use lightweight interactive court visuals and formulas.

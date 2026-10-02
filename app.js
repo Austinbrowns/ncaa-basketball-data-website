@@ -245,8 +245,26 @@ function svgText(x, y, value, attributes = "") {
   return `<text x="${x}" y="${y}" ${attributes}>${escapeHtml(value)}</text>`;
 }
 
+function replayMotion(container, className) {
+  container.classList.remove(className);
+  void container.offsetWidth;
+  container.classList.add(className);
+}
+
+function chartTransitionDelay(container) {
+  const dashboardCharts = [...document.querySelectorAll('body[data-page="dashboard"] .chart')];
+  const chartIndex = dashboardCharts.indexOf(container);
+  return `${Math.max(0, Math.min(chartIndex, 7)) * 45}ms`;
+}
+
+function replayChartMotion(container) {
+  container.style.setProperty("--chart-delay", chartTransitionDelay(container));
+  replayMotion(container, "chart-is-refreshing");
+}
+
 function emptyChart(container, message = "No rows match these filters.") {
   container.innerHTML = `<div class="empty-chart">${escapeHtml(message)}</div>`;
+  replayChartMotion(container);
 }
 
 function chartFrame(width, height, content, label) {
@@ -303,6 +321,7 @@ function activateChartTooltips(container) {
 function setChart(container, svg) {
   container.innerHTML = `${svg}<div class="chart-tooltip" role="tooltip"></div>`;
   activateChartTooltips(container);
+  replayChartMotion(container);
 }
 
 function chartFilterAttributes(options, item) {
