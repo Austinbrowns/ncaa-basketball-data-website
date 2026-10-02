@@ -38,6 +38,50 @@ const escapeHtml = (value) => String(value ?? "")
   .replaceAll("'", "&#039;");
 
 let teamDirectory = new Map();
+const teamIdentityCache = new Map();
+const fallbackTeamPalettes = [
+  ["#0b1c31", "#f2c14e"], ["#76232f", "#f6c344"], ["#003b5c", "#d6a84f"], ["#512698", "#f7c948"],
+  ["#0057b8", "#fdbb30"], ["#7c2529", "#f2f2f2"], ["#006633", "#ffcc00"], ["#ba0c2f", "#111111"],
+];
+
+function normalizeColor(value, fallback) {
+  const text = String(value || "").replace("#", "");
+  return /^[0-9a-f]{6}$/i.test(text) ? `#${text}` : fallback;
+}
+
+function fallbackTeamColor(team, alternate = false) {
+  const hash = [...String(team || "")].reduce((total, character) => total + character.charCodeAt(0), 0);
+  return fallbackTeamPalettes[hash % fallbackTeamPalettes.length][alternate ? 1 : 0];
+}
+
+function teamColor(team, alternate = false) {
+  const identity = teamDirectory.get(team) || {};
+  return normalizeColor(alternate ? identity.alternateColor : identity.color, fallbackTeamColor(team, alternate));
+}
+
+async function hydrateTeamIdentities(teams) {
+  const pending = teams.filter((team) => team && !teamIdentityCache.has(team)).map(async (team) => {
+    const base = teamDirectory.get(team);
+    if (!base?.teamId) return;
+    try {
+      const response = await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/teams/${encodeURIComponent(base.teamId)}`);
+      if (!response.ok) throw new Error("team identity unavailable");
+      const payload = await response.json();
+      const remoteTeam = payload.team || {};
+      teamDirectory.set(team, {
+        ...base,
+        abbreviation: remoteTeam.abbreviation || base.abbreviation,
+        color: remoteTeam.color,
+        alternateColor: remoteTeam.alternateColor,
+      });
+    } catch (error) {
+      teamDirectory.set(team, { ...base, color: fallbackTeamColor(team), alternateColor: fallbackTeamColor(team, true) });
+    }
+    teamIdentityCache.set(team, true);
+  });
+  if (!pending.length) return;
+  await Promise.all(pending);
+}
 
 function teamInitials(team, abbreviation = "") {
   if (abbreviation) return abbreviation.slice(0, 4).toUpperCase();
@@ -48,8 +92,9 @@ function teamLogoMarkup(team, className = "team-logo") {
   const identity = teamDirectory.get(team) || {};
   const logoUrl = identity.teamId ? `https://a.espncdn.com/i/teamlogos/ncaa/500/${encodeURIComponent(identity.teamId)}.png` : "";
   const initials = teamInitials(team, identity.abbreviation);
-  const image = logoUrl ? `<img src="${logoUrl}" alt="" loading="lazy" onerror="this.parentElement.classList.add('logo-fallback')">` : "";
-  return `<span class="${className}" aria-label="${escapeHtml(team)} logo">${image}<span class="team-logo-text">${escapeHtml(initials)}</span></span>`;
+  const logoClass = logoUrl ? className : `${className} logo-fallback`;
+  const image = logoUrl ? `<img src="${logoUrl}" alt="" loading="lazy" onerror="this.style.display='none';this.parentElement.classList.add('logo-fallback')">` : "";
+  return `<span class="${logoClass}" aria-label="${escapeHtml(team)} logo">${image}<span class="team-logo-text">${escapeHtml(initials)}</span></span>`;
 }
 
 function parseCSV(text) {
@@ -368,11 +413,13 @@ function renderComparisonLine(container, series, options = {}) {
     const dotClasses = ["chart-dot-primary", "chart-dot-alt", "chart-dot-third", "chart-dot-fourth"];
     const lineClass = lineClasses[lineIndex % lineClasses.length];
     const dotClass = dotClasses[lineIndex % dotClasses.length];
-    if (points.length > 1) content += `<polyline points="${points.map((point) => `${point.x},${point.y}`).join(" ")}" class="${lineClass}"/>`;
+    const lineColor = line.color ? ` style="stroke:${escapeHtml(line.color)}"` : "";
+    const dotColor = line.color ? ` style="fill:${escapeHtml(line.color)}"` : "";
+    if (points.length > 1) content += `<polyline points="${points.map((point) => `${point.x},${point.y}`).join(" ")}" class="${lineClass}"${lineColor}/>`;
     points.forEach((point) => {
       const displayValue = options.valueFormat ? options.valueFormat(point.value) : formatNumber(point.value);
       const tooltipText = `${line.label} · ${point.label}: ${displayValue}`;
-      content += `<circle cx="${point.x}" cy="${point.y}" r="5" class="${dotClass}" data-tooltip="${escapeHtml(tooltipText)}" aria-label="${escapeHtml(tooltipText)}"${chartFilterAttributes(options, point)}><title>${escapeHtml(tooltipText)}</title></circle>`;
+      content += `<circle cx="${point.x}" cy="${point.y}" r="5" class="${dotClass}"${dotColor} data-tooltip="${escapeHtml(tooltipText)}" aria-label="${escapeHtml(tooltipText)}"${chartFilterAttributes(options, point)}><title>${escapeHtml(tooltipText)}</title></circle>`;
       content += svgText(point.x, point.y - 12, displayValue, 'class="chart-value" text-anchor="middle"');
     });
   });
@@ -386,7 +433,8 @@ function renderComparisonLine(container, series, options = {}) {
     const x = 52 + (index % legendColumns) * 235;
     const y = 20 + Math.floor(index / legendColumns) * 20;
     const colorClass = ["chart-line", "chart-line-alt", "chart-line-third", "chart-line-fourth"][index % 4];
-    content += `<line x1="${x}" y1="${y}" x2="${x + 24}" y2="${y}" class="${colorClass}"/>`;
+    const legendColor = line.color ? ` style="stroke:${escapeHtml(line.color)}"` : "";
+    content += `<line x1="${x}" y1="${y}" x2="${x + 24}" y2="${y}" class="${colorClass}"${legendColor}/>`;
     content += svgText(x + 32, y + 4, shortLabel(line.label, 26), 'class="chart-legend"');
   });
 
@@ -539,6 +587,111 @@ function renderLollipops(container, items, options = {}) {
     content += svgText(x + 13, y + 4, displayValue, 'class="chart-value"');
   });
   setChart(container, chartFrame(width, height, content, options.label || "Lollipop ranking chart"));
+}
+
+const CONCEPTS = {
+  efg: {
+    label: "Shot quality",
+    title: "Effective field-goal percentage",
+    plain: "A made three is worth more than a made two. eFG% gives the shot profile credit for that extra point, so it tells us more than raw field-goal percentage.",
+    formula: "(FGM + 0.5 × 3PM) ÷ FGA",
+    visual: "shots",
+    videoId: "_u0NSrwKs-w",
+    videoTitle: "How Do You Calculate Effective Field Goal Percentage?",
+  },
+  turnoverRate: {
+    label: "Ball security",
+    title: "Turnover rate",
+    plain: "Every empty possession is a chance the other team gets for free. A lower turnover rate means a team keeps more of its possessions alive.",
+    formula: "turnovers ÷ estimated possessions",
+    visual: "turnover",
+  },
+  orbRate: {
+    label: "Second chances",
+    title: "Offensive-rebound rate",
+    plain: "A miss is not always the end of a possession. An offensive rebound gives the offense another shot, another pass, or another trip to the line.",
+    formula: "ORB ÷ (ORB + opponent DRB)",
+    visual: "rebound",
+    videoId: "d_D4rNMi9AA",
+    videoTitle: "Mastering the Offensive Rebound",
+  },
+  freeThrowRate: {
+    label: "Pressure at the line",
+    title: "Free-throw rate",
+    plain: "This estimates how often a team gets to the line relative to its field-goal attempts. It is a pressure signal: drives, contact, and paint attacks create extra scoring chances.",
+    formula: "FTA ÷ FGA",
+    visual: "freethrow",
+  },
+};
+
+function conceptVisual(key) {
+  if (key === "efg") return `<div class="concept-visual concept-visual-shots"><span class="court-hoop"></span><span class="shot-dot shot-two">2</span><span class="shot-dot shot-three">3</span><span class="shot-path path-two"></span><span class="shot-path path-three"></span><b>3 points count more</b></div>`;
+  if (key === "turnoverRate") return `<div class="concept-visual concept-visual-turnover"><span class="possession-ball">●</span><span class="possession-path"></span><span class="possession-x">×</span><b>empty trip</b><small>the opponent gets the next possession</small></div>`;
+  if (key === "orbRate") return `<div class="concept-visual concept-visual-rebound"><span class="backboard"></span><span class="rim"></span><span class="rebound-ball ball-miss">●</span><span class="rebound-ball ball-board">●</span><span class="rebound-arrow">↗</span><b>miss → extra chance</b></div>`;
+  return `<div class="concept-visual concept-visual-freethrow"><span class="free-line"></span><span class="free-hoop"></span><span class="free-ball">●</span><span class="free-arrow">→</span><b>pressure creates points</b></div>`;
+}
+
+function factorEdges(profileA, profileB, teamA, teamB) {
+  return MARCH_MODEL.features.map((feature) => {
+    const valueA = profileA[feature.key];
+    const valueB = profileB[feature.key];
+    const signedModelEdge = feature.coefficient * (valueA - valueB);
+    const winner = signedModelEdge >= 0 ? teamA : teamB;
+    return { feature, valueA, valueB, winner, difference: Math.abs(valueA - valueB), signedModelEdge };
+  });
+}
+
+function renderConceptExplainer(key, rows, model) {
+  const container = document.getElementById("concept-explainer");
+  if (!container) return;
+  const concept = CONCEPTS[key] || CONCEPTS.orbRate;
+  const teamA = document.getElementById("compare-team-a")?.value;
+  const teamB = document.getElementById("compare-team-b")?.value;
+  const season = document.getElementById("filter-season")?.value || "all";
+  const profileA = getTeamModelProfile(model, rows, teamA, season);
+  const profileB = getTeamModelProfile(model, rows, teamB, season);
+  const edge = profileA && profileB ? factorEdges(profileA, profileB, teamA, teamB).find((item) => item.feature.key === key) : null;
+  const video = concept.videoId
+    ? `<div class="concept-video"><iframe src="https://www.youtube-nocookie.com/embed/${concept.videoId}?rel=0" title="${escapeHtml(concept.videoTitle)}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><a href="https://www.youtube.com/watch?v=${concept.videoId}" target="_blank" rel="noreferrer">Watch the full example on YouTube ↗</a></div>`
+    : `<div class="concept-video concept-video-placeholder"><div class="concept-video-caption">This concept is shown with the interactive floor visual above. Select another factor to watch a coaching example.</div></div>`;
+  container.innerHTML = `<div class="concept-heading"><span class="eyebrow">See the stat on the floor</span><h3>${escapeHtml(concept.title)}</h3><p>${escapeHtml(concept.plain)}</p></div>${conceptVisual(key)}<div class="concept-formula"><span>Formula</span><strong>${escapeHtml(concept.formula)}</strong>${edge ? `<small>${escapeHtml(edge.winner)} leads this factor by ${formatNumber(edge.difference)} percentage points in the selected profile.</small>` : ""}</div>${video}`;
+}
+
+function renderHeadToHeadFactorBars(rows, model) {
+  const container = document.getElementById("dashboard-chart-factor-bars");
+  const status = document.getElementById("factor-board-status");
+  const teamA = document.getElementById("compare-team-a")?.value;
+  const teamB = document.getElementById("compare-team-b")?.value;
+  const season = document.getElementById("filter-season")?.value || "all";
+  if (!teamA || !teamB || teamA === teamB) {
+    status.textContent = "Choose two different teams to reveal the matchup story.";
+    container.innerHTML = `<div class="empty-chart">Your four-factor faceoff will appear here.</div>`;
+    return;
+  }
+  const profileA = getTeamModelProfile(model, rows, teamA, season);
+  const profileB = getTeamModelProfile(model, rows, teamB, season);
+  if (!profileA || !profileB) {
+    status.textContent = "Not enough regular-season data for the four-factor faceoff.";
+    container.innerHTML = `<div class="empty-chart">Not enough data to build this matchup story.</div>`;
+    return;
+  }
+  const edges = factorEdges(profileA, profileB, teamA, teamB);
+  const strongest = [...edges].sort((a, b) => Math.abs(b.signedModelEdge) - Math.abs(a.signedModelEdge))[0];
+  status.textContent = `${strongest.winner} owns the biggest modeled edge: ${strongest.feature.label.toLowerCase()}. Click any row to see how that stat becomes a basketball action.`;
+  container.innerHTML = edges.map((edge) => {
+    const aScore = edge.feature.coefficient < 0 ? 100 - edge.valueA : edge.valueA;
+    const bScore = edge.feature.coefficient < 0 ? 100 - edge.valueB : edge.valueB;
+    const total = Math.max(0.01, aScore + bScore);
+    const aWidth = 100 * aScore / total;
+    const bWidth = 100 * bScore / total;
+    const winnerA = edge.winner === teamA;
+    return `<button type="button" class="factor-duel-row ${winnerA ? "factor-duel-a" : "factor-duel-b"}" data-factor="${escapeHtml(edge.feature.key)}"><div class="factor-duel-heading"><span>${escapeHtml(edge.feature.shortLabel)} <small>${edge.feature.coefficient < 0 ? "lower is better" : "higher is better"}</small></span><strong>${teamLogoMarkup(edge.winner, "team-logo team-logo-tiny")}${escapeHtml(edge.winner)} +${formatNumber(edge.difference)} pp</strong></div><div class="factor-bar-line"><span class="factor-bar-team"><i style="background:${teamColor(teamA)}"></i>${escapeHtml(teamA)} <b>${formatPercent(edge.valueA)}</b></span><span class="factor-track"><i class="factor-fill-a" style="width:${aWidth}%;background:${teamColor(teamA)}"></i></span></div><div class="factor-bar-line"><span class="factor-bar-team"><i style="background:${teamColor(teamB)}"></i>${escapeHtml(teamB)} <b>${formatPercent(edge.valueB)}</b></span><span class="factor-track"><i class="factor-fill-b" style="width:${bWidth}%;background:${teamColor(teamB)}"></i></span></div></button>`;
+  }).join("");
+  container.querySelectorAll("[data-factor]").forEach((row) => {
+    row.addEventListener("click", () => renderConceptExplainer(row.dataset.factor, rows, model));
+    row.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); renderConceptExplainer(row.dataset.factor, rows, model); } });
+  });
+  renderConceptExplainer(strongest.feature.key, rows, model);
 }
 
 const MARCH_MODEL = {
@@ -1029,7 +1182,8 @@ function renderMatchupInsights(rows, model) {
       document.getElementById("measure-select").value = card.dataset.matchupFeature;
       document.getElementById("breakdown-select").value = "team";
       updateDashboard(rows);
-      document.getElementById("dashboard-chart-bars")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      renderConceptExplainer(card.dataset.matchupFeature, rows, model);
+      document.getElementById("concept-explainer")?.scrollIntoView({ behavior: "smooth", block: "center" });
     });
   });
 }
@@ -1231,6 +1385,7 @@ function updateTeamComparison(rows, measureKey) {
       label: team,
       values: seasons.map((season) => ({ label: season, value: averages.get(season) })),
       rows: teamRows.length,
+      color: teamColor(team),
     };
   });
 
@@ -1255,7 +1410,7 @@ function updateMultiTeamComparison(rows, measureKey) {
     const teamRows = filteredRows.filter((row) => row.team === team);
     const grouped = groupRows(teamRows, (row) => row.seasonLabel, (row) => measureValue(row, measureKey));
     const averages = new Map(grouped.map((item) => [item.label, item.average]));
-    return { label: team, values: seasons.map((season) => ({ label: season, value: averages.get(season) })), rows: teamRows.length };
+    return { label: team, values: seasons.map((season) => ({ label: season, value: averages.get(season) })), rows: teamRows.length, color: teamColor(team) };
   });
   status.textContent = `${visibleTeams.length} teams on the season race for ${measureDefinitions[measureKey].label.toLowerCase()}.${selected.length > 8 ? " Showing the first eight selected teams." : ""}`;
   renderComparisonLine(chart, series, { label: `${measureDefinitions[measureKey].label} comparison for selected teams`, valueFormat: measureDefinitions[measureKey].format, height: 390 });
@@ -1280,12 +1435,24 @@ function updateDashboard(rows) {
   renderActiveFilters(rows);
   renderSelectedTeamIdentity();
   renderComparisonIdentities();
+  renderHeadToHeadFactorBars(rows, dashboardModel);
   updateTeamComparison(rows, measureKey);
   updateMultiTeamComparison(rows, measureKey);
   updateHeadToHead(rows);
   renderTeamDNA(rows, dashboardModel);
   renderMatchupInsights(rows, dashboardModel);
   updateScenario(dashboardModel, rows);
+  const identityTeams = [...new Set([...selectedTeams(), document.getElementById("compare-team-a").value, document.getElementById("compare-team-b").value, document.getElementById("scenario-team").value].filter(Boolean))];
+  hydrateTeamIdentities(identityTeams).then(() => {
+    renderSelectedTeamIdentity();
+    renderComparisonIdentities();
+    const hydratedMeasure = document.getElementById("measure-select").value;
+    updateTeamComparison(rows, hydratedMeasure);
+    updateMultiTeamComparison(rows, hydratedMeasure);
+    renderHeadToHeadFactorBars(rows, dashboardModel);
+    renderTeamDNA(rows, dashboardModel);
+    renderMatchupInsights(rows, dashboardModel);
+  });
 
   const comparison = groups.slice(0, 14).reverse();
   renderBars(document.getElementById("dashboard-chart-bars"), comparison.map((item) => ({ label: item.label, value: item.value })), { label: `${measure.label} by ${breakdownDefinitions[breakdownKey].label}`, valueFormat: measure.format, height: 340, filterId: breakdownDefinitions[breakdownKey].filterId });

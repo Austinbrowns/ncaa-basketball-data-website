@@ -66,8 +66,8 @@
         <div class="comparison-heading">
           <div>
             <p class="eyebrow">Head-to-head scouting</p>
-            <h2 id="comparison-heading">Put two programs on the same graph.</h2>
-            <p>Choose two programs for a focused matchup, or select multiple teams in Control the context for a multi-team season race. The comparison respects the season, conference, venue, and result filters above.</p>
+            <h2 id="comparison-heading">Why does one team win this matchup?</h2>
+            <p>Choose two programs for a focused scouting read. The graph tracks the selected measure over time, then the faceoff below shows which team owns the four factors that travel with March wins. Use the multi-team picker for a wider season race.</p>
           </div>
           <div class="comparison-controls">
             <label>Team one<select id="compare-team-a" aria-label="First team to compare"></select></label>
@@ -77,6 +77,14 @@
         <p id="comparison-status" class="comparison-status">Choose two teams to begin.</p>
         <div id="comparison-identities" class="comparison-identities" aria-live="polite"></div>
         <div id="dashboard-chart-compare" class="chart comparison-chart loading">Loading…</div>
+        <div class="comparison-story-grid">
+          <div class="head-to-head-factor-panel">
+            <div class="chart-card-heading"><h3>The four-factor faceoff</h3><span>School colors · click a row to learn why</span></div>
+            <p id="factor-board-status" class="comparison-status">Choose two teams to reveal the matchup story.</p>
+            <div id="dashboard-chart-factor-bars" class="factor-bar-chart"></div>
+          </div>
+          <aside id="concept-explainer" class="concept-explainer" aria-live="polite"></aside>
+        </div>
         <div class="multi-comparison-block">
           <div class="chart-card-heading"><h3>Selected-team season race</h3><span>Up to eight teams · hover for exact values</span></div>
           <p id="multi-comparison-status" class="comparison-status">Select at least two teams in Control the context.</p>
