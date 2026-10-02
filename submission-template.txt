@@ -1,4 +1,4 @@
-Your Name: [replace with your name]
-Student ID: [replace with your student ID]
-Repository URL: [paste the public GitHub repository URL]
-Live Site URL: [paste the GitHub Pages URL]
+Your Name: Austin Brown
+Student ID: ENTER YOUR STUDENT ID
+Repository URL: https://github.com/Austinbrowns/ncaa-basketball-data-website
+Live Site URL: https://austinbrowns.github.io/ncaa-basketball-data-website/

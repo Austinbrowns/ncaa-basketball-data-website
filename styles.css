@@ -889,6 +889,9 @@ tbody tr:hover { background: #fff4f5; }
   text-shadow: 0 6px 0 rgba(0, 0, 0, 0.16), 0 18px 36px rgba(0, 0, 0, 0.28);
 }
 .report-hero h1 span { color: var(--gold); }
+.report-identity { max-width: 1240px; margin: 0 auto; padding: 30px 22px 0; }
+.report-identity .eyebrow { margin-bottom: 8px; }
+.report-summary { max-width: 860px; margin: 0; color: var(--ink-soft); font-size: 1rem; line-height: 1.55; }
 
 .dashboard-page { display: flex; flex-direction: column; }
 .dashboard-page > .dashboard-heading { order: 1; }
@@ -906,6 +909,7 @@ tbody tr:hover { background: #fff4f5; }
 
 @media (max-width: 620px) {
   .report-hero h1 { font-size: clamp(4rem, 19vw, 7rem); }
+  .report-identity { padding: 24px 20px 0; }
   .dashboard-page > .summary-grid { margin-top: 14px; }
 }
 

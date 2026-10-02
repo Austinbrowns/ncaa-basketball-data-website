@@ -16,7 +16,7 @@ The source documentation describes the team-box dataset as one row per team per 
 
 ## Analysis file
 
-`team_box_2022_2026.csv` is the normalized file loaded by the website. It contains five seasons, 58,771 retained rows, 362 unique D-I teams, and 30,946 unique games.
+`team_box_2022_2026.csv` is the normalized file loaded by the website. It contains five seasons, 58,771 retained rows, 362 unique D-I team IDs, 372 distinct display-name values across seasons, and 30,946 unique games. `march_model.json` is generated from this CSV by `scripts/fit-march-model.py` and supplies the report's fitted postseason coefficients.
 
 The most important fields are:
 
@@ -39,5 +39,7 @@ The most important fields are:
 | `total_rebounds`, `assists`, `steals`, `blocks`, `turnovers` | Team box-score totals |
 | `possessions` | Estimated possessions = FGA − offensive rebounds + turnovers + 0.44 × FTA |
 | `turnover_rate_pct` | Turnovers divided by estimated possessions, multiplied by 100 |
+
+The website reports arithmetic means of nonmissing team-game values. Its other derived formulas are: offensive-rebound rate = ORB / (ORB + opponent DRB) × 100; free-throw rate = FTA / FGA × 100; points per possession = points / estimated possessions; win rate = wins / team-game rows × 100; and margin = team score − opponent score. Unique game totals count each `game_id` once, rather than counting both team rows. `points_in_paint` is the source's transparent proxy for shots around the rim; it is available for only part of the panel, so it is kept as context rather than used in the core model.
 
 `quality.json` records the row counts and filtering performed by the preparation script.

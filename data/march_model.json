@@ -1,0 +1,47 @@
+{
+  "model_name": "Historical postseason title-path proxy",
+  "path_length": 6,
+  "intercept": -0.00264869,
+  "features": [
+    {
+      "key": "efg",
+      "label": "Effective FG%",
+      "shortLabel": "Shot quality",
+      "definition": "(FGM + 0.5 \u00d7 3PM) \u00f7 FGA",
+      "coefficient": 0.07566725
+    },
+    {
+      "key": "turnoverRate",
+      "label": "Turnover rate",
+      "shortLabel": "Ball security",
+      "definition": "Turnovers \u00f7 estimated possessions",
+      "coefficient": -0.08095011
+    },
+    {
+      "key": "orbRate",
+      "label": "Offensive-rebound rate",
+      "shortLabel": "Second chances",
+      "definition": "ORB \u00f7 (ORB + opponent DRB)",
+      "coefficient": 0.02122665
+    },
+    {
+      "key": "freeThrowRate",
+      "label": "Free-throw rate",
+      "shortLabel": "Pressure at the line",
+      "definition": "FTA \u00f7 FGA",
+      "coefficient": 0.01490215
+    }
+  ],
+  "fit": {
+    "source_rows": 58771,
+    "regular_profile_count": 1791,
+    "postseason_team_seasons": 605,
+    "postseason_team_game_rows": 1177,
+    "regular_profile_min_games": 10,
+    "ridge": 0.001,
+    "standardization": "mean/std across team-seasons with postseason games",
+    "outcome": "postseason wins out of postseason team-game rows",
+    "generated_by": "scripts/fit-march-model.py"
+  },
+  "generated_utc": "2026-10-02T18:57:22.069244+00:00"
+}

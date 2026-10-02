@@ -1,5 +1,6 @@
 const DATA_URL = "data/team_box_2022_2026.csv";
 const QUALITY_URL = "data/quality.json";
+const MODEL_URL = "data/march_model.json";
 
 const number = (value) => {
   const parsed = Number(value);
@@ -202,14 +203,26 @@ function enrichRows(rows) {
 }
 
 async function loadDataset() {
-  const [dataResponse, qualityResponse] = await Promise.all([
+  const [dataResponse, qualityResponse, modelResponse] = await Promise.all([
     fetch(DATA_URL),
     fetch(QUALITY_URL),
+    fetch(MODEL_URL),
   ]);
   if (!dataResponse.ok) throw new Error(`Could not load ${DATA_URL}`);
   const dataText = await dataResponse.text();
   const rows = enrichRows(parseCSV(dataText).map(normalizeRow).filter((row) => row.teamId && row.team));
   const quality = qualityResponse.ok ? await qualityResponse.json() : {};
+  if (modelResponse.ok) {
+    const modelConfig = await modelResponse.json();
+    if (Number.isFinite(Number(modelConfig.intercept)) && Array.isArray(modelConfig.features) && modelConfig.features.length) {
+      MARCH_MODEL.intercept = Number(modelConfig.intercept);
+      MARCH_MODEL.pathLength = Number(modelConfig.path_length) || 6;
+      MARCH_MODEL.features = modelConfig.features.map((feature) => ({
+        ...feature,
+        coefficient: Number(feature.coefficient),
+      }));
+    }
+  }
   return { rows, quality };
 }
 
@@ -714,13 +727,13 @@ function renderHeadToHeadFactorBars(rows, model) {
 }
 
 const MARCH_MODEL = {
-  intercept: -0.0314,
+  intercept: -0.00264869,
   pathLength: 6,
   features: [
-    { key: "efg", label: "Effective FG%", shortLabel: "Shot quality", definition: "(FGM + 0.5 × 3PM) ÷ FGA", coefficient: 0.1268 },
-    { key: "turnoverRate", label: "Turnover rate", shortLabel: "Ball security", definition: "Turnovers ÷ estimated possessions", coefficient: -0.0799 },
-    { key: "orbRate", label: "Offensive-rebound rate", shortLabel: "Second chances", definition: "ORB ÷ (ORB + opponent DRB)", coefficient: 0.2408 },
-    { key: "freeThrowRate", label: "Free-throw rate", shortLabel: "Pressure at the line", definition: "FTA ÷ FGA", coefficient: -0.0500 },
+    { key: "efg", label: "Effective FG%", shortLabel: "Shot quality", definition: "(FGM + 0.5 × 3PM) ÷ FGA", coefficient: 0.07566725 },
+    { key: "turnoverRate", label: "Turnover rate", shortLabel: "Ball security", definition: "Turnovers ÷ estimated possessions", coefficient: -0.08095011 },
+    { key: "orbRate", label: "Offensive-rebound rate", shortLabel: "Second chances", definition: "ORB ÷ (ORB + opponent DRB)", coefficient: 0.02122665 },
+    { key: "freeThrowRate", label: "Free-throw rate", shortLabel: "Pressure at the line", definition: "FTA ÷ FGA", coefficient: 0.01490215 },
   ],
 };
 
@@ -874,11 +887,11 @@ function renderMarchTakeaway(model, latestSeason) {
     const sign = feature.coefficient >= 0 ? "+" : "−";
     return `${sign} ${formatNumber(Math.abs(feature.coefficient), 3)} z(${feature.shortLabel})`;
   }).join(" ");
-  const formula = `logit(p) = ${formatNumber(MARCH_MODEL.intercept, 3)} ${formulaParts};  p = 1 ÷ (1 + e⁻ˡ);  title path ≈ p⁶`;
+  const formula = `logit(p) = ${formatNumber(MARCH_MODEL.intercept, 3)} ${formulaParts};  p = 1 ÷ (1 + e⁻ˡ);  title path ≈ p${MARCH_MODEL.pathLength}`;
 
   document.getElementById("march-takeaway-lede").textContent = `The formula was estimated from ${formatNumber(model.postseasonGameRows, 0)} postseason team-game rows across ${formatNumber(model.postseasonProfileCount, 0)} team-seasons. ${strongest.label} carries ${formatNumber(100 * Math.abs(strongest.coefficient) / model.totalWeight, 0)}% of the model’s relative factor weight in this sample, followed by ${MARCH_MODEL.features.filter((feature) => feature !== strongest).sort((a, b) => Math.abs(b.coefficient) - Math.abs(a.coefficient))[0].label.toLowerCase()}.`;
   document.getElementById("march-formula").textContent = formula;
-  document.getElementById("march-model-footnote").textContent = `The chart estimates a six-game path by raising each team’s one-game win probability to the sixth power. It is a historical postseason proxy—not a sportsbook line, seed model, or literal bracket forecast. Hover any bar or point for the exact value.`;
+  document.getElementById("march-model-footnote").textContent = `The chart estimates a ${MARCH_MODEL.pathLength}-game path by raising each team’s one-game win probability to the ${MARCH_MODEL.pathLength}th power. It is a historical postseason proxy—not a sportsbook line, seed model, or literal bracket forecast. Hover any bar or point for the exact value.`;
   document.getElementById("march-factor-grid").innerHTML = MARCH_MODEL.features.map((feature) => {
     const sign = feature.coefficient >= 0 ? "+" : "−";
     const weight = 100 * Math.abs(feature.coefficient) / model.totalWeight;
@@ -948,7 +961,7 @@ function renderReport(rows, quality) {
   document.getElementById("headline-teams").textContent = formatNumber(unique(rows, "teamId"), 0);
   document.getElementById("headline-pace").textContent = formatNumber(mean(rows, "possessions"), 1);
   const heroSummary = document.getElementById("hero-summary");
-  if (heroSummary) heroSummary.textContent = `This report uses ${formatNumber(rows.length, 0)} Division I team-game observations from ${firstSeason} through ${lastSeason}. It turns repeated box scores into evidence about competitive games, home court, pace, shot quality, ball security, and the margins that separate winning from losing.`;
+  if (heroSummary) heroSummary.textContent = `This report uses ${formatNumber(rows.length, 0)} Division I team-game observations from ${firstSeason} through ${lastSeason}, representing ${formatNumber(unique(rows, "teamId"), 0)} team IDs and ${formatNumber(gameRows.length, 0)} unique games. It turns repeated ESPN/SportsDataverse box scores into evidence about competitive games, home court, pace, shot quality, ball security, second chances, and the margins that separate winning from losing.`;
   renderMarchTakeaway(marchModel, lastSeason);
 
   const firstThree = seasonThreeRate[0]?.average || 0;
@@ -994,7 +1007,7 @@ function renderReport(rows, quality) {
   renderLine(document.getElementById("report-chart-10"), seasonThreeRate.map((item) => ({ label: item.label, value: item.average })), { label: "Three-point attempt rate by season", valueFormat: (value) => formatPercent(value) });
 
   const dropped = quality.dropped_rows ?? 0;
-  document.getElementById("methodology-copy").innerHTML = `The raw ESPN/SportsDataverse files contain one row per team per game. I combined seasons 2022–2026, kept rows whose team ID appears in the public 2026 Division I crosswalk, and dropped ${formatNumber(dropped, 0)} rows belonging to non-D-I teams or rows missing a required score/team identifier. The final file contains ${formatNumber(rows.length, 0)} rows and ${formatNumber(unique(rows, "teamId"), 0)} teams. A team-game row is the unit of analysis; the opponent is retained as a descriptive field. Game-level margin findings use each game ID once. Points, rebounds, assists, turnovers, free throws, and shooting percentages are taken from the source box score. Three-point rate equals 3PA/FGA × 100. Effective field-goal percentage equals (FGM + 0.5 × 3PM)/FGA × 100. Estimated possessions equal FGA − offensive rebounds + turnovers + 0.44 × FTA; turnover rate equals turnovers divided by estimated possessions. Win rate equals winning team-game rows divided by all team-game rows. The March model uses regular-season profiles for effective FG%, turnover rate, offensive-rebound rate, and free-throw rate, then estimates a one-game postseason win probability and raises it to six for a simple title-path proxy.`;
+  document.getElementById("methodology-copy").innerHTML = `Source: public ESPN men's college basketball team box scores released through SportsDataverse, joined to the public 2026 Division I team crosswalk. The raw files contain one row per team per game; seasons 2022–2026 were combined, rows whose team ID was absent from the Division I crosswalk or missing a required team/opponent score were dropped (${formatNumber(dropped, 0)} rows), and the final file contains ${formatNumber(rows.length, 0)} rows, ${formatNumber(unique(rows, "teamId"), 0)} team IDs, ${formatNumber(unique(rows, "team"), 0)} display-name values, and ${formatNumber(gameRows.length, 0)} unique games. A team-game row is the unit of analysis, while unique game counts use each game ID once. Report and dashboard averages are arithmetic means of nonmissing team-game values; points per possession equals points ÷ estimated possessions; three-point attempt rate equals 3PA ÷ FGA × 100; effective field-goal percentage equals (FGM + 0.5 × 3PM) ÷ FGA × 100; offensive-rebound rate equals ORB ÷ (ORB + opponent DRB) × 100; free-throw rate equals FTA ÷ FGA × 100; estimated possessions equal FGA − ORB + turnovers + 0.44 × FTA; turnover rate equals turnovers ÷ estimated possessions × 100; win rate equals wins ÷ team-game rows × 100; and every displayed margin is team score minus opponent score. The March model averages each team-season's regular-season factor values, standardizes them by the mean and population standard deviation among team-seasons with postseason games, fits a ridge-regularized weighted logistic regression to postseason wins out of postseason team-game rows, converts the result to p = 1 ÷ (1 + e⁻ˡᵒᵍⁱᵗ), and reports a six-game title-path proxy as p⁶. It is a transparent historical postseason signal, not a literal NCAA bracket probability.`;
 }
 
 const measureDefinitions = {
