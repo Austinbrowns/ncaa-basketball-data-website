@@ -892,6 +892,7 @@ tbody tr:hover { background: #fff4f5; }
 .report-identity { max-width: 1240px; margin: 0 auto; padding: 30px 22px 0; }
 .report-identity .eyebrow { margin-bottom: 8px; }
 .report-summary { max-width: 860px; margin: 0; color: var(--ink-soft); font-size: 1rem; line-height: 1.55; }
+.report-identity + .headline-grid { margin-top: 28px; }
 
 .dashboard-page { display: flex; flex-direction: column; }
 .dashboard-page > .dashboard-heading { order: 1; }
