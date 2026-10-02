@@ -8,3 +8,5 @@ The site uses two locally stored, public-domain photographs as subtle background
 The images are used with a light overlay and low visual contrast so the historical context supports, rather than competes with, the data.
 
 The report cover also uses a remote championship celebration image of Michigan after winning the 2026 NCAA men’s basketball championship. The image is served by Gray/WILX; see the [championship coverage](https://www.wilx.com/2026/04/07/michigan-basketball-captures-2026-national-championship-with-a-69-63-win-over-uconn/) for the source and rights information.
+
+The dashboard background uses a remote celebration image of UConn coach Dan Hurley and guard Braylon Mullins after Mullins’ game-winning three sent UConn past Duke in the 2026 NCAA tournament. Image source: [Sports Illustrated](https://www.si.com/college-basketball/si-am-uconn-dynasty-dan-hurley-braylon-mullins-shot).

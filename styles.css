@@ -908,3 +908,10 @@ tbody tr:hover { background: #fff4f5; }
   .report-hero h1 { font-size: clamp(4rem, 19vw, 7rem); }
   .dashboard-page > .summary-grid { margin-top: 14px; }
 }
+
+body[data-page="dashboard"] {
+  background-image: linear-gradient(rgba(237, 240, 242, 0.91), rgba(237, 240, 242, 0.96)), url("https://images2.minutemediacdn.com/image/upload/c_fill,w_1600,ar_16:9,f_auto,q_auto,g_auto/images/ImagnImages/mmsport/si/01kmzghjs7tpg5fbv434.jpg");
+  background-position: center top;
+  background-size: cover;
+  background-attachment: fixed;
+}
