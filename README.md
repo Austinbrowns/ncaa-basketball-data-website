@@ -4,8 +4,8 @@ An interactive report and dashboard about recent NCAA Division I men’s basketb
 
 ## Pages
 
-- `index.html` is the report page. It has ten evidence-based findings, headline numbers, and a chart for every finding.
-- `dashboard.html` is the browser-side dashboard. It has filters for season, team, conference, venue, and result; Scout, March, and Fan modes; March-focused measures for effective FG%, turnover rate, offensive-rebound rate, and free-throw rate plus context measures; hoverable and clickable charts; Team DNA profiles; four-factor matchup edges; a what-if title-path simulator; four changing summary numbers; a two-team season comparison chart; a conference-only head-to-head matchup history with scores and a game table; a breakdown switch; a reset button; and an aggregation table.
+- `index.html` is the report page. It has ten evidence-based findings, headline numbers, and interactive visual forms including trend lines, a four-factor radar, winner-loss dumbbells, and efficiency lollipops.
+- `dashboard.html` is the browser-side dashboard. It has filters for season, multiple teams, conference, venue, and result; Scout, March, and Fan modes; March-focused measures for effective FG%, turnover rate, offensive-rebound rate, and free-throw rate plus context measures; hoverable and clickable charts; ESPN team logos with text fallbacks; Team DNA profiles; four-factor matchup edges; a multi-team season race; a what-if title-path simulator; four changing summary numbers; a two-team season comparison chart; a conference-only head-to-head matchup history with scores and a game table; a breakdown switch; a reset button; and an aggregation table.
 - `assets/` contains the locally stored public-domain historical basketball photographs used as subtle page backgrounds, with credits in `assets/README.md`.
 
 The dashboard’s conference head-to-head history defines a conference meeting as a regular-season game where both selected teams appear as opponents and both rows carry the same conference. Postseason and conference-tournament games are excluded.
@@ -30,6 +30,8 @@ The six-game value is a simple average-opponent path estimate, not a sportsbook 
 - Head-to-head scouting cards identify which team has the modeled edge in each factor and let the reader jump directly to that measure.
 - The what-if lab adjusts a selected team’s factor profile by percentage points and recalculates the model estimate in the browser.
 - Mode buttons change the dashboard lens: Scout keeps full detail, March foregrounds the four model factors, and Fan starts with team scoring and rankings.
+- The team picker supports multiple programs at once; the season-race chart shows up to eight selected teams with distinct lines and logo-backed identity chips.
+- Team logos are loaded from the public ESPN team-logo CDN using the dataset’s ESPN team IDs, with abbreviation fallbacks when a logo is unavailable.
 
 ## Data
 
