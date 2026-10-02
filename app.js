@@ -947,7 +947,8 @@ function renderReport(rows, quality) {
   document.getElementById("headline-teamgames").textContent = formatNumber(rows.length, 0);
   document.getElementById("headline-teams").textContent = formatNumber(unique(rows, "teamId"), 0);
   document.getElementById("headline-pace").textContent = formatNumber(mean(rows, "possessions"), 1);
-  document.getElementById("hero-summary").textContent = `This report uses ${formatNumber(rows.length, 0)} Division I team-game observations from ${firstSeason} through ${lastSeason}. It turns repeated box scores into evidence about competitive games, home court, pace, shot quality, ball security, and the margins that separate winning from losing.`;
+  const heroSummary = document.getElementById("hero-summary");
+  if (heroSummary) heroSummary.textContent = `This report uses ${formatNumber(rows.length, 0)} Division I team-game observations from ${firstSeason} through ${lastSeason}. It turns repeated box scores into evidence about competitive games, home court, pace, shot quality, ball security, and the margins that separate winning from losing.`;
   renderMarchTakeaway(marchModel, lastSeason);
 
   const firstThree = seasonThreeRate[0]?.average || 0;
@@ -1080,6 +1081,35 @@ function setFilterValue(select, value) {
 function fillChoiceSelect(selectId, values, placeholder) {
   const select = document.getElementById(selectId);
   select.innerHTML = `<option value="">${escapeHtml(placeholder)}</option>${values.map((value) => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join("")}`;
+}
+
+function syncComparisonTeamsToConference(rows) {
+  const conferenceSelect = document.getElementById("filter-conference");
+  const conference = conferenceSelect?.value || "all";
+  const previousSelectedTeams = new Set(selectedTeams());
+  const previousCompareA = document.getElementById("compare-team-a")?.value || "";
+  const previousCompareB = document.getElementById("compare-team-b")?.value || "";
+  const previousScenario = document.getElementById("scenario-team")?.value || "";
+  const scopedRows = conference === "all" ? rows : rows.filter((row) => row.conference === conference);
+  const teams = optionValues(scopedRows, "team");
+
+  fillMultiSelect("filter-team", teams);
+  [...document.getElementById("filter-team").options].forEach((option) => {
+    option.selected = previousSelectedTeams.has(option.value);
+  });
+  fillChoiceSelect("compare-team-a", teams, conference === "all" ? "Choose team one" : `Choose ${conference} team one`);
+  fillChoiceSelect("compare-team-b", teams, conference === "all" ? "Choose team two" : `Choose ${conference} team two`);
+  fillChoiceSelect("scenario-team", teams, conference === "all" ? "Choose a team" : `Choose a ${conference} team`);
+
+  const chooseTeam = (previous, fallbackIndex) => teams.includes(previous) ? previous : (teams[fallbackIndex] || "");
+  document.getElementById("compare-team-a").value = chooseTeam(previousCompareA, 0);
+  document.getElementById("compare-team-b").value = chooseTeam(previousCompareB, 1);
+  document.getElementById("scenario-team").value = chooseTeam(previousScenario, 0);
+
+  const help = document.getElementById("team-filter-help");
+  if (help) help.textContent = conference === "all"
+    ? "Choose one or more programs. Leave this empty to view the full Division I panel."
+    : `${formatNumber(teams.length, 0)} ${conference} teams are loaded into the comparison selectors. Select multiple for a season race.`;
 }
 
 function renderActiveFilters(rows) {
@@ -1510,10 +1540,14 @@ function initializeDashboard(rows) {
     document.getElementById("compare-team-b").value = teams[1];
     document.getElementById("scenario-team").value = teams[0];
   }
+  syncComparisonTeamsToConference(rows);
   renderScenarioSliders();
 
   ["filter-season", "filter-team", "filter-conference", "filter-venue", "filter-result", "measure-select", "breakdown-select", "compare-team-a", "compare-team-b"].forEach((id) => {
-    document.getElementById(id).addEventListener("change", () => updateDashboard(rows));
+    document.getElementById(id).addEventListener("change", () => {
+      if (id === "filter-conference") syncComparisonTeamsToConference(rows);
+      updateDashboard(rows);
+    });
   });
   document.getElementById("scenario-team").addEventListener("change", () => updateScenario(dashboardModel, rows));
   document.querySelectorAll("[data-scenario-feature]").forEach((input) => input.addEventListener("input", () => updateScenario(dashboardModel, rows)));
@@ -1530,6 +1564,7 @@ function initializeDashboard(rows) {
     [...document.getElementById("filter-team").options].forEach((option) => { option.selected = false; });
     document.getElementById("measure-select").value = "efg";
     document.getElementById("breakdown-select").value = "season";
+    syncComparisonTeamsToConference(rows);
     if (teams.length > 1) {
       document.getElementById("compare-team-a").value = teams[0];
       document.getElementById("compare-team-b").value = teams[1];

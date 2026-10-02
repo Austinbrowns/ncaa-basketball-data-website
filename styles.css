@@ -871,3 +871,40 @@ tbody tr:hover { background: #fff4f5; }
   .filter-heading .button { margin-top: 18px; }
   .comparison-heading, .matchup-heading { padding-bottom: 14px; }
 }
+
+/* Cover treatment and a single top-to-bottom dashboard reading order. */
+.report-hero {
+  align-items: center;
+  background-image: linear-gradient(112deg, rgba(11, 22, 34, 0.88) 0%, rgba(11, 22, 34, 0.72) 55%, rgba(207, 18, 52, 0.52) 100%), url("https://gray-wilx-prod.gtv-cdn.com/resizer/v2/ZOZ3BNY4YVGGHGRJCWXXZDDQZQ.jpg?auth=793c2abdf2753f2aaa5f131597b4863712c8e77e8fa5243a2d68815b93568afb&height=1200&smart=true&width=2000");
+}
+.report-hero .hero-copy { max-width: 1000px; }
+.report-hero h1 {
+  margin: 0;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  font-size: clamp(4.5rem, 12vw, 12rem);
+  font-weight: 900;
+  letter-spacing: 0.015em;
+  line-height: 0.82;
+  text-transform: uppercase;
+  text-shadow: 0 6px 0 rgba(0, 0, 0, 0.16), 0 18px 36px rgba(0, 0, 0, 0.28);
+}
+.report-hero h1 span { color: var(--gold); }
+
+.dashboard-page { display: flex; flex-direction: column; }
+.dashboard-page > .dashboard-heading { order: 1; }
+.dashboard-page > .mode-panel { order: 2; }
+.dashboard-page > .filter-panel { order: 3; }
+.dashboard-page > .control-panel { order: 4; }
+.dashboard-page > .dashboard-status { order: 5; }
+.dashboard-page > .summary-grid { order: 6; margin-top: 22px; }
+.dashboard-page > .comparison-panel { order: 7; }
+.dashboard-page > .dashboard-charts { order: 8; }
+.dashboard-page > .team-dna-panel { order: 9; }
+.dashboard-page > .matchup-panel { order: 10; }
+.dashboard-page > .simulator-panel { order: 11; }
+.dashboard-page > .table-section { order: 12; }
+
+@media (max-width: 620px) {
+  .report-hero h1 { font-size: clamp(4rem, 19vw, 7rem); }
+  .dashboard-page > .summary-grid { margin-top: 14px; }
+}
